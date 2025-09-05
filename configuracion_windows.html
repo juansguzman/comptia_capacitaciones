@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Windows</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px 0;
+        }
+        
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+        
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+            animation: slideIn 0.4s ease-in-out;
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.2rem;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        
+        .slide h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+            margin: 20px 0 15px 0;
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+        }
+        
+        .slide h3 {
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin: 15px 0 10px 0;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .slide ul, .slide ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .slide li {
+            margin-bottom: 8px;
+        }
+        
+        .content-with-image {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .content-left {
+            flex: 1;
+        }
+        
+        .content-right {
+            flex: 1;
+        }
+        
+        .image-container {
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .slide-image {
+            width: 100%;
+            height: 450px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            object-fit: contain;
+        }
+        
+        .image-caption {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .security-alert {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #0284c7;
+        }
+        
+        .protocol-card h4 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+            position: relative;
+            z-index: 1000;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            min-width: 120px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
+        }
+        
+        .slide-counter {
+            background: #1e3a8a;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
+        }
+        
+        .red-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #10b981;
+        }
+        
+        .feature-card h4 {
+            color: #047857;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table {
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+        
+        .title-slide {
+            text-align: center;
+            padding: 60px 40px;
+        }
+        
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+        
+        .title-slide h2 {
+            font-size: 1.5rem;
+            color: #6b7280;
+            margin-bottom: 40px;
+            border: none;
+            padding: 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            border: 2px solid #1e3a8a;
+            padding: 20px 30px;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-with-image {
+                flex-direction: column;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2rem;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Página de Presentación -->
+        <div class="slide active">
+            <div class="title-slide">
+                <h1>Configuración de Windows</h1>
+                <h2>Trabajas para una empresa de diseño gráfico que se especializa en crear materiales de marketing</h2>
+                <div class="logo-container">
+                    <div class="logo">EDUPAN</div>
+                    <div class="logo">CompTIA Core Certification</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introducción al Sistema Operativo -->
+        <div class="slide">
+            <h1>Introducción al Sistema Operativo</h1>
+            
+            <p>El <strong class="red-text">sistema operativo (SO)</strong> es el software que proporciona una interfaz de usuario al hardware de la computadora y proporciona un entorno en el cual ejecutar aplicaciones de software y crear redes de computadoras.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Rol del Profesional de TI</h4>
+                    <p>Como representante profesional de soporte de TI, tu trabajo incluirá instalar, configurar, mantener y solucionar problemas de sistemas operativos de PC.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Conocimiento Fundamental</h4>
+                    <p>Necesitas entender las versiones, características, componentes y capacidades técnicas del SO.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Soporte Efectivo</h4>
+                    <p>Con este conocimiento, puedes proporcionar soporte efectivo para todos los tipos de entornos de sistema.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Interfaces Administrativas</h4>
+                    <p>Aprenderás cómo las interfaces administrativas básicas para Windows 10 y 11 pueden usarse para configurar ajustes de usuario y sistema.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Configuraciones de Usuario de Windows -->
+        <div class="slide">
+            <h1>Configuraciones de Usuario de Windows</h1>
+            
+            <h2>Escenario de Soporte</h2>
+            <p>Un usuario ha reportado que su computadora no está funcionando correctamente. Se está quejando de varios problemas:</p>
+            
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h4>Texto Demasiado Pequeño</h4>
+                    <p>El texto es muy pequeño para que puedan leerlo cómodamente.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Reloj Incorrecto</h4>
+                    <p>El reloj no muestra la hora correcta.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Problemas con Laptop</h4>
+                    <p>Problemas con la laptop que usan para trabajar remotamente.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Gestión de Energía</h4>
+                    <p>Cuando cierran la tapa, la computadora no se apaga como solía hacerlo, drenando la batería.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Objetivo:</strong> Ser capaz de configurar las configuraciones del sistema operativo ayudará a este usuario mientras utiliza el sistema y viaja con él.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Interfaces de Windows -->
+        <div class="slide">
+            <h1>Interfaces de Windows</h1>
+            
+            <p>Un SO está compuesto de archivos del kernel y controladores de dispositivos para interfaz con el hardware, más programas para proporcionar una interfaz de usuario y herramientas de configuración.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Evolución Histórica</h4>
+                    <p>Los primeros sistemas operativos para PC, como el Sistema Operativo de Disco (DOS) de Microsoft, usaban una interfaz de línea de comandos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Interfaz Gráfica (GUI)</h4>
+                    <p>Windows y las aplicaciones de software para Windows se marcaron por el uso de una <strong class="red-text">interfaz gráfica de usuario (GUI)</strong>.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Facilidad de Uso</h4>
+                    <p>Esto ayudó a hacer las computadoras más fáciles de usar por personal no técnico y usuarios domésticos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Preferencias del Cliente</h4>
+                    <p>El estilo de escritorio GUI favorecido por un SO particular es un factor poderoso en determinar las preferencias del cliente.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Escritorio de Windows 10 -->
+        <div class="slide">
+            <h1>Escritorio de Windows 10</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Una de las funciones principales de un SO es proporcionar una interfaz (o shell) para que el usuario configure y opere el hardware y software de la computadora.</p>
+                    
+                    <h2>Componentes del Escritorio</h2>
+                    <ul>
+                        <li><strong>Menú Inicio:</strong> Se activa seleccionando el botón Inicio o presionando la tecla START o logo de Windows</li>
+                        <li><strong>Barra de tareas:</strong> Contiene iconos para aplicaciones abiertas y permite cambiar entre ventanas</li>
+                        <li><strong>Íconos de acceso directo:</strong> Para lanzar aplicaciones rápidamente</li>
+                        <li><strong>Área de notificación:</strong> Contiene íconos para procesos en segundo plano</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/5594-1639514209810-windows_10_21h2_desktop_start_menu.png" alt="Escritorio Windows 10" class="slide-image">
+                    <p class="image-caption">Escritorio y Menú Inicio de Windows 10 (21H2)</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Atajos de Teclado:</strong> Vale la pena aprender los atajos de teclado para navegar el escritorio y ventanas de programas rápidamente.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Escritorio de Windows 11 -->
+        <div class="slide">
+            <h1>Escritorio de Windows 11</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Windows 11 refresca el estilo del escritorio introduciendo una barra de tareas alineada al centro, mejor espaciado para control táctil y esquinas redondeadas.</p>
+                    
+                    <h2>Nuevas Características</h2>
+                    <ul>
+                        <li><strong>Barra de tareas centrada:</strong> Nueva alineación visual más moderna</li>
+                        <li><strong>Mejor espaciado:</strong> Optimizado para control táctil</li>
+                        <li><strong>Esquinas redondeadas:</strong> Diseño más suave</li>
+                        <li><strong>Múltiples escritorios:</strong> Función más accesible para diferentes espacios de trabajo</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Múltiples Escritorios:</strong> Permiten al usuario configurar diferentes espacios de trabajo, como un escritorio con ventanas para aplicaciones de negocios abiertas y otro con ventanas y accesos directos para aplicaciones personales y juegos.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/4862-1639514225120-windows_11_desktop_start_menu.png" alt="Escritorio Windows 11" class="slide-image">
+                    <p class="image-caption">Escritorio y Menú Inicio de Windows 11</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Configuración de Windows y Panel de Control -->
+        <div class="slide">
+            <h1>Configuración de Windows y Panel de Control</h1>
+            
+            <p>La aplicación <strong class="red-text">Configuración de Windows</strong> y el <strong class="red-text">Panel de Control</strong> son las dos interfaces principales para administrar Windows.</p>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Interfaz</th>
+                            <th>Descripción</th>
+                            <th>Uso Preferido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Configuración de Windows</strong></td>
+                            <td>Interfaz habilitada para toque para gestionar Windows</td>
+                            <td>Interfaz administrativa preferida</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Panel de Control</strong></td>
+                            <td>Interfaz heredada con applets tradicionales</td>
+                            <td>Configuraciones avanzadas y opciones no migradas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Registro:</strong> Todos los datos de configuración de Windows se mantienen finalmente en una base de datos llamada el registro. Configuración de Windows y Panel de Control contienen páginas gráficas y applets para modificar estas configuraciones.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Aplicación Configuración de Windows -->
+        <div class="slide">
+            <h1>Aplicación Configuración de Windows</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La aplicación <strong class="red-text">Configuración de Windows</strong> es una interfaz habilitada para toque para gestionar Windows. Las "páginas" de opciones de configuración se dividen entre algunos encabezados principales.</p>
+                    
+                    <h2>Diferencias entre Versiones</h2>
+                    <ul>
+                        <li><strong>Windows 10:</strong> Tiene una página "inicio" con todos los encabezados de configuración</li>
+                        <li><strong>Windows 11:</strong> No tiene página "inicio", usa íconos de navegación para moverse entre grupos de encabezados</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/3057-1639514390619-windows_10_21h2_settings_home.png" alt="Configuración Windows 10" class="slide-image">
+                    <p class="image-caption">Página principal en la aplicación Configuración de Windows 10 mostrando los encabezados de configuración de nivel superior</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Panel de Control -->
+        <div class="slide">
+            <h1>Panel de Control</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La mayoría de las configuraciones estándar de Windows 10 y Windows 11 pueden ubicarse dentro de Configuración de Windows, pero no todas. Algunas opciones aún se configuran vía la interfaz heredada del <strong class="red-text">Panel de Control</strong>.</p>
+                    
+                    <h2>Características</h2>
+                    <ul>
+                        <li>Cada ícono representa un applet usado para tareas de configuración</li>
+                        <li>La mayoría de applets son agregados por Windows</li>
+                        <li>Algunas aplicaciones de software agregan sus propios applets</li>
+                        <li>Ejemplos: software antivirus con sus propios paneles de configuración</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/controlpanel11.png" alt="Panel de Control Windows 11" class="slide-image">
+                    <p class="image-caption">Panel de Control de Windows 11 mostrando todos los elementos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Configuración de Cuentas -->
+        <div class="slide">
+            <h1>Configuración de Cuentas</h1>
+            
+            <p>Una <strong class="red-text">cuenta de usuario</strong> controla el acceso a la computadora. Cada cuenta puede asignarse derechos o privilegios para hacer cambios de configuración del SO.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Autenticación</h4>
+                    <p>Una cuenta de usuario está protegida por autenticar al propietario de la cuenta usando datos conocidos solo por el propietario.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Perfil de Usuario</h4>
+                    <p>Cada cuenta se asocia con un perfil que contiene carpetas predeterminadas para documentos personales, imágenes, videos y música.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Cuenta Administrador</h4>
+                    <p>El primer usuario se configura como cuenta administrador predeterminada con privilegios para cambiar cualquier aspecto de la configuración del sistema.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Usuarios Estándar</h4>
+                    <p>Las cuentas adicionales usualmente se configuran como usuarios estándar con privilegios solo en su perfil.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Cuentas de Windows -->
+        <div class="slide">
+            <h1>Cuentas de Windows</h1>
+            
+            <h2>Tipos de Cuentas</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Cuenta</th>
+                            <th>Descripción</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cuenta Local</strong></td>
+                            <td>Puede usarse para iniciar sesión en una sola computadora únicamente</td>
+                            <td>Configuración local sin sincronización</td>
+                        </tr>
+                        <tr>
+                            <td><strong class="red-text">Cuenta Microsoft</strong></td>
+                            <td>Da acceso a servicios en la nube de Microsoft</td>
+                            <td>Permite inicio de sesión y sincronización de configuraciones a través de múltiples dispositivos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Configuraciones de Cuenta:</strong> La aplicación de Configuración de Cuentas se usa para gestionar información del usuario actual, agregar credenciales de inicio de sesión para otras cuentas, configurar opciones de inicio de sesión, unirse a redes de dominio, y gestionar configuraciones de sincronización.</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Applet de Cuentas de Usuario -->
+        <div class="slide">
+            <h1>Applet de Cuentas de Usuario</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>El <strong class="red-text">Applet de Cuentas de Usuario</strong> en el Panel de Control es la interfaz heredada. Muchas de sus funciones están ofuscadas u ocultas y puede que no se usen fácilmente para agregar nuevas cuentas.</p>
+                    
+                    <h2>Funciones Principales</h2>
+                    <ul>
+                        <li>Proporciona opciones para ajustar el nombre de cuenta</li>
+                        <li>Cambiar el nivel de privilegio entre administrador y usuario estándar</li>
+                        <li>Cambiar configuraciones de Control de Cuentas de Usuario (UAC)</li>
+                    </ul>
+                    
+                    <div class="security-alert">
+                        <p><strong>Control de Cuentas de Usuario (UAC):</strong> Es un sistema para prevenir uso no autorizado de privilegios de administrador. En el nivel de configuración predeterminado, cambiar una configuración administrativa requiere que el usuario confirme una solicitud.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/3.2_image.png" alt="Applet Cuentas de Usuario" class="slide-image">
+                    <p class="image-caption">Applet de Cuentas de Usuario</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Configuración de Privacidad -->
+        <div class="slide">
+            <h1>Configuración de Privacidad y Seguridad</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Las <strong class="red-text">Configuraciones de Privacidad y Seguridad</strong> gobiernan qué datos de uso Windows tiene permitido recopilar y qué funciones de dispositivo están habilitadas y para qué aplicaciones.</p>
+                    
+                    <h2>Categorías Principales</h2>
+                    <ul>
+                        <li><strong>Recopilación de datos:</strong> Permite a Microsoft procesar telemetría de uso</li>
+                        <li><strong>Permisos de aplicaciones:</strong> Permiten o niegan acceso a dispositivos como servicio de ubicación, cámara y micrófono</li>
+                        <li><strong>Configuraciones de seguridad:</strong> Permiten cambiar configuraciones de antivirus, navegador y firewall</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/3.2_image_b.png" alt="Configuración de privacidad" class="slide-image">
+                    <p class="image-caption">Configuraciones generales de privacidad en Windows 11</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Datos de Usuario:</strong> Los permisos de aplicaciones también controlan el acceso a datos de usuario como contactos, elementos de calendario, email y archivos.</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Configuración de Escritorio -->
+        <div class="slide">
+            <h1>Configuración de Escritorio</h1>
+            
+            <h2>Configuración de Hora e Idioma</h2>
+            <p>Las páginas de configuraciones de Hora e Idioma se usan para dos propósitos principales:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Fecha/Hora y Zona Horaria</h4>
+                    <p>Establecer la fecha/hora correcta y zona horaria. Mantener el PC sincronizado a una fuente de tiempo precisa es importante para procesos como autenticación y respaldo.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Opciones Regionales</h4>
+                    <p>Establecer opciones de región para ortografía y localización apropiadas, método de entrada de teclado y reconocimiento de voz.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Múltiples Idiomas</h4>
+                    <p>Opcionalmente, múltiples idiomas pueden habilitarse. El idioma activo se cambia usando un ícono en el área de notificación.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Configuración de Personalización</h4>
+                    <p>Permiten seleccionar y personalizar temas, que establecen la apariencia del entorno de escritorio.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Configuración de Idioma -->
+        <div class="slide">
+            <h1>Configuración de Idioma</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Las configuraciones de idioma permiten configurar múltiples idiomas y métodos de entrada para adaptarse a diferentes usuarios y regiones.</p>
+                    
+                    <h2>Elementos de Configuración</h2>
+                    <ul>
+                        <li><strong>Idioma de Visualización:</strong> Idioma principal de la interfaz de Windows</li>
+                        <li><strong>Teclados:</strong> Distribuciones de teclado para diferentes idiomas</li>
+                        <li><strong>Reconocimiento de Voz:</strong> Configuración para entrada por voz</li>
+                        <li><strong>Corrección Ortográfica:</strong> Diccionarios y reglas para diferentes idiomas</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Cambio Rápido:</strong> El idioma activo se cambia usando START+SPACE o un ícono en el área de notificación.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/3051-1639514475848-windows_10_21h2_settings_time_language_with_language_bar.png" alt="Configuración de idioma" class="slide-image">
+                    <p class="image-caption">Configuraciones de idioma</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Configuración de Accesibilidad -->
+        <div class="slide">
+            <h1>Configuración de Accesibilidad</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Las configuraciones de <strong class="red-text">Accesibilidad</strong> (o Facilidad de Acceso) configuran opciones de entrada y salida para adaptarse mejor a cada usuario.</p>
+                    
+                    <h2>Tres Grupos Principales</h2>
+                    <ul>
+                        <li><strong>Visión:</strong> Indicadores de cursor, modos de alto contraste y filtros de color, herramienta Lupa y Narrador</li>
+                        <li><strong>Audición:</strong> Opciones de volumen, mezcla de sonido mono, notificaciones visuales y subtítulos</li>
+                        <li><strong>Interacción:</strong> Opciones de usabilidad de teclado y mouse, métodos de entrada controlados por voz y ojos</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/3.1.png" alt="Configuración de accesibilidad" class="slide-image">
+                    <p class="image-caption">Configuraciones de accesibilidad en Windows 11</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Disponibilidad:</strong> La Facilidad de Acceso puede configurarse vía Configuración o vía Panel de Control. En Windows 11, estas configuraciones se encuentran bajo el encabezado <strong>Accesibilidad</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Slide 17: Explorador de Archivos -->
+        <div class="slide">
+            <h1>Explorador de Archivos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La gestión de archivos es una parte crítica del uso de una computadora. En Windows, la gestión de archivos se realiza usando la aplicación <strong class="red-text">Explorador de Archivos</strong>.</p>
+                    
+                    <h2>Funciones Principales</h2>
+                    <ul>
+                        <li>Abrir, copiar, mover, renombrar archivos y carpetas</li>
+                        <li>Ver y eliminar archivos y carpetas</li>
+                        <li>Navegar por la estructura de directorios</li>
+                        <li>Acceder a ubicaciones de red</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Nota:</strong> El Explorador de Archivos a menudo se refiere simplemente como "Explorer," ya que el proceso se ejecuta desde el archivo explorer.exe.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/4712-1639514532616-windows_10_file_explorer_window.png" alt="Explorador de archivos Windows 10" class="slide-image">
+                    <p class="image-caption">Explorador de Archivos en Windows 10</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Objetos del Sistema -->
+        <div class="slide">
+            <h1>Objetos del Sistema</h1>
+            
+            <p>En Windows, el acceso a archivos de datos típicamente se media por objetos del sistema. Estos se muestran en el panel de navegación izquierdo en el Explorador de Archivos.</p>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Objeto del Sistema</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cuenta de Usuario</strong></td>
+                            <td>Contiene carpetas de datos personales pertenecientes al perfil de cuenta con sesión iniciada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OneDrive</strong></td>
+                            <td>Muestra archivos y carpetas guardados en el servicio de almacenamiento en la nube (si tienes cuenta Microsoft)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Este PC</strong></td>
+                            <td>Contiene carpetas personales del perfil y discos fijos y unidades de almacenamiento removibles</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Red</strong></td>
+                            <td>Contiene computadoras, carpetas compartidas e impresoras compartidas disponibles en la red</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Papelera de Reciclaje</strong></td>
+                            <td>Proporciona opción para recuperar archivos y carpetas marcados para eliminación</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 19: Unidades y Carpetas -->
+        <div class="slide">
+            <h1>Unidades y Carpetas</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Mientras los objetos del sistema representan áreas de almacenamiento lógicas, los archivos de datos reales se escriben a unidades de disco.</p>
+                    
+                    <h2>Estructura de Directorio</h2>
+                    <ul>
+                        <li><strong>Directorio Raíz:</strong> Representado por la barra invertida (\). Ejemplo: C:\</li>
+                        <li><strong>Convenciones:</strong> A: unidad de disquete, C: partición principal con Windows</li>
+                        <li><strong>Jerarquía:</strong> Subdirectorios (carpetas) pueden contener subcarpetas y archivos</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Tipos de Unidades:</strong> Una "unidad" puede ser un disco físico único, una partición en un disco, una carpeta de red compartida mapeada a una letra de unidad, o un disco removible.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/4970-1639514602855-typical_windows_directory_structure.png" alt="Estructura de directorio típica de Windows" class="slide-image">
+                    <p class="image-caption">Estructura de directorio típica de Windows</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Archivos del Sistema -->
+        <div class="slide">
+            <h1>Archivos del Sistema</h1>
+            
+            <p>Los archivos del sistema son los archivos requeridos para que el sistema operativo funcione. El directorio raíz de una instalación típica de Windows normalmente contiene las siguientes carpetas:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Windows</h4>
+                    <p>La raíz del sistema, conteniendo controladores, registros, aplicaciones complementarias, archivos de sistema y configuración (notablemente el subdirectorio System32).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Program Files</h4>
+                    <p>Subdirectorios para software de aplicaciones instaladas. En versiones de 64 bits, se crea Program Files (x86) para aplicaciones de 32 bits.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Users</h4>
+                    <p>Almacenamiento para configuraciones de perfil y datos de usuarios. Cada usuario tiene una carpeta nombrada según su cuenta de usuario.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Subcarpetas del Perfil</h4>
+                    <p>Contiene NTUSER.DAT (datos del registro) más subcarpetas para archivos de datos personales, configuraciones de aplicaciones y archivos temporales.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Opciones del Explorador de Archivos -->
+        <div class="slide">
+            <h1>Opciones del Explorador de Archivos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>El <strong class="red-text">applet Opciones del Explorador de Archivos</strong> en el Panel de Control gobierna cómo Explorer muestra carpetas y archivos.</p>
+                    
+                    <h2>Configuraciones Principales</h2>
+                    <ul>
+                        <li><strong>Ocultar extensiones:</strong> Las extensiones de archivo pueden ocultarse para archivos conocidos</li>
+                        <li><strong>Archivos y carpetas ocultos:</strong> Pueden marcarse como "Ocultos" y no mostrarse por defecto</li>
+                        <li><strong>Archivos del sistema operativo protegidos:</strong> Archivos marcados con atributo Sistema como ocultos</li>
+                    </ul>
+                    
+                    <div class="security-alert">
+                        <p><strong>Protección de Archivos:</strong> En Windows, la Protección de Archivos/Recursos previene que los usuarios (incluso usuarios administrativos) eliminen archivos del sistema.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_user_settings/4086-1639514621971-windows_10_21h2_file_explorer_options.png" alt="Opciones del Explorador de Archivos" class="slide-image">
+                    <p class="image-caption">Configuraciones generales y de vista en el diálogo Opciones del Explorador de Archivos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Configuración del Sistema -->
+        <div class="slide">
+            <h1>Configuración del Sistema</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La página <strong class="red-text">Configuración del Sistema</strong> en la aplicación Configuración presenta opciones para configurar dispositivos de entrada y salida, energía, escritorio remoto, notificaciones y portapapeles.</p>
+                    
+                    <h2>Información Disponible</h2>
+                    <ul>
+                        <li>Información clave de hardware</li>
+                        <li>Información de versión del SO</li>
+                        <li>Enlaces a configuraciones relacionadas</li>
+                        <li>Accesos directos a páginas de configuración avanzada</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Variables de Entorno:</strong> Las variables de entorno establecen varias rutas de archivos útiles. Por ejemplo, la variable %SYSTEMROOT% se expande a la ubicación de la carpeta Windows (C:\Windows, por defecto).</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_system_settings/779-1639514691847-windows_10_21h2_settings_about.png" alt="Página Acerca de en configuración" class="slide-image">
+                    <p class="image-caption">Página Acerca de en configuración de Windows 10</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Actualización y Configuración de Seguridad -->
+        <div class="slide">
+            <h1>Actualización y Configuración de Seguridad</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Las Configuraciones de <strong class="red-text">Windows Update</strong> y Privacidad y Seguridad proporcionan una interfaz única para gestionar un entorno informático seguro y confiable.</p>
+                    
+                    <h2>Componentes Principales</h2>
+                    <ul>
+                        <li><strong>Gestión de Parches:</strong> Tarea importante de mantenimiento para asegurar que las PC operen de manera confiable y segura</li>
+                        <li><strong>Aplicaciones de Seguridad:</strong> Detectan y bloquean amenazas al sistema y datos de la computadora</li>
+                        <li><strong>Actualizaciones de Características:</strong> Se lanzan periódicamente e introducen cambios a características y herramientas del SO</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_system_settings/4792-1639514718311-windows_10_21h2_settings_update_and_security.png" alt="Windows Update" class="slide-image">
+                    <p class="image-caption">Windows Update</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Registro de Actividad:</strong> La actividad de actualización se registra por el Visor de Eventos de Windows. Si una actualización falla en instalarse, debes verificar el registro para encontrar la causa.</p>
+            </div>
+        </div>
+
+        <!-- Slide 24: Configuración de Dispositivos -->
+        <div class="slide">
+            <h1>Configuración de Dispositivos</h1>
+            
+            <p>La mayoría de dispositivos de hardware compatibles con Windows usan <strong class="red-text">Plug and Play</strong>. Esto significa que Windows detecta automáticamente cuando se conecta un nuevo dispositivo.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Páginas de Configuración del Sistema</h4>
+                    <p>Contienen opciones para configurar dispositivos de <strong>Pantalla</strong> y <strong>Sonido</strong>.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Bluetooth y Dispositivos</h4>
+                    <p>Páginas de configuración contienen opciones para dispositivos de entrada, dispositivos de impresión/escaneo y gestión de periféricos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Dispositivos Móviles</h4>
+                    <p>Configuraciones permiten vincular un smartphone a la computadora.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Administrador de Dispositivos</h4>
+                    <p>Proporciona una consola de gestión avanzada para gestionar dispositivos del sistema y periféricos.</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Controladores de 64 bits:</strong> Al usar una edición de 64 bits de Windows, debes obtener controladores de dispositivo de 64 bits. Los controladores de 32 bits no funcionarán.</p>
+            </div>
+        </div>
+
+        <!-- Slide 25: Herramientas Administrativas y Aplicaciones -->
+        <div class="slide">
+            <h1>Herramientas Administrativas y Aplicaciones</h1>
+            
+            <h2>Aplicaciones Basadas en la Nube</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Sistemas de Email</h4>
+                    <p>Ejemplos incluyen Outlook Web a través del portal Microsoft 365 y cuentas Gmail del entorno Workspace de Google.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Almacenamiento</h4>
+                    <p>Soluciones como iCloud de Apple, Google Drive o OneDrive de Microsoft para acceso desde cualquier ubicación y dispositivo.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Herramientas de Colaboración</h4>
+                    <p>Permiten que múltiples usuarios trabajen juntos simultáneamente, como Microsoft Teams, Slack y Zoom.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Licenciamiento de Usuario</h4>
+                    <p>El licenciamiento de aplicaciones basadas en la nube puede diferir de las licencias de aplicaciones instaladas localmente.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Sincronización de Identidad:</strong> El uso de un proveedor de identidad en línea o basado en la nube puede simplificar cómo los usuarios inician sesión y acceden a recursos en un entorno empresarial.</p>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Impacto en el Negocio:</strong> En un entorno corporativo, cualquier aplicación que se instale también debe ser soportada, considerando licenciamiento, soporte técnico, entrenamiento y impacto en operaciones.</p>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+            <a href="index.html"><button class="btn">Volver inicio</button"></a>
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">25</span>
+            </span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializar
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a la Ciberseguridad - Semana 10</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: none;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .slide.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Rotación de fondos */
+        .bg1 { background-image: url('https://esilo.com/wp-content/uploads/media-library/hooded-hacker-on-comupter-digital-brain-potential-blog-post-e1573366318920.jpg'); }
+        .bg2 { background-image: url('https://img.money.co.uk/t014ej9w3ur1/13zUvgfMkyBPxP6dHWar3h/b1a7e072c1c707eedc3c3185a8104e27/shutterstock_1703023246.jpg?auto=format%2Ccompress&q=45&ixlib=react-9.8.1'); }
+        .bg3 { background-image: url('https://1602894.fs1.hubspotusercontent-na1.net/hub/1602894/hubfs/110104793_m_normal_none%20%281%29.jpg?width=1170&name=110104793_m_normal_none%20%281%29.jpg'); }
+        .bg4 { background-image: url('https://www.foley.com/wp-content/uploads/2024/08/cybersecuritylock1680x680.jpg'); }
+        .bg5 { background-image: url('https://i.ytimg.com/vi/ouJq0oevLIg/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-HYAC8BCKAgwIABABGDIgZSgyMA8=&rs=AOn4CLB5t5AGRaf4Uu39id0-tArVxk7KTQ'); }
+        .bg6 { background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZZTN-MEsNcM8fnkWUXHFwBz0nWzedx0JGow&s'); }
+        .bg7 { background-image: url('https://esilo.com/wp-content/uploads/media-library/hooded-hacker-on-comupter-digital-brain-potential-blog-post-e1573366318920.jpg'); }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 90%;
+            max-height: 85%;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #003366;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #003366;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        p, li {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .important {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .example {
+            background-color: #ffff99;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #003366;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #004080;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 51, 102, 0.8);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            z-index: 1000;
+        }
+
+        ul {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .professor-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #666;
+        }
+
+        /* Scrollbar estilizado */
+        .content-box::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .content-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .content-box::-webkit-scrollbar-thumb {
+            background: #003366;
+            border-radius: 10px;
+        }
+
+        .content-box::-webkit-scrollbar-thumb:hover {
+            background: #004080;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .small-text {
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-number" id="slideNumber">1 / 50</div>
+        
+        <!-- Slide 1: Título -->
+        <div class="slide active bg1">
+            <div class="content-box">
+                <h1>Introducción a la Ciberseguridad</h1>
+                <div class="professor-info">
+                    <p><strong>Profesor: Pablo Morales</strong></p>
+                    <p><strong>Semana 10</strong></p>
+                </div>
+                <div class="image-container">
+                    <img src="https://blog.latam.university/wp-content/uploads/2021/12/%C2%BFCual-es-el-perfil-de-un-experto-en-ciberseguridad_.jpg" alt="Ciberseguridad">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Motivacional -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <div class="two-column">
+                    <div class="column">
+                        <h1>¡Lucha por tu Sueño!</h1>
+                        <p>Queridos estudiantes de <span class="important">primer ingreso</span> en ciberseguridad:</p>
+                        <p>Están iniciando un viaje fascinante en el mundo de la <span class="important">seguridad digital</span>. Esta carrera no solo es emocionante, sino fundamental para proteger nuestro mundo interconectado.</p>
+                        <p>El camino puede ser desafiante, pero cada <span class="important">línea de código</span>, cada <span class="important">vulnerabilidad descubierta</span>, y cada <span class="important">sistema protegido</span> los acerca más a convertirse en los guardianes digitales del mañana.</p>
+                        <p>¡<span class="important">No se rindan</span>! El mundo necesita profesionales como ustedes. ¡Adelante!</p>
+                    </div>
+                    <div class="column">
+                        <img src="https://ipss.cl/wp-content/uploads/2023/10/MicrosoftTeams-image-69.jpg" alt="Estudiantes" style="width: 100%; border-radius: 10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Introducción a la Tríada DAD -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Lo Opuesto de la Tríada CIA</h1>
+                <h2>La Tríada DAD</h2>
+                <div class="image-container">
+                    <img src="https://thorteaches.com/wp-content/uploads/2017/08/CIA-OPOSITE.png" alt="CIA Triad">
+                </div>
+                <p>Mientras que la Tríada CIA (Confidencialidad, Integridad, Disponibilidad) representa los <span class="important">objetivos de seguridad</span>, la Tríada DAD representa las <span class="important">amenazas</span> que debemos combatir:</p>
+                <ul>
+                    <li><span class="important">D</span>isclosure (Divulgación)</li>
+                    <li><span class="important">A</span>lteration (Alteración)</li>
+                    <li><span class="important">D</span>estruction (Destrucción)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Disclosure -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Disclosure (Divulgación)</h1>
+                <div class="image-container">
+                    <img src="https://miro.medium.com/v2/resize:fit:600/1*k_VepThbpBL1VJ5YYOjTMg.png" alt="Data Breach">
+                </div>
+                <p>Es análogo a una <span class="important">violación de la confidencialidad</span>. Se refiere al acceso no autorizado y exposición de información.</p>
+                <div class="example">
+                    <strong>Ejemplo:</strong> Un atacante obtiene acceso a una base de datos de clientes y expone información personal como números de tarjetas de crédito, direcciones y contraseñas.
+                </div>
+                <p><strong>Impacto:</strong> Pérdida de confianza, multas regulatorias, robo de identidad.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Alteration -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Alteration (Alteración)</h1>
+                <div class="image-container">
+                    <img src="https://www.techtarget.com/rms/onlineimages/message_modification_attack-f_mobile.png" alt="Data Integrity">
+                </div>
+                <p>Esta amenaza corresponde a una <span class="important">pérdida de integridad</span>, donde se realizan cambios no autorizados a los datos.</p>
+                <div class="example">
+                    <strong>Ejemplo:</strong> Un empleado descontento modifica los registros financieros de la empresa para ocultar fraude o crear transacciones falsas.
+                </div>
+                <p><strong>Consecuencias:</strong> Decisiones empresariales incorrectas, pérdidas financieras, problemas legales.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Destruction -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Destruction (Destrucción)</h1>
+                <div class="image-container">
+                    <img src="https://www.malwarebytes.com/wp-content/uploads/sites/2/2019/09/asset_upload_file21765_83310.jpg?w=736" alt="Data Destruction">
+                </div>
+                <p>Representa un ataque directo a la <span class="important">disponibilidad</span>. La destrucción implica la eliminación o corrupción de datos o daño físico al hardware, haciendo la información irrecuperable.</p>
+                <div class="example">
+                    <strong>Ejemplo:</strong> Ransomware que cifra todos los archivos de una organización y elimina las copias de seguridad.
+                </div>
+                <p><strong>Impacto:</strong> Interrupción del negocio, pérdida permanente de datos críticos, costos de recuperación.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Introducción a AAA -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>El Marco AAA</h1>
+                <div class="image-container">
+                    <img src="https://i.adroitacademy.com/blog/98236086.png" alt="AAA Framework">
+                </div>
+                <p>AAA es un marco fundamental en ciberseguridad que garantiza el <span class="important">control de acceso seguro</span> a los recursos:</p>
+                <ul>
+                    <li><span class="important">Authentication</span> (Autenticación): ¿Quién eres?</li>
+                    <li><span class="important">Authorization</span> (Autorización): ¿Qué puedes hacer?</li>
+                    <li><span class="important">Accounting</span> (Contabilidad/Auditoría): ¿Qué hiciste?</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Authentication -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Authentication (Autenticación)</h1>
+                <p>Es el proceso de <span class="important">verificar la identidad</span> de un usuario, dispositivo u otra entidad en un sistema informático, típicamente como prerrequisito para otorgar acceso a recursos en un sistema.</p>
+                <div class="image-container">
+                    <img src="https://www.infosectrain.com/wp-content/uploads/2023/12/Types-of-Authentication.jpg" alt="Authentication Methods">
+                </div>
+                <p>• Viene después de la <span class="important">identificación</span></p>
+                <div class="example">
+                    <strong>Proceso típico:</strong><br>
+                    1. Identificación: "Soy usuario123"<br>
+                    2. Autenticación: "Mi contraseña es ********"<br>
+                    3. Verificación: El sistema confirma que la contraseña coincide
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Factores de Autenticación -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <h1>Factores de Autenticación</h1>
+                <h2><span class="important">Algo que sabes</span></h2>
+                <p>Verificar identidad basándose en conocimiento confidencial: contraseñas, PIN, respuestas a preguntas secretas.</p>
+                
+                <h2><span class="important">Algo que tienes</span></h2>
+                <p>Elementos en tu posesión: tokens de seguridad, tarjetas inteligentes, teléfono móvil (para OTPs).</p>
+                
+                <h2><span class="important">Algo que eres</span></h2>
+                <p>Biometría - características físicas únicas: huellas dactilares, reconocimiento facial, escaneos de iris, patrones de voz.</p>
+                
+                <h2><span class="important">Donde estás</span></h2>
+                <p>Ubicación del usuario determinada por IP, GPS u otros métodos de geolocalización.</p>
+                
+                <h2><span class="important">Algo que haces</span></h2>
+                <p>Biometría conductual: dinámica de tecleo, patrones de uso del mouse.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: MFA -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Autenticación de Múltiples Factores (MFA)</h1>
+                <p>Proceso de seguridad que requiere <span class="important">más de un método de autenticación</span> de categorías independientes de credenciales para verificar la identidad del usuario.</p>
+                <div class="image-container">
+                    <img src="https://www.manageengine.com/products/passwordmanagerpro/images/two-factor-authentication.png" alt="MFA">
+                </div>
+                <p>MFA combina <span class="important">dos o más credenciales independientes</span>: lo que el usuario sabe (contraseña), lo que el usuario tiene (token de seguridad), y lo que el usuario es (verificación biométrica).</p>
+                <div class="example">
+                    <strong>Ejemplo común:</strong> Iniciar sesión en tu banco requiere tu contraseña + un código SMS enviado a tu teléfono
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Autenticación de Personas -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Autenticando Personas</h1>
+                <p>Se puede hacer usando:</p>
+                <ul>
+                    <li><span class="important">Biometría</span>: Utilizar características físicas (ej., huellas dactilares, reconocimiento facial, escaneos de retina) únicas de un individuo.</li>
+                    <li><span class="important">Autenticación basada en conocimiento</span>: Requerir información que solo el usuario debería saber (ej., contraseñas, PINs, preguntas de seguridad).</li>
+                    <li><span class="important">Autenticación de múltiples factores (MFA)</span>: Combinar algo que el usuario sabe (contraseña) con algo que tiene (teléfono o token) o es (verificación biométrica).</li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://recfaces.com/wp-content/uploads/2020/10/types-of-biometrics.jpg" alt="Tipos de Biometría">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Autenticación de Sistemas -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Autenticando Sistemas</h1>
+                <p>Se puede hacer usando:</p>
+                <ul>
+                    <li><span class="important">Certificados y Claves</span>: Usar certificados digitales y claves criptográficas para establecer confianza entre máquinas.</li>
+                    <li><span class="important">Lista de IP permitidas</span>: Permitir solo sistemas con ciertas direcciones IP acceder a un servicio o red.</li>
+                    <li><span class="important">Filtrado de direcciones MAC</span>: Restringir acceso a una red a dispositivos con direcciones MAC específicas.</li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.thesslstore.com/blog/wp-content/uploads/2021/07/how-digital-certificates-work.png" alt="Certificados Digitales">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Authorization -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Authorization (Autorización)</h1>
+                <p>La autorización determina <span class="important">qué puede hacer ese usuario</span> estableciendo sus derechos y privilegios.</p>
+                <h3>Se puede hacer usando:</h3>
+                <ul>
+                    <li><span class="important">Permisos y Privilegios</span>: Implica otorgar permisos para acceder a recursos específicos o datos. Los permisos definen las acciones permitidas, como leer, escribir, ejecutar, eliminar o modificar.</li>
+                    <li><span class="important">Control de Acceso</span>: La autorización se aplica a través de mecanismos de control de acceso como las Listas de Control de Acceso (ACLs).</li>
+                    <li><span class="important">Modelos de Autorización</span>: Como Control de Acceso Obligatorio (MAC) o Control de Acceso Discrecional (DAC).</li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.dnsstuff.com/wp-content/uploads/2019/10/role-based-access-control.jpg" alt="Control de Acceso">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Accounting -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>Accounting (Contabilidad/Auditoría)</h1>
+                <p>Se refiere al <span class="important">seguimiento de las actividades del usuario</span> y el uso de recursos dentro de un sistema.</p>
+                <p>Garantiza que los usuarios no solo estén autenticados y autorizados, sino también <span class="important">responsables de sus acciones</span> mientras acceden y usan recursos del sistema.</p>
+                <h3>Se puede hacer usando:</h3>
+                <ul>
+                    <li><span class="important">Seguimiento de actividad del usuario</span>: La contabilidad implica recopilar datos sobre actividades del usuario, como tiempos de inicio de sesión, duración de sesiones, recursos accedidos, servicios de red utilizados, cambios del sistema realizados y datos transferidos.</li>
+                    <li><span class="important">Rastros de auditoría y registros</span>: Los sistemas mantienen registros y rastros de auditoría que capturan información detallada sobre varios eventos.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 15: Accountability -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Accountability (Responsabilidad)</h1>
+                <p>Principio que garantiza que las personas o entidades sean <span class="important">responsables de sus acciones</span> dentro de un sistema.</p>
+                <div class="image-container">
+                    <img src="https://www.manageengine.com/products/eventlog/images/event-log-management.png" alt="Event Log Management">
+                </div>
+                <p>La responsabilidad es crucial porque:</p>
+                <ul>
+                    <li>Permite el <span class="important">rastreo de acciones</span> hasta usuarios específicos</li>
+                    <li>Facilita las <span class="important">investigaciones forenses</span></li>
+                    <li>Disuade el <span class="important">comportamiento malicioso</span></li>
+                    <li>Cumple con <span class="important">requisitos regulatorios</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 16: Gap Analysis -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <h1>Gap Analysis (Análisis de Brechas)</h1>
+                <p>Es una evaluación metódica que las organizaciones usan para comparar su <span class="important">postura de seguridad actual</span> con un conjunto de estándares, mejores prácticas o requisitos regulatorios para identificar áreas que necesitan mejora.</p>
+                <h3>Implica:</h3>
+                <ul>
+                    <li><span class="important">Identificación del Estado Actual</span>: Esto implica mapear las medidas de seguridad, políticas y controles existentes.</li>
+                    <li><span class="important">Determinación del Estado Objetivo</span>: El estado objetivo generalmente está definido por estándares de la industria, requisitos regulatorios o los objetivos internos de seguridad de la organización.</li>
+                    <li><span class="important">Análisis de la Brecha</span>: El núcleo del análisis de brechas es identificar las diferencias entre el estado actual y el estado objetivo.</li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.bmc.com/blogs/wp-content/uploads/2016/06/gap-analysis-process.png" alt="Gap Analysis Process">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Security Controls Intro -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Controles de Seguridad</h1>
+                <p>Los controles de seguridad son <span class="important">salvaguardas o contramedidas</span> empleadas para evitar, detectar, contrarrestar o minimizar riesgos de seguridad a la propiedad física, información, sistemas informáticos u otros activos.</p>
+                <p>Ayudan a mantener la <span class="important">confidencialidad, integridad y disponibilidad</span> de la información</p>
+                <h3>Se dividen en:</h3>
+                <div class="two-column">
+                    <div class="column">
+                        <h3><span class="important">Categorías</span></h3>
+                        <ul>
+                            <li>Técnicos</li>
+                            <li>Gerenciales</li>
+                            <li>Operacionales</li>
+                            <li>Físicos</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3><span class="important">Tipos</span></h3>
+                        <ul>
+                            <li>Preventivos</li>
+                            <li>Disuasorios</li>
+                            <li>Detectivos</li>
+                            <li>Correctivos</li>
+                            <li>Compensatorios</li>
+                            <li>Directivos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Technical Controls -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Controles de Seguridad - Categorías</h1>
+                <h2>Controles Técnicos</h2>
+                <p>Los controles de seguridad técnicos, también conocidos como controles de seguridad lógicos, son mecanismos implementados en hardware, software o firmware que automatizan el proceso de prevenir, detectar y responder a amenazas de seguridad.</p>
+                <h3>Incluye:</h3>
+                <ul>
+                    <li><span class="important">Mecanismos de Control de Acceso</span></li>
+                    <li><span class="important">Firewalls</span></li>
+                    <li><span class="important">Sistemas de Detección de Intrusiones (IDS)</span> y <span class="important">Sistemas de Prevención de Intrusiones (IPS)</span></li>
+                    <li><span class="important">Cifrado</span></li>
+                    <li><span class="important">Software Antivirus y Antimalware</span></li>
+                    <li><span class="important">Redes Privadas Virtuales (VPN)</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 19: Managerial Controls -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Controles de Seguridad - Categorías</h1>
+                <h2>Controles Gerenciales</h2>
+                <p>Los controles de seguridad gerenciales, también conocidos como controles administrativos, son las políticas, procedimientos y pautas que gobiernan el comportamiento de las personas dentro de una organización y la operación de los sistemas de TI.</p>
+                <h3>Incluye:</h3>
+                <ul>
+                    <li><span class="important">Políticas y Procedimientos de Seguridad</span></li>
+                    <li><span class="important">Gestión de Riesgos</span></li>
+                    <li><span class="important">Planes de Respuesta a Incidentes y Recuperación</span></li>
+                    <li><span class="important">Planificación de Continuidad del Negocio y Recuperación ante Desastres</span></li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.csoonline.com/wp-content/uploads/2023/05/incident_response_plan_team_management_disaster_recovery_by_christianchan_gettyimages-1320893041_cso_2400x1600-100862063-orig.jpg?quality=50&strip=all" alt="Incident Response">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Operational Controls -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Controles de Seguridad - Categorías</h1>
+                <h2>Controles Operacionales</h2>
+                <p>Los controles de seguridad operacionales son los <span class="important">métodos y procedimientos del día a día</span> que se implementan en una organización para garantizar y mantener la seguridad de su información y activos.</p>
+                <p><span class="important">Realizados por personas en la organización.</span></p>
+                <h3>Incluye:</h3>
+                <ul>
+                    <li><span class="important">Capacitación de Concientización sobre Seguridad</span></li>
+                    <li><span class="important">Protección de medios físicos</span></li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.knowbe4.com/hubfs/Security-Awareness-Training.jpg" alt="Security Awareness Training">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Physical Controls -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>Controles de Seguridad - Categorías</h1>
+                <h2>Controles Físicos</h2>
+                <p>Los controles de seguridad física en seguridad de TI son medidas tomadas para proteger el <span class="important">hardware real y las instalaciones</span> que albergan los sistemas, redes y datos.</p>
+                <p>Estos controles están diseñados para prevenir el <span class="important">acceso no autorizado, daño e interferencia</span> a los recursos físicos de la organización.</p>
+                <h3>Incluye:</h3>
+                <ul>
+                    <li><span class="important">Iluminación</span></li>
+                    <li><span class="important">Señalización</span></li>
+                    <li><span class="important">Cercas</span></li>
+                    <li><span class="important">Guardias de seguridad</span></li>
+                    <li><span class="important">Cámaras</span></li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.cdvi.co.uk/wp-content/uploads/2021/09/layers-physical-security.jpg" alt="Physical Security Layers">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Control Types 1 -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Tipos de Controles de Seguridad</h1>
+                <h2><span class="important">Controles Preventivos</span></h2>
+                <p>Intentan <span class="important">detener</span> que ocurra un incidente de seguridad.</p>
+                <p class="example">Ej.: IPS, firewalls, cifrado, controles de acceso</p>
+                
+                <h2><span class="important">Controles Detectivos</span></h2>
+                <p>Intentan <span class="important">detectar</span> eventos que resultaron en un incidente de seguridad.</p>
+                <p class="example">Ej.: IDS, SIEM, videovigilancia, detección de movimiento</p>
+                
+                <h2><span class="important">Controles Correctivos</span></h2>
+                <p>Intentan <span class="important">remediar</span> un incidente que ha ocurrido.</p>
+                <p class="example">Ej.: UPS, restauración de copias de seguridad, procedimientos de respuesta a incidentes</p>
+            </div>
+        </div>
+
+        <!-- Slide 23: Control Types 2 -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <h1>Tipos de Controles de Seguridad (Continuación)</h1>
+                <h2><span class="important">Controles Disuasorios</span></h2>
+                <p>Intentan <span class="important">desalentar</span> una amenaza.</p>
+                <p class="example">Ej.: Perros guardianes, cámaras, alambre de púas</p>
+                
+                <h2><span class="important">Controles Directivos</span></h2>
+                <p>Proporcionan <span class="important">direcciones</span> sobre cómo operar los sistemas.</p>
+                <p class="example">Ej.: Políticas, procedimientos</p>
+                
+                <h2><span class="important">Controles Compensatorios</span></h2>
+                <p>Proporcionan <span class="important">controles alternativos</span> cuando el control principal puede no ser suficiente.</p>
+                <p class="example">Ej.: Segregación de funciones</p>
+            </div>
+        </div>
+
+        <!-- Slide 24: Shadow IT -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Shadow IT (TI en la Sombra)</h1>
+                <p>Se refiere a sistemas y soluciones de tecnología de la información construidos y utilizados dentro de las organizaciones <span class="important">sin aprobación organizacional explícita</span>.</p>
+                <p>Incluye software, hardware y servicios en la nube adquiridos y gestionados <span class="important">fuera del ámbito del departamento oficial de TI</span>.</p>
+                <div class="image-container">
+                    <img src="https://www.manageengine.com/products/desktop-central/images/shadow-it.png" alt="Shadow IT">
+                </div>
+                <p>Los riesgos asociados con Shadow IT provienen de la <span class="important">falta de supervisión y control</span>.</p>
+                <p>Los sistemas y aplicaciones que no son evaluados por el departamento de TI pueden no cumplir con las políticas o estándares de seguridad organizacional.</p>
+                <p>Esto puede llevar a <span class="important">violaciones de datos</span>, <span class="important">incumplimiento de regulaciones</span> y <span class="important">vulnerabilidades potenciales en la red</span>.</p>
+                <div class="example">
+                    <strong>Ejemplos comunes:</strong> Empleados usando servicios de almacenamiento en la nube no autorizados para compartir archivos de la empresa, instalando software personal en dispositivos de trabajo, o usando aplicaciones de mensajería no sancionadas para comunicación.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: Threat Vectors - Message-based -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Vectores de Amenaza y Superficies de Ataque</h1>
+                <h2>Basados en Mensajes:</h2>
+                <ul>
+                    <li><span class="important">Email</span>: Un medio popular para entregar contenido o enlaces maliciosos. Los intentos de phishing, malware, ransomware y spam a menudo usan este vector.</li>
+                    <li><span class="important">SMS</span>: Los mensajes de texto móviles pueden contener enlaces de phishing (Smishing) o contenido malicioso dirigido a smartphones.</li>
+                    <li><span class="important">Mensajería Instantánea (IM)</span>: Los servicios de mensajería en tiempo real pueden ser explotados para entregar malware o contenido de phishing.</li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.phishprotection.com/content/images/Phishing_Email_Example.png" alt="Phishing Email Example">
+                </div>
+                <h3>Otros Vectores:</h3>
+                <ul>
+                    <li><span class="important">Basado en Imágenes</span>: Las cargas maliciosas pueden estar incrustadas en imágenes que, al ser vistas, pueden explotar vulnerabilidades.</li>
+                    <li><span class="important">Basado en Archivos</span>: El software malicioso puede estar incrustado dentro de archivos que, al abrirse o ejecutarse, pueden llevar a comprometer el sistema.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 26: Voice Call and Removable Devices -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Vectores de Amenaza: Voz y Dispositivos</h1>
+                <h2><span class="important">Llamada de Voz</span></h2>
+                <p>Vishing (phishing basado en voz) involucra a criminales usando llamadas telefónicas para engañar a las víctimas para que divulguen información personal o sigan instrucciones maliciosas.</p>
+                <div class="example">
+                    <strong>Ejemplo:</strong> "Hola, soy del departamento de TI. Necesitamos su contraseña para resolver un problema urgente."
+                </div>
+                
+                <h2><span class="important">Dispositivo Extraíble</span></h2>
+                <p>Dispositivos como USBs pueden usarse para introducir malware o explotar vulnerabilidades de software cuando se conectan a un sistema.</p>
+                <div class="image-container">
+                    <img src="https://www.kaspersky.com/content/en-global/images/repository/isc/2021/usb_security_1.jpg" alt="USB Security Threat">
+                </div>
+                
+                <h2><span class="important">Software Vulnerable</span>:</h2>
+                <ul>
+                    <li><span class="important">Basado en Cliente</span>: Software que requiere instalación en el sistema de un usuario puede ser objetivo de vulnerabilidades.</li>
+                    <li><span class="important">Sin Agente</span>: Software que se ejecuta sin instalaciones o agentes, haciéndolos más difíciles de monitorear y potencialmente vulnerables.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 27: Unsecure Networks -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Vectores de Amenaza: Redes y Sistemas</h1>
+                <h2><span class="important">Sistemas y Aplicaciones No Soportados</span></h2>
+                <p>El software desactualizado que ya no recibe actualizaciones de seguridad puede ser un riesgo significativo.</p>
+                
+                <h2><span class="important">Redes Inseguras</span>:</h2>
+                <ul>
+                    <li><span class="important">Inalámbricas</span>: Las redes Wi-Fi no seguras pueden ser interceptadas o explotadas.</li>
+                    <li><span class="important">Cableadas</span>: El acceso físico a redes cableadas puede llevar a intrusiones.</li>
+                    <li><span class="important">Bluetooth</span>: Las vulnerabilidades en Bluetooth pueden ser explotadas para espiar o controlar dispositivos.</li>
+                </ul>
+                
+                <h2><span class="important">Puertos de Servicio Abiertos</span></h2>
+                <p>Los puertos abiertos no seguros pueden permitir acceso no autorizado o ataques a servicios que se ejecutan en esos puertos.</p>
+                
+                <h2><span class="important">Credenciales Predeterminadas</span></h2>
+                <p>Dispositivos o sistemas con contraseñas predeterminadas sin cambiar pueden ser fácilmente accedidos por atacantes.</p>
+                <div class="example">
+                    <strong>Ejemplos comunes:</strong> admin/admin, admin/password, root/toor, admin/1234
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: Supply Chain -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>Cadena de Suministro</h1>
+                <h2><span class="important">Proveedores de Servicios Gestionados (MSPs)</span></h2>
+                <p>Si se comprometen, pueden proporcionar acceso a la infraestructura de sus clientes.</p>
+                
+                <h2><span class="important">Vendedores</span></h2>
+                <p>Sus sistemas, si son violados, pueden actuar como una puerta de entrada a la infraestructura de una organización.</p>
+                
+                <h2><span class="important">Proveedores</span></h2>
+                <p>Un compromiso en la seguridad de un proveedor puede tener efectos en cadena en sus clientes.</p>
+                
+                <div class="image-container">
+                    <img src="https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.png" alt="Supply Chain Attack">
+                </div>
+                <div class="example">
+                    <strong>Caso Real:</strong> El ataque SolarWinds afectó a miles de organizaciones a través de una actualización de software comprometida
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Vulnerabilities Introduction -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Vulnerabilidades</h1>
+                <p>Una vulnerabilidad se refiere a una <span class="important">debilidad en un sistema</span> que puede ser explotada por un actor de amenaza, como un hacker, para obtener acceso no autorizado o realizar acciones no autorizadas en un sistema informático.</p>
+                <div class="image-container">
+                    <img src="https://www.eccouncil.org/wp-content/uploads/2022/01/vulnerability-assessment.jpg" alt="Vulnerability Assessment">
+                </div>
+                <h3>Tipos principales de vulnerabilidades:</h3>
+                <ul>
+                    <li>Inyección de memoria</li>
+                    <li>Desbordamiento de búfer</li>
+                    <li>Condiciones de carrera</li>
+                    <li>Vulnerabilidades del sistema operativo</li>
+                    <li>Inyección SQL</li>
+                    <li>Cross-Site Scripting (XSS)</li>
+                    <li>Vulnerabilidades de hardware</li>
+                    <li>Vulnerabilidades de virtualización</li>
+                    <li>Vulnerabilidades específicas de la nube</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 30: Memory Injection -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <h1>Inyección de Memoria</h1>
+                <p>Insertar <span class="important">código malicioso en la memoria de un programa</span>. El atacante aprovecha vulnerabilidades que le permiten ejecutar código arbitrario.</p>
+                <h3>Las técnicas comunes incluyen:</h3>
+                <ul>
+                    <li><span class="important">Inyección de código</span></li>
+                    <li><span class="important">Desbordamientos de búfer</span></li>
+                    <li><span class="important">Inyecciones de DLL</span></li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.netsparker.com/media/code-injection-vulnerability.png" alt="Code Injection">
+                </div>
+                <p><span class="important">Se corrige</span> siguiendo prácticas de codificación segura como la validación de entrada.</p>
+                <div class="example">
+                    <strong>Prevención:</strong> Siempre validar y sanear la entrada del usuario antes de procesarla
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: Buffer Overflow -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Desbordamiento de Búfer</h1>
+                <p>Un desbordamiento de búfer ocurre cuando los datos que se pretenden almacenar en un búfer, que es un bloque contiguo de memoria de computadora, <span class="important">exceden la capacidad de almacenamiento del búfer</span>. Esto resulta en que las ubicaciones de memoria adyacentes sean sobrescritas.</p>
+                <h3>Ejemplo de desbordamiento de búfer basado en pila:</h3>
+                <div class="example">
+                    Considera un programa que pide el nombre de un usuario y lo almacena en un búfer que puede contener 10 caracteres. Si el usuario ingresa un nombre de 12 caracteres, los 2 caracteres adicionales podrían sobrescribir la memoria adyacente. Si esta memoria adyacente está controlando el flujo de ejecución del programa (por ejemplo, dirección de retorno para una función), un atacante puede manipular esto para ejecutar código arbitrario.
+                </div>
+                <div class="image-container">
+                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220613173040/Group12.jpg" alt="Buffer Overflow">
+                </div>
+                <p>Generalmente <span class="important">detectado durante un escaneo de vulnerabilidades</span>.</p>
+                <p><span class="important">Se corrige</span> siguiendo buenas prácticas de codificación como verificar la longitud de los datos antes de escribirlos en un búfer.</p>
+            </div>
+        </div>
+
+        <!-- Slide 32: Race Conditions -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Condiciones de Carrera</h1>
+                <p>Vulnerabilidad que ocurre cuando el <span class="important">tiempo de las acciones afecta el estado y el resultado de un sistema</span>.</p>
+                <p>El peligro surge cuando el éxito de una operación de seguridad depende del tiempo de ciertos eventos, y una entidad maliciosa puede influir en este tiempo.</p>
+                <h3><span class="important">Vulnerabilidades de Tiempo de Verificación a Tiempo de Uso (TOCTOU)</span>:</h3>
+                <p>Estas vulnerabilidades ocurren cuando un programa verifica el estado de un recurso y luego lo usa después de un retraso, durante el cual el estado puede haber cambiado. Si un atacante puede cambiar el recurso entre los pasos de "verificación" y "uso", puede inducir un comportamiento no autorizado.</p>
+                <div class="example">
+                    <strong>Error TOCTOU clásico:</strong> Se encuentra en operaciones de acceso a archivos. Si un programa verifica la existencia de un archivo y luego lo abre, un atacante podría intercambiar el archivo con un enlace simbólico a un archivo sensible después de la verificación pero antes del uso. El programa, que ahora abre el enlace simbólico, puede inadvertidamente leer, escribir o eliminar información sensible.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 33: Race Condition Example -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Ejemplo de Condición de Carrera</h1>
+                <h2>Ejecución normal de un archivo en Unix:</h2>
+                <div class="example">
+                    if (access("file", W_OK) != 0) {<br>
+                    &nbsp;&nbsp;exit(1);<br>
+                    }<br>
+                    fd = open("file", O_WRONLY);<br>
+                    write(fd, buffer, sizeof(buffer));
+                </div>
+                
+                <h2>Ataque:</h2>
+                <div class="example">
+                    if (access("file", W_OK) != 0) {<br>
+                    &nbsp;&nbsp;exit(1);<br>
+                    }<br>
+                    <span class="important">// El atacante crea un enlace simbólico aquí</span><br>
+                    <span class="important">symlink("/etc/passwd", "file");</span><br>
+                    fd = open("file", O_WRONLY);<br>
+                    write(fd, buffer, sizeof(buffer));
+                </div>
+                <p>¡El atacante logra escribir en <span class="important">/etc/passwd</span> en lugar del archivo original!</p>
+            </div>
+        </div>
+
+        <!-- Slide 34: OS-based Vulnerabilities -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Vulnerabilidades Basadas en el Sistema Operativo (SO)</h1>
+                <p>Debilidades en el SO que pueden ser explotadas para obtener <span class="important">acceso no autorizado</span>, <span class="important">elevar privilegios</span>, etc.</p>
+                <p>Generalmente se resuelven <span class="important">actualizando el sistema operativo</span>.</p>
+                <div class="image-container">
+                    <img src="https://www.bleepstatic.com/content/hl-images/2020/01/14/Windows-7-end-of-support.jpg" alt="Windows 7 End of Support">
+                </div>
+                <p>Muchas empresas todavía usan SO que <span class="important">ya no están soportados</span> como:</p>
+                <ul>
+                    <li>Windows XP</li>
+                    <li>Windows 7</li>
+                </ul>
+                <p>Esto lleva a que <span class="important">no haya actualizaciones disponibles</span> para los sistemas operativos.</p>
+                <div class="example">
+                    <strong>Riesgo:</strong> Las vulnerabilidades no parcheadas pueden ser explotadas años después de su descubrimiento
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 35: SQL Injection -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>Inyección de Lenguaje de Consulta Estructurado (SQLi)</h1>
+                <p>Los atacantes insertan <span class="important">código SQL malicioso</span> en campos de entrada para ejecutar consultas SQL no autorizadas.</p>
+                <div class="image-container">
+                    <img src="https://www.imperva.com/learn/wp-content/uploads/sites/13/2019/01/sql-injection.png" alt="SQL Injection">
+                </div>
+                <h3>Ejemplo y Demo:</h3>
+                <p><a href="https://www.codingame.com/playgrounds/154/sql-injection-demo/sql-injection" style="color: #003366;">https://www.codingame.com/playgrounds/154/sql-injection-demo/sql-injection</a></p>
+                <div class="example">
+                    <strong>Ejemplo de Ataque:</strong><br>
+                    Login: admin' OR '1'='1<br>
+                    Password: cualquier cosa<br>
+                    <br>
+                    Esto hace que la consulta SQL sea:<br>
+                    SELECT * FROM users WHERE username = 'admin' OR '1'='1' AND password = 'cualquier cosa'
+                </div>
+                <p>Puede <span class="important">corregirse</span> usando prácticas de codificación segura como la validación de entrada.</p>
+            </div>
+        </div>
+
+        <!-- Slide 36: Cross-Site Scripting -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Cross-Site Scripting (XSS)</h1>
+                <p>Vulnerabilidad de seguridad típicamente encontrada en aplicaciones web. XSS permite a los atacantes <span class="important">inyectar scripts del lado del cliente</span> en páginas web vistas por otros usuarios.</p>
+                <p>Una vulnerabilidad XSS surge cuando una aplicación web incluye <span class="important">entrada de usuario no validada o no codificada</span> como salida en una página.</p>
+                <div class="image-container">
+                    <img src="https://www.imperva.com/learn/wp-content/uploads/sites/13/2019/01/sorted-XSS.png" alt="XSS Types">
+                </div>
+                <h3>Ejemplo y Demo:</h3>
+                <p><a href="https://xss-game.appspot.com/" style="color: #003366;">https://xss-game.appspot.com/</a></p>
+                <div class="example">
+                    <strong>Ejemplo de ataque XSS:</strong><br>
+                    &lt;script&gt;alert('XSS')&lt;/script&gt;<br>
+                    Si este script no se filtra, se ejecutará en el navegador de la víctima
+                </div>
+                <p>Puede <span class="important">corregirse</span> usando prácticas de codificación segura como la validación de entrada.</p>
+            </div>
+        </div>
+
+        <!-- Slide 37: Hardware Vulnerabilities -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <h1>Vulnerabilidades de Hardware</h1>
+                <div class="image-container">
+                    <img src="https://www.synopsys.com/content/dam/synopsys/sig-assets/images/hardware-security.jpg.imgo.jpg" alt="Hardware Security">
+                </div>
+                <h2><span class="important">Vulnerabilidades de Firmware</span></h2>
+                <p>Debilidades en el software de bajo nivel que se ejecuta en dispositivos de hardware.</p>
+                
+                <h2><span class="important">Hardware al Final de su Vida Útil</span></h2>
+                <p>Dispositivos que ya no son soportados por los fabricantes, resultando en vulnerabilidades sin parchar.</p>
+                
+                <h2><span class="important">Hardware Heredado</span></h2>
+                <p>Hardware más antiguo que puede no ser compatible con las medidas de seguridad actuales.</p>
+                
+                <div class="example">
+                    <strong>Ejemplo:</strong> Routers con firmware desactualizado que no han sido actualizados en años, switches antiguos sin soporte de cifrado moderno
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 38: Virtualization Vulnerabilities -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Vulnerabilidades de Virtualización</h1>
+                <h2><span class="important">Escape de Máquina Virtual (VM)</span></h2>
+                <p>Un atacante ejecuta código en una VM que le permite salir e interactuar con el sistema host.</p>
+                <div class="image-container">
+                    <img src="https://cdn.ttgtmedia.com/rms/onlineimages/virtual_machine_escape-f_mobile.png" alt="VM Escape">
+                </div>
+                <h2><span class="important">Reutilización de Recursos</span></h2>
+                <p>Los datos sensibles pueden permanecer en los recursos del sistema y ser accedidos por otros procesos.</p>
+                
+                <div class="example">
+                    <strong>Riesgo:</strong> Si un atacante escapa de una VM, podría acceder a todas las otras VMs en el mismo host, comprometiendo múltiples sistemas a la vez
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 39: Cloud Vulnerabilities -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Vulnerabilidades Específicas de la Nube</h1>
+                <p>La computación en la nube se ha vuelto cada vez más popular, pero también introduce <span class="important">vulnerabilidades únicas</span> que son específicas de su entorno.</p>
+                <h3>Vulnerabilidades específicas de la nube:</h3>
+                <ul>
+                    <li><span class="important">Violaciones de Datos</span>: Los datos almacenados en servidores en la nube pueden ser objetivo de hackers, exponiendo potencialmente información sensible.</li>
+                    <li><span class="important">Gestión Insuficiente de Identidad, Credenciales y Acceso</span>: Procesos de autenticación débiles, gestión inadecuada de credenciales y controles de acceso insuficientes pueden llevar a acceso no autorizado a recursos en la nube.</li>
+                    <li><span class="important">Interfaces y APIs Inseguras</span>: Los servicios en la nube se acceden a través de interfaces y APIs que, si no están adecuadamente aseguradas, pueden ser explotadas.</li>
+                    <li><span class="important">Vulnerabilidades del Sistema</span>: Las infraestructuras en la nube pueden ser complejas y podrían contener vulnerabilidades del sistema.</li>
+                    <li><span class="important">Secuestro de Cuenta</span>: Un atacante que obtiene acceso a la cuenta en la nube de un usuario puede manipular datos, espiar transacciones y redirigir clientes a sitios ilegítimos.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 40: Supply Chain Vulnerabilities -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Vulnerabilidades de la Cadena de Suministro</h1>
+                <p>Se refiere a la <span class="important">compleja red de proveedores</span> involucrados en la producción y distribución de productos y servicios de TI. Esto incluye proveedores de servicios, proveedores de hardware y proveedores de software.</p>
+                <h2>Proveedor de Servicios:</h2>
+                <p>Estas entidades entregan diversos servicios de TI, incluyendo computación en la nube, almacenamiento de datos y servicios de red.</p>
+                <p><span class="important">Preocupaciones de Seguridad:</span> Los proveedores de servicios podrían ser un vector para violaciones de seguridad si sus sistemas están comprometidos. Tienen acceso a datos sensibles y a menudo se integran con los sistemas internos de sus clientes.</p>
+                <div class="image-container">
+                    <img src="https://www.nist.gov/sites/default/files/images/2022/02/04/Cyber%20Supply%20Chain_0.png" alt="Supply Chain Security">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 41: Hardware and Software Providers -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Proveedores de Hardware y Software</h1>
+                <h2><span class="important">Proveedor de Hardware:</span></h2>
+                <p>Estos son los fabricantes y distribuidores de dispositivos y componentes de computación física, como servidores, routers y chips.</p>
+                <p><span class="important">Preocupaciones de Seguridad:</span> La integridad del hardware es crucial. El hardware puede ser manipulado en cualquier punto de la cadena de suministro, llevando a riesgos como malware integrado o puertas traseras.</p>
+                
+                <h2><span class="important">Proveedor de Software:</span></h2>
+                <p>Entidades que desarrollan y distribuyen software, incluyendo sistemas operativos, aplicaciones y firmware.</p>
+                <p><span class="important">Preocupaciones de Seguridad:</span> Las vulnerabilidades del software pueden ser explotadas por atacantes para obtener acceso no autorizado o interrumpir servicios. Este riesgo se magnifica si el software es ampliamente utilizado en múltiples organizaciones. Las actualizaciones regulares, la gestión de parches y las auditorías de seguridad son esenciales para mitigar estos riesgos.</p>
+            </div>
+        </div>
+
+        <!-- Slide 42: Cryptographic Vulnerabilities -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>Vulnerabilidades Criptográficas</h1>
+                <p>Se refieren a <span class="important">debilidades dentro de los algoritmos criptográficos</span> o su implementación que pueden ser explotadas para violar la seguridad.</p>
+                <div class="image-container">
+                    <img src="https://www.keyfactor.com/wp-content/uploads/weak-cryptography.png" alt="Weak Cryptography">
+                </div>
+                <h3>Pueden incluir:</h3>
+                <ul>
+                    <li><span class="important">Debilidades del Algoritmo</span>: Algunos algoritmos criptográficos tienen debilidades inherentes. Por ejemplo, algoritmos más antiguos como DES ya no se consideran seguros porque pueden romperse con suficiente poder computacional.</li>
+                    <li><span class="important">Problemas de Gestión de Claves</span>: Si las claves no se generan, almacenan o manejan de forma segura, pueden comprometerse.</li>
+                    <li><span class="important">Implementación Deficiente</span>: Esto puede incluir errores de programación, como desbordamientos de búfer, que pueden ser explotados para obtener acceso o información no autorizada.</li>
+                </ul>
+                <div class="example">
+                    <strong>Ejemplo:</strong> Usar MD5 para hash de contraseñas - ¡ha sido roto desde 2004! Use SHA-256 o bcrypt en su lugar.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 43: Misconfiguration Vulnerabilities -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Vulnerabilidades de Mala Configuración</h1>
+                <p>Se refieren a la <span class="important">configuración inadecuada</span> de software, hardware o sistemas de red, lo que puede llevar a debilidades de seguridad.</p>
+                <h3>Incluye:</h3>
+                <ul>
+                    <li><span class="important">Configuraciones predeterminadas</span></li>
+                    <li><span class="important">Servicios innecesarios habilitados</span></li>
+                    <li><span class="important">Controles de seguridad inadecuados</span></li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.manageengine.com/network-configuration-manager/images/network-misconfiguration.png" alt="Network Misconfiguration">
+                </div>
+                <div class="example">
+                    <strong>Ejemplos comunes:</strong><br>
+                    • Dejar el puerto 3389 (RDP) abierto a Internet<br>
+                    • Usar certificados SSL autofirmados en producción<br>
+                    • Permisos de archivos demasiado permisivos (777)<br>
+                    • Bases de datos sin contraseña
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 44: Mobile Device Vulnerabilities -->
+        <div class="slide bg2">
+            <div class="content-box">
+                <h1>Vulnerabilidades de Dispositivos Móviles</h1>
+                <p>Se refieren a debilidades que podrían ser potencialmente explotadas por atacantes para obtener acceso no autorizado a un dispositivo o sus datos.</p>
+                <h3>Incluye:</h3>
+                <ul>
+                    <li><span class="important">Sistemas Operativos Desactualizados</span>: No instalar actualizaciones puede dejar agujeros de seguridad conocidos sin parchar.</li>
+                    <li><span class="important">Conexiones de Red No Seguras</span>: Usar conexiones Wi-Fi o Bluetooth no cifradas puede exponer datos.</li>
+                    <li><span class="important">Acceso Físico</span>: Un dispositivo desbloqueado o no seguro puede ser fácilmente manipulado.</li>
+                    <li><span class="important">Fallas del Sistema</span>: Debilidades inherentes en el sistema operativo o hardware que pueden ser explotadas.</li>
+                    <li><span class="important">Comportamiento del Usuario</span>: Como compartir contraseñas o hacer clic en enlaces de phishing.</li>
+                </ul>
+                <div class="image-container">
+                    <img src="https://www.kaspersky.com/content/en-global/images/repository/isc/2021/mobile_device_security_1.jpg" alt="Mobile Security">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 45: Jailbreaking and Sideloading -->
+        <div class="slide bg3">
+            <div class="content-box">
+                <h1>Jailbreaking y Sideloading</h1>
+                <h2><span class="important">Jailbreaking</span></h2>
+                <p>Se refiere al proceso de eliminar las restricciones de software impuestas por el sistema operativo en dispositivos, particularmente dispositivos iOS. Para Android, un proceso similar se conoce como "rooting".</p>
+                <p>• Generalmente se hace reemplazando el SO en el dispositivo con un SO que te da acceso root.</p>
+                <div class="image-container">
+                    <img src="https://www.lifewire.com/thmb/0Pp-n_v-FMC3Id5v9x0_LK5fBRk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/jailbreak-57f1b8af3df78c690f8e88f5.jpg" alt="Jailbreaking">
+                </div>
+                <h2><span class="important">Side loading</span></h2>
+                <p>Es el proceso de instalar aplicaciones en un dispositivo móvil desde fuentes distintas a la tienda oficial de aplicaciones (como Google Play Store para Android o Apple App Store para iOS).</p>
+                <div class="example">
+                    <strong>Riesgos:</strong> Las aplicaciones sideloaded pueden contener malware, no reciben actualizaciones automáticas, y pueden comprometer la seguridad del dispositivo
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 46: Signs of Attack - Bloatware -->
+        <div class="slide bg4">
+            <div class="content-box">
+                <h1>Otros Signos de Ataques: Bloatware</h1>
+                <p>Se refiere a <span class="important">software no deseado</span> que viene preinstalado en un dispositivo, típicamente por el fabricante, o se incluye en otras instalaciones de software.</p>
+                <p>No es inherentemente malicioso como el malware, pero el bloatware puede <span class="important">ralentizar los sistemas</span>, <span class="important">ocupar espacio valioso en el disco</span>, y a veces, puede incluir vulnerabilidades que podrían ser explotadas por actores maliciosos.</p>
+                <h3>Características del Bloatware:</h3>
+                <ul>
+                    <li><span class="important">Aplicaciones preinstaladas</span></li>
+                    <li><span class="important">Consumo de recursos</span></li>
+                    <li><span class="important">Difícil de eliminar</span></li>
+                    <li><span class="important">Riesgos potenciales de seguridad</span></li>
+                </ul>
+                <div class="example">
+                    <strong>Ejemplo:</strong> Aplicaciones de prueba que vienen con nuevas computadoras, barras de herramientas del navegador no deseadas, software del fabricante que nunca usas
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 47: DDoS Introduction -->
+        <div class="slide bg5">
+            <div class="content-box">
+                <h1>Denegación de Servicio Distribuida (DDoS)</h1>
+                <p>Un intento malicioso de interrumpir el tráfico normal de un servidor, servicio o red objetivo al <span class="important">abrumar el objetivo o su infraestructura circundante con una inundación de tráfico de Internet</span>.</p>
+                <p>Utilizan múltiples sistemas informáticos comprometidos como fuentes de tráfico de ataque.</p>
+                <p>Estos sistemas pueden incluir computadoras y otros recursos en red como dispositivos IoT.</p>
+                <div class="image-container">
+                    <img src="https://www.cloudflare.com/img/learning/ddos/what-is-a-ddos-attack/ddos-attack-traffic-metaphor.png" alt="DDoS Attack">
+                </div>
+                <h3>Mapa de DDoS en vivo</h3>
+                <p><a href="https://www.netscout.com/ddos-attack-map" style="color: #003366;">https://www.netscout.com/ddos-attack-map</a></p>
+            </div>
+        </div>
+
+        <!-- Slide 48: DDoS Types -->
+        <div class="slide bg6">
+            <div class="content-box">
+                <h1>Tipos de Ataques DDoS</h1>
+                <h2><span class="important">DDoS Basado en Red</span></h2>
+                <p>Un perpetrador usa múltiples sistemas comprometidos, a menudo infectados con un troyano, para lanzar un único ataque masivo. Estos sistemas forman una red llamada botnet.</p>
+                
+                <h2><span class="important">Inundaciones UDP</span></h2>
+                <p>El atacante abruma puertos aleatorios en el host objetivo con paquetes IP que contienen datagramas UDP. El objetivo es inundar la red con suficientes paquetes UDP para ralentizar o bloquear el sistema objetivo.</p>
+                
+                <h2><span class="important">Inundaciones SYN</span></h2>
+                <p>Un ataque de inundación SYN es un tipo de ataque de Denegación de Servicio (DoS) que apunta a la secuencia de conexión TCP, conocida como el protocolo de enlace de tres vías TCP.</p>
+                <div class="image-container">
+                    <img src="https://www.imperva.com/learn/wp-content/uploads/sites/13/2019/01/syn-flood.png" alt="SYN Flood">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 49: DDoS Amplification and Mitigation -->
+        <div class="slide bg7">
+            <div class="content-box">
+                <h1>Ataques de Amplificación y Mitigación DDoS</h1>
+                <h2><span class="important">Ataques de Amplificación</span></h2>
+                <p>Estos ataques explotan las características de ciertos protocolos para magnificar la cantidad de tráfico que se envía a un objetivo, causando una denegación de servicio.</p>
+                <p>• Usa protocolos como DNS o direccionamiento IP</p>
+                
+                <h2><span class="important">DDoS Reflejado</span></h2>
+                <p>Caracterizado por su uso de reflexión, lo que significa que el atacante obliga a servidores de terceros a dirigir tráfico a la víctima, a menudo sin el conocimiento del tercero.</p>
+                <p>• La suplantación de IP es una forma de hacer esto.</p>
+                
+                <h2><span class="important">Los ataques DDoS pueden mitigarse mediante:</span></h2>
+                <ul>
+                    <li><span class="important">Aumentar el ancho de banda</span></li>
+                    <li><span class="important">Servicios de protección DDoS</span> (Cloudflare) - <a href="https://www.cloudflare.com/ddos/" style="color: #003366;">https://www.cloudflare.com/ddos/</a></li>
+                    <li><span class="important">Hardware de red con protección DDoS</span>: Algunos hardware de red, como routers y firewalls, vienen con características de protección DDoS incorporadas.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 50: DNS Attacks -->
+        <div class="slide bg1">
+            <div class="content-box">
+                <h1>Sistema de Nombres de Dominio (DNS)</h1>
+                <p>DNS es esencialmente la <span class="important">guía telefónica de Internet</span>; traduce nombres de dominio legibles por humanos (como www.example.com) en direcciones IP numéricas que las computadoras usan para conectarse entre sí.</p>
+                <div class="image-container">
+                    <img src="https://www.cloudflare.com/img/learning/dns/what-is-dns/dns-lookup-diagram.png" alt="DNS Lookup">
+                </div>
+                <h3>Varias preocupaciones de seguridad y vectores de ataque:</h3>
+                <ul>
+                    <li><span class="important">Suplantación de DNS (o Envenenamiento de Caché)</span>: Este ataque implica corromper el caché DNS con información falsa.</li>
+                    <li><span class="important">Ataques de Amplificación DNS</span>: Son un tipo de ataque DDoS donde el atacante explota servidores DNS de acceso público.</li>
+                    <li><span class="important">Túnel DNS</span>: Implica codificar los datos de otros programas o protocolos en consultas y respuestas DNS.</li>
+                    <li><span class="important">Secuestro de DNS</span>: El atacante desvía consultas a un servidor DNS malicioso.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Más slides continuarán... -->
+
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+        <a href="index.html"><button class="nav-btn">Volver inicio</button"></a>
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = document.getElementsByClassName('slide').length;
+
+        function showSlide(n) {
+            const slides = document.getElementsByClassName('slide');
+            
+            if (n >= slides.length) currentSlide = 0;
+            if (n < 0) currentSlide = slides.length - 1;
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove('active');
+            }
+            
+            slides[currentSlide].classList.add('active');
+            
+            // Actualizar número de diapositiva
+            document.getElementById('slideNumber').textContent = `${currentSlide + 1} / ${totalSlides}`;
+            
+            // Deshabilitar/habilitar botones
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') changeSlide(-1);
+            if (event.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Inicializar
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

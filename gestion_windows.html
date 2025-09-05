@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Windows</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px 0;
+        }
+        
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+        
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+            animation: slideIn 0.4s ease-in-out;
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.2rem;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        
+        .slide h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+            margin: 20px 0 15px 0;
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+        }
+        
+        .slide h3 {
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin: 15px 0 10px 0;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .slide ul, .slide ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .slide li {
+            margin-bottom: 8px;
+        }
+        
+        .content-with-image {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .content-left {
+            flex: 1;
+        }
+        
+        .content-right {
+            flex: 1;
+        }
+        
+        .image-container {
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .slide-image {
+            width: 100%;
+            height: 450px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            object-fit: contain;
+        }
+        
+        .image-caption {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .security-alert {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #0284c7;
+        }
+        
+        .protocol-card h4 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+            position: relative;
+            z-index: 1000;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            min-width: 120px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
+        }
+        
+        .slide-counter {
+            background: #1e3a8a;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
+        }
+        
+        .red-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #10b981;
+        }
+        
+        .feature-card h4 {
+            color: #047857;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table {
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+        
+        .title-slide {
+            text-align: center;
+            padding: 60px 40px;
+        }
+        
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+        
+        .title-slide h2 {
+            font-size: 1.5rem;
+            color: #6b7280;
+            margin-bottom: 40px;
+            border: none;
+            padding: 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            border: 2px solid #1e3a8a;
+            padding: 20px 30px;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-with-image {
+                flex-direction: column;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2rem;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Página de Presentación -->
+        <div class="slide active">
+            <div class="title-slide">
+                <h1>Gestión de Windows</h1>
+                <h2>Trabajas para una empresa de diseño gráfico que se especializa en crear materiales de marketing</h2>
+                <div class="logo-container">
+                    <div class="logo">EDUPAN</div>
+                    <div class="logo">CompTIA Core Certification</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Escenario Empresarial -->
+        <div class="slide">
+            <h1>Escenario Empresarial</h1>
+            
+            <p>La empresa de comercio electrónico de rápido crecimiento para la que trabajas está expandiendo sus operaciones y actualizando su infraestructura de TI para manejar el aumento del tráfico en línea y mejorar los procesos internos.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Expansión de Operaciones</h4>
+                    <p>Aumento del tráfico en línea requiere infraestructura robusta y escalable.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Configuración de Dispositivos</h4>
+                    <p>Asegurar que todos los dispositivos de escritorio y portátiles estén configurados correctamente.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Mantenimiento Eficiente</h4>
+                    <p>Mantener todos los sistemas de manera eficiente y con conexión segura a la red.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Soporte Técnico</h4>
+                    <p>Proporcionar soporte para cualquier problema técnico que surja durante la transición.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Responsabilidades Clave:</strong> Tu rol es asegurar que todos los dispositivos de escritorio y portátiles estén configurados correctamente, mantenidos eficientemente y conectados de forma segura a la red.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Uso de Consolas de Gestión -->
+        <div class="slide">
+            <h1>Uso de Consolas de Gestión</h1>
+            
+            <h2>Tareas de Actualización de Infraestructura</h2>
+            <p>Como parte de la actualización de infraestructura, necesitas asegurar que:</p>
+            
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h4>Controladores Actualizados</h4>
+                    <p>Todas las estaciones de trabajo de empleados estén ejecutando los controladores más recientes.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Particiones Optimizadas</h4>
+                    <p>Las particiones de disco estén optimizadas para rendimiento.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Cuentas de Usuario</h4>
+                    <p>Configurar cuentas de usuario para nuevos empleados.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Certificados Digitales</h4>
+                    <p>Gestionar certificados digitales para asegurar transacciones en línea.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Administrador de Dispositivos -->
+        <div class="slide">
+            <h1>Administrador de Dispositivos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>El <strong class="red-text">Administrador de Dispositivos (devmgmt.msc)</strong> te permite ver y editar propiedades de hardware instalado, cambiar configuraciones, actualizar controladores y remover o deshabilitar dispositivos.</p>
+                    
+                    <h2>Actualización y Solución de Problemas</h2>
+                    <ul>
+                        <li>Windows puede identificar el tipo y función de un dispositivo pero fallar en encontrar un controlador</li>
+                        <li>Resulta en "Dispositivo Desconocido" o tipo "genérico" con marca de exclamación amarilla</li>
+                        <li>Los fabricantes a menudo proporcionan controladores actualizados en sus sitios web</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/4401-1640182432818-windows_10_device_manager_properties_driver.png" alt="Propiedades del dispositivo" class="slide-image">
+                    <p class="image-caption">Uso de propiedades del dispositivo para investigar controlador y revertir a versión anterior</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Actualizaciones de Controladores:</strong> Las actualizaciones de controladores también pueden estar disponibles a través de Windows Update como actualizaciones opcionales.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Gestión de Dispositivos -->
+        <div class="slide">
+            <h1>Remover, Desinstalar y Deshabilitar Dispositivos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Dispositivos Plug and Play</h2>
+                    <p>Para dispositivos Plug and Play de intercambio en caliente, puedes removerlos sin desinstalar.</p>
+                    
+                    <h3>Proceso de Remoción Segura</h3>
+                    <ol>
+                        <li>Cerrar cualquier aplicación activa</li>
+                        <li>Hacer clic en el icono <strong>"Quitar Hardware de Forma Segura"</strong></li>
+                        <li>Seleccionar la opción para detener o expulsar el dispositivo</li>
+                    </ol>
+                    
+                    <div class="security-alert">
+                        <p><strong>Deshabilitar Dispositivos:</strong> En el Administrador de Dispositivos, puedes <strong class="red-text">deshabilitar</strong> un dispositivo si está mal funcionando o para restringir acceso del usuario. Los dispositivos deshabilitados se indican con una flecha hacia abajo.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/3729-1643036439646-windows_10_icon_safely_remove_hardware.png" alt="Remover hardware" class="slide-image">
+                    <p class="image-caption">Icono Quitar Hardware de Forma Segura</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Consola de Administración de Discos -->
+        <div class="slide">
+            <h1>Consola de Administración de Discos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>El subsistema de disco almacena todos los datos generados por el sistema operativo y aplicaciones. Asegurar su confiabilidad y rendimiento es una tarea crítica de gestión.</p>
+                    
+                    <h2>Funcionalidad</h2>
+                    <p>La <strong class="red-text">consola de Administración de Discos</strong> resume todos los discos fijos y removibles: HDDs, SSDs y unidades ópticas conectadas al sistema.</p>
+                    
+                    <div class="important-note">
+                        <p><strong>Terminología:</strong> Los términos unidades, volúmenes y particiones pueden ser confusos. Las particiones se configuran en HDDs y SSDs. Un volumen es una unidad de almacenamiento lógica para el SO.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/7947-1639515227094-windows_10_21h2_disk_management_ssd_hdd_cd.png" alt="Administración de discos" class="slide-image">
+                    <p class="image-caption">Consola de Administración de Discos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Estructura de Volúmenes -->
+        <div class="slide">
+            <h1>Estructura de Volúmenes del Sistema</h1>
+            
+            <h2>Configuración Típica del Disco 0</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Volumen</th>
+                            <th>Contenido</th>
+                            <th>Letra de Unidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Volumen del Sistema</strong></td>
+                            <td>Contiene archivos de arranque, usando EFI</td>
+                            <td>No asignada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Volumen de Arranque</strong></td>
+                            <td>Contiene archivos del sistema operativo</td>
+                            <td>Típicamente C:</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Particiones de Recuperación</strong></td>
+                            <td>Contienen herramientas para reparación o reinicio de fábrica</td>
+                            <td>No asignada</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Espacios de Almacenamiento:</strong> La función de discos dinámicos está obsoleta. Windows ahora soporta una función de RAID de software llamada <strong class="red-text">Espacios de Almacenamiento</strong> para configuraciones de disco redundantes.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Tareas de Administración de Discos -->
+        <div class="slide">
+            <h1>Tareas de Administración de Discos</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Inicializar Discos</h4>
+                    <p>Al agregar un HDD, SSD o unidad USB sin formato, debes inicializarlo usando MBR o GPT.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Particionado</h4>
+                    <p>Configurar cada disco con al menos una partición. Crear nuevas particiones haciendo clic derecho en espacio sin particionar.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Formateo</h4>
+                    <p>Escribir un sistema de archivos, típicamente NTFS, a nuevas particiones permitiendo que Windows lea y escriba archivos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Reparticionado</h4>
+                    <p>Expandir particiones existentes cuando sea necesario si hay espacio sin particionar o remover/reducir particiones.</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Importante:</strong> Durante la configuración, la partición de arranque debe ser NTFS, y la partición del sistema debe ser FAT32. Las particiones del sistema o arranque no pueden ser formateadas o eliminadas.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Herramientas de Mantenimiento de Disco -->
+        <div class="slide">
+            <h1>Herramientas de Mantenimiento de Disco</h1>
+            
+            <h2>Problemas Principales del Almacenamiento</h2>
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h4>Fragmentación</h4>
+                    <p>En un disco duro, los archivos idealmente ocupan clústeres contiguos. Con el tiempo, se fragmentan reduciendo el rendimiento de lectura.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Capacidad</h4>
+                    <p>Típicamente, se crean más archivos de los que se eliminan, reduciendo capacidad. El rendimiento sufre si el volumen de arranque tiene menos del 20% de espacio libre.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Daño</h4>
+                    <p>Los HDDs son propensos a daño físico, especialmente durante cortes de energía, llevando a archivos corruptos.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Mantenimiento Regular</h4>
+                    <p>El uso regular de herramientas de mantenimiento de disco, al menos mensualmente y antes de instalaciones de software.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Desfragmentador de Disco -->
+        <div class="slide">
+            <h1>Desfragmentador de Disco</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La herramienta <strong class="red-text">Desfragmentar y Optimizar Unidades</strong> mejora el rendimiento de HDD y SSD:</p>
+                    
+                    <h2>Para HDDs</h2>
+                    <p>En un HDD, desfragmentar reorganiza los datos de archivos en clústeres contiguos, reduciendo el tiempo que el controlador necesita para buscar a través del disco.</p>
+                    
+                    <h2>Para SSDs</h2>
+                    <p>En un SSD, los datos se almacenan en bloques gestionados por el controlador de la unidad. El optimizador ejecuta operaciones TRIM, permitiendo al controlador marcar datos eliminables del SO como escribibles.</p>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/5701-1639515245365-windows_10_21h2_defragment_optimize.png" alt="Optimizar unidades" class="slide-image">
+                    <p class="image-caption">Optimizar Unidades (Desfragmentador) en Windows 11</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Automatización:</strong> Windows usa el Programador de Tareas para ejecutar automáticamente el optimizador de disco. Verificar regularmente cualquier problema, como ejecuciones no exitosas.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Limpieza de Disco -->
+        <div class="slide">
+            <h1>Limpieza de Disco</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La herramienta <strong class="red-text">Limpieza de Disco</strong> identifica archivos seguros para eliminación para liberar espacio, incluyendo aquellos en la Papelera de Reciclaje y archivos temporales.</p>
+                    
+                    <h2>Modo Administrador</h2>
+                    <p>Ejecutarlo en modo administrador con la opción <strong>"Limpiar archivos del sistema"</strong> recupera espacio de cachés como Windows Update y Defender.</p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Archivos que Puede Limpiar:</strong></p>
+                        <ul>
+                            <li>Archivos de la Papelera de Reciclaje</li>
+                            <li>Archivos temporales</li>
+                            <li>Cachés de Windows Update</li>
+                            <li>Archivos de Windows Defender</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/9259-1639515254753-windows_10_21h2_disk_cleanup.png" alt="Limpieza de disco" class="slide-image">
+                    <p class="image-caption">Utilidad de Limpieza de Disco</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Programador de Tareas -->
+        <div class="slide">
+            <h1>Programador de Tareas</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>El <strong class="red-text">Programador de Tareas</strong> automatiza comandos y scripts, con muchos procesos de Windows teniendo horarios predefinidos.</p>
+                    
+                    <h2>Características Clave</h2>
+                    <ul>
+                        <li><strong>Desencadenadores:</strong> Las tareas pueden ser activadas por eventos, como inicio de sesión del usuario o despertar de la máquina</li>
+                        <li><strong>Múltiples Acciones:</strong> Cada tarea puede incluir múltiples acciones para automatización compleja</li>
+                        <li><strong>Registro:</strong> Toda la actividad de tareas se registra para investigar fallas</li>
+                        <li><strong>Organización:</strong> Las tareas pueden organizarse en carpetas para mejor gestión</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/5316-1639515273035-windows_10_21h2_task_scheduler.png" alt="Programador de tareas" class="slide-image">
+                    <p class="image-caption">Programador de Tareas mostrando una tarea de auto-actualización de Dell configurada para ejecutarse cada semana</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Credenciales:</strong> Además de especificar la ruta del archivo o script y el desencadenador, debes ingresar las credenciales bajo las cuales la tarea se ejecutará. Si la cuenta de usuario carece de permisos suficientes, la tarea no se ejecutará.</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Consola de Usuarios y Grupos Locales -->
+        <div class="slide">
+            <h1>Consola de Usuarios y Grupos Locales</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La <strong class="red-text">consola de Usuarios y Grupos Locales</strong> ofrece una interfaz avanzada para gestionar cuentas de usuario, incluyendo crear, modificar, deshabilitar, eliminar y reiniciar contraseñas.</p>
+                    
+                    <h2>Grupos de Seguridad</h2>
+                    <p>Los grupos de seguridad te permiten agrupar cuentas de usuario con permisos similares, como editar archivos en una carpeta compartida.</p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Grupos Predeterminados:</strong></p>
+                        <ul>
+                            <li><strong>Administradores:</strong> Privilegios completos del sistema</li>
+                            <li><strong>Usuarios:</strong> Acceso estándar limitado</li>
+                            <li><strong>Invitados:</strong> Acceso muy limitado</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/5319-1639515286463-windows_10_21h2_local_users_and_groups_groups.png" alt="Usuarios y grupos locales" class="slide-image">
+                    <p class="image-caption">Consola de Usuarios y Grupos Locales mostrando grupos de seguridad predeterminados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Administrador de Certificados -->
+        <div class="slide">
+            <h1>Administrador de Certificados</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Un certificado digital verifica la identidad de un usuario, computadora o servicio, con validez garantizada por la autoridad de certificación (CA) emisora.</p>
+                    
+                    <h2>Subcarpetas Clave</h2>
+                    <ul>
+                        <li><strong>Carpeta Personal:</strong> Almacena certificados emitidos a la cuenta de usuario</li>
+                        <li><strong>Autoridades de Certificación Raíz Confiables:</strong> Contiene certificados de todos los emisores confiables</li>
+                        <li><strong>Autoridades de Certificación Raíz de Terceros:</strong> Contiene emisores confiables de proveedores no Microsoft</li>
+                    </ul>
+                    
+                    <div class="security-alert">
+                        <p><strong>Vulnerabilidades de Seguridad:</strong> Confiar en una CA insegura genera vulnerabilidades de seguridad críticas. Un certificado de CA fraudulento podría permitir que un sitio web se haga pasar por un banco legítimo.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/9416-1639515303503-windows_10_21h2_certificate_manager_trusted_root_certification_authorities.png" alt="Administrador de certificados" class="slide-image">
+                    <p class="image-caption">Uso del Administrador de Certificados para ver certificados del usuario actual</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Editor de Políticas de Grupo -->
+        <div class="slide">
+            <h1>Editor de Políticas de Grupo</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Las herramientas GUI como Configuración y Panel de Control modifican perfiles de usuario y configuraciones del sistema almacenadas en el registro, pero muchas configuraciones del registro no son accesibles a través de estas herramientas.</p>
+                    
+                    <h2>Funcionalidad</h2>
+                    <p>El <strong class="red-text">Editor de Políticas de Grupo</strong> ofrece una forma robusta de configurar estas configuraciones de Windows sin editar directamente el registro.</p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Beneficios en Redes Grandes:</strong> En redes grandes, las políticas de grupo aplican eficientemente configuraciones a través de múltiples computadoras, evitando configuración manual.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/449-1639515318721-windows_10_21h2_group_policy_editor_security_account_password.png" alt="Editor de políticas de grupo" class="slide-image">
+                    <p class="image-caption">Uso del Editor de Políticas de Grupo para ver la política de contraseñas local</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Editor de Política de Seguridad Local:</strong> Usa el editor de Política de Seguridad Local (secpol.msc) para modificar configuraciones de seguridad específicamente.</p>
+            </div>
+        </div>
+
+        <!-- Slide 16: Editor del Registro -->
+        <div class="slide">
+            <h1>Editor del Registro</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>El <strong class="red-text">registro de Windows</strong> es una base de datos accesible remotamente para almacenar información de configuración para el SO, dispositivos y aplicaciones.</p>
+                    
+                    <h2>Cinco Claves Raíz</h2>
+                    <ul>
+                        <li><strong>HKEY_LOCAL_MACHINE (HKLM):</strong> Gestiona configuraciones del sistema</li>
+                        <li><strong>HKEY_USERS (HKU):</strong> Contiene configuraciones para perfiles de usuario individuales</li>
+                        <li><strong>HKEY_CURRENT_USER (HKCU):</strong> Subconjunto de HKEY_USERS con configuraciones para el usuario conectado</li>
+                        <li><strong>HKEY_CLASSES_ROOT (HKCR):</strong> Información sobre aplicaciones registradas y asociaciones de archivos</li>
+                        <li><strong>HKEY_CURRENT_CONFIG (HKCC):</strong> Refleja el perfil de hardware actual usado al inicio</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/9411-1639515334205-windows_10_21h2_registry_editor_root.png" alt="Claves raíz del registro" class="slide-image">
+                    <p class="image-caption">Claves raíz del registro</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Herramientas de Línea de Comandos -->
+        <div class="slide">
+            <h1>Herramientas de Línea de Comandos</h1>
+            
+            <p>Se te requiere automatizar varias tareas rutinarias usando herramientas de línea de comandos para mejorar la eficiencia y reducir errores manuales en las operaciones de TI de la empresa.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Símbolo del Sistema</h4>
+                    <p>Puedes ejecutar cualquier comando desde el diálogo Ejecutar, pero para una serie de comandos o ver salida, usa el shell de comandos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Privilegios Elevados</h4>
+                    <p>Algunos comandos requieren privilegios elevados. Para ejecutar como administrador, haz clic derecho en el acceso directo del Símbolo del Sistema.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Sintaxis de Comandos</h4>
+                    <p>Ingresar comandos en el prompt (>) usando el nombre del comando, modificadores y argumentos con sintaxis apropiada.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Sistema de Ayuda</h4>
+                    <p>El símbolo del sistema incluye un sistema de ayuda básico. Escribe help y presiona ENTER para ver comandos disponibles.</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Elevación Requerida:</strong> Si un comando necesita elevación, verás "La operación solicitada requiere elevación." El título mostrará "Administrador: Símbolo del Sistema".</p>
+            </div>
+        </div>
+
+        <!-- Slide 18: Comandos de Navegación -->
+        <div class="slide">
+            <h1>Comandos de Navegación</h1>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comando</th>
+                            <th>Función</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>dir</strong></td>
+                            <td>Listar archivos y subdirectorios</td>
+                            <td>dir /o:n (ordenar por nombre)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>cd</strong></td>
+                            <td>Cambiar directorio de trabajo</td>
+                            <td>cd C:\Users\David</td>
+                        </tr>
+                        <tr>
+                            <td><strong>cd ..</strong></td>
+                            <td>Subir al directorio padre</td>
+                            <td>cd .. (desde Documents a David)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>D:</strong></td>
+                            <td>Cambiar unidad activa</td>
+                            <td>D: (cambia a unidad D)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Comodines:</strong> Usa caracteres comodín para caracteres no especificados. Un signo de interrogación ? representa un solo carácter no especificado. Por ejemplo, dir ????????.log lista todos los archivos .log con nombres de ocho caracteres.</p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Comandos de Gestión de Archivos -->
+        <div class="slide">
+            <h1>Comandos de Gestión de Archivos y Discos</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>move y copy</h4>
+                    <p>Permiten transferir archivos dentro de un directorio único. Usan sintaxis de tres partes: comando Origen Destino.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>robocopy</h4>
+                    <p>Utilidad de "copia robusta". Microsoft recomienda usar robocopy sobre xcopy para mejor manejo de nombres largos y atributos NTFS.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>diskpart</h4>
+                    <p>Sirve como la interfaz de línea de comandos para la herramienta de Administración de Discos. Permite acciones destructivas.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>chkdsk</h4>
+                    <p>Escanea el sistema de archivos y sectores del disco en busca de fallas e intenta reparar problemas detectados.</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Precaución con diskpart:</strong> A diferencia de la herramienta de Administración de Discos, diskpart permite acciones destructivas, como eliminar volúmenes del sistema o arranque, así que úsalo con precaución.</p>
+            </div>
+        </div>
+
+        <!-- Slide 20: Comandos del Sistema -->
+        <div class="slide">
+            <h1>Comandos del Sistema</h1>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comando</th>
+                            <th>Función</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>shutdown /s</strong></td>
+                            <td>Apagado seguro del sistema</td>
+                            <td>shutdown /s /t 30 (apagar en 30 segundos)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>shutdown /r</strong></td>
+                            <td>Reiniciar el sistema</td>
+                            <td>shutdown /r (reinicio suave)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>sfc /scannow</strong></td>
+                            <td>Verificar y restaurar archivos del sistema</td>
+                            <td>sfc /scannow (escaneo inmediato)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>winver</strong></td>
+                            <td>Información de versión de Windows</td>
+                            <td>winver (muestra detalles del SO)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>whoami</strong></td>
+                            <td>Verificar identidad del usuario actual</td>
+                            <td>whoami /groups (grupos del usuario)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Protección de Recursos de Windows:</strong> La utilidad <strong class="red-text">sfc</strong> permite verificar y restaurar archivos del sistema desde caché si están corruptos o dañados.</p>
+            </div>
+        </div>
+
+        <!-- Slide 21: Consolas Personalizadas de Microsoft Management -->
+        <div class="slide">
+            <h1>Consolas Personalizadas de Microsoft Management</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Una <strong class="red-text">Microsoft Management Console (MMC)</strong> es un contenedor para complementos como Administrador de Dispositivos, Administración de Discos, Editor de Políticas de Grupo y Administrador de Certificados.</p>
+                    
+                    <h2>Personalización</h2>
+                    <ul>
+                        <li>Usa el comando `mmc` para personalizar y crear una consola con tus complementos elegidos</li>
+                        <li>Guarda la consola como un archivo MSC en la carpeta Herramientas Administrativas</li>
+                        <li>Agrega los complementos que necesitas para tu flujo de trabajo específico</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Beneficios:</strong> Crear consolas personalizadas permite agrupar herramientas relacionadas en una sola interfaz, mejorando la eficiencia del trabajo administrativo.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_use_management_consoles/4611-1639515378226-windows_10_21h2_mmc_add_certificates_consoles.png" alt="Agregar complemento a consola personalizada" class="slide-image">
+                    <p class="image-caption">Agregando un complemento a una consola personalizada</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Conexiones de Red Cableadas -->
+        <div class="slide">
+            <h1>Conexiones de Red Cableadas</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Casi todas las conexiones de red <strong class="red-text">cableadas</strong> se basan en algún tipo de Ethernet. El tipo de medio del adaptador debe coincidir con el del switch al que está conectado.</p>
+                    
+                    <h2>Características</h2>
+                    <ul>
+                        <li>La mayoría usa cable de alambre de cobre con conectores RJ45</li>
+                        <li>Algunas instalaciones corporativas pueden usar cableado de fibra óptica</li>
+                        <li>El adaptador y switch deben usar las mismas configuraciones Ethernet</li>
+                        <li>Estas usualmente se establecen para autonegociar</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Nomenclatura:</strong> Bajo Windows, cada adaptador cableado recibe un nombre. El primer adaptador se etiqueta como `Ethernet`. Los adaptadores adicionales se identifican como `Ethernet2`, `Ethernet3`, etc.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_networking/1179-1640182711290-windows_10_21h2_settings_network_internet_status.png" alt="Configuración de red Windows 10" class="slide-image">
+                    <p class="image-caption">Aplicación de configuración de Red e Internet de Windows 10</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Conexiones de Red Inalámbricas -->
+        <div class="slide">
+            <h1>Conexiones de Red Inalámbricas</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Para <strong class="red-text">establecer una conexión de red inalámbrica</strong>, selecciona el icono de estado de red en el área de notificación y selecciona de la lista de redes mostradas.</p>
+                    
+                    <h2>Características de la Lista</h2>
+                    <ul>
+                        <li>Las barras muestran la fuerza de la señal</li>
+                        <li>El icono de candado indica si la red usa encriptación</li>
+                        <li>Opción "Conectar automáticamente" para uso futuro</li>
+                    </ul>
+                    
+                    <h2>Configuración Manual</h2>
+                    <p>Si la difusión de SSID está suprimida, ingresa configuraciones WLAN manualmente desde Red e Internet ⇨ Wi-Fi ⇨ Administrar redes conocidas ⇨ Agregar una nueva red.</p>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_networking/7047-1640182733301-windows_10_21h2_device_manager_wifi_properties.png" alt="Propiedades del adaptador inalámbrico" class="slide-image">
+                    <p class="image-caption">Propiedades del adaptador de red inalámbrica en Administrador de Dispositivos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Configuración del Cliente Windows -->
+        <div class="slide">
+            <h1>Configuración del Cliente Windows</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>La configuración IP para cada interfaz de adaptador a menudo se establece usando el diálogo Propiedades GUI accedido vía configuraciones de Red e Internet.</p>
+                    
+                    <h2>Clientes, Protocolos y Servicios Predeterminados</h2>
+                    <ul>
+                        <li>Cliente para Redes Microsoft</li>
+                        <li>Compartir Archivos e Impresoras para Redes Microsoft</li>
+                        <li><strong class="red-text">Protocolo de Internet</strong> - Tanto IP versión 4 como versión 6</li>
+                        <li>Descubrimiento de Topología de Capa de Enlace</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Configuración Automática:</strong> Las propiedades IP predeterminadas están en <strong>"Obtener una dirección IP automáticamente"</strong>, que usa un servidor DHCP.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_windows_networking/7092-1640182830011-windows_10_21h2_nic_ethernet_ip_properties_combined.png" alt="Propiedades de Ethernet e IP" class="slide-image">
+                    <p class="image-caption">Diálogo de Propiedades de Ethernet (izquierda) y Propiedades de Protocolo de Internet Versión 4 (derecha)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: Configuración de VPN y Conexiones Especiales -->
+        <div class="slide">
+            <h1>VPN y Tipos de Conexión Especiales</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Red Privada Virtual (VPN)</h4>
+                    <p>Una <strong class="red-text">red privada virtual</strong> conecta componentes y recursos de dos redes (privadas) sobre otra red (pública). Es un "túnel" seguro a través de Internet.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Red de Área Amplia Inalámbrica (WWAN)</h4>
+                    <p>Se refiere a usar un adaptador celular para conectar a Internet vía red del proveedor. El ancho de banda depende de las tecnologías soportadas (3G, 4G, 5G).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Configuración de Proxy</h4>
+                    <p>Algunas redes usan un <strong class="red-text">servidor proxy</strong> para proporcionar conectividad de red. Puede mejorar tanto rendimiento como seguridad.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Conexión Medida</h4>
+                    <p>Los proveedores celulares pueden imponer cargos altos si se excede la asignación de datos del suscriptor. Puedes definir la red como conexión medida.</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Configuración de Firewall:</strong> Cada conexión de red se rige por las configuraciones del firewall del SO local impuestas por Windows Defender Firewall. Los perfiles incluyen Privado, Público y Dominio.</p>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+            <a href="index.html"><button class="btn">Volver inicio</button"></a>
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">25</span>
+            </span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializar
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA A+ Módulo 4 - Presentación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .slide {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 40px;
+            margin-bottom: 30px;
+            min-height: 500px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            page-break-after: always;
+        }
+        .slide h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .slide h2 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        .slide ul {
+            line-height: 1.8;
+            color: #555;
+        }
+        .slide li {
+            margin-bottom: 10px;
+        }
+        .notes {
+            background-color: #fffbf0;
+            border: 1px solid #f0e0a0;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+        .notes h3 {
+            color: #8b7355;
+            margin-top: 0;
+        }
+        .key-term {
+            font-weight: bold;
+            color: #c0392b;
+        }
+        .code-box {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Portada -->
+<div class="slide">
+    <h1 style="text-align: center; font-size: 36px;">CompTIA A+ Core 1</h1>
+    <h2 style="text-align: center; font-size: 28px;">Módulo 4: BIOS/UEFI y Solución de Problemas</h2>
+    <div style="text-align: center; margin-top: 100px;">
+        <p style="font-size: 20px;">Submódulos:</p>
+        <ul style="list-style: none; font-size: 18px;">
+            <li>4.1 BIOS y UEFI</li>
+            <li>4.2 Problemas de Energía y Disco</li>
+            <li>4.3 Problemas de Sistema y Pantalla</li>
+        </ul>
+    </div>
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>Este módulo cubre los conceptos fundamentales de firmware del sistema (BIOS/UEFI), así como la solución de problemas relacionados con energía, almacenamiento y componentes del sistema. Es crucial para el examen CompTIA A+ Core 1 entender tanto la teoría como la práctica de estos componentes.</p>
+    </div>
+</div>
+
+<!-- Slide 2: BIOS y UEFI - Introducción -->
+<div class="slide">
+    <h1>4.1.1 BIOS y UEFI - Conceptos Fundamentales</h1>
+    <h2>¿Qué es el Firmware?</h2>
+    <ul>
+        <li>El <span class="key-term">firmware</span> es código de programa especial almacenado en memoria flash</li>
+        <li>Está estrechamente ligado a las funciones básicas del hardware específico</li>
+        <li>El firmware de la computadora ayuda a inicializar componentes en la placa base</li>
+        <li>Permite cargar el sistema operativo principal</li>
+    </ul>
+    
+    <h2>Evolución del Firmware</h2>
+    <ul>
+        <li><span class="key-term">BIOS (Basic Input/Output System)</span>: Sistema tradicional usado por muchos años</li>
+        <li><span class="key-term">UEFI (Unified Extensible Firmware Interface)</span>: Estándar moderno que reemplaza a BIOS</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>El firmware es el primer software que se ejecuta cuando enciendes una computadora. Es fundamental entender que sin firmware funcionando correctamente, la computadora no puede arrancar. La transición de BIOS a UEFI representa una evolución significativa en la tecnología de arranque de computadoras.</p>
+    </div>
+</div>
+
+<!-- Slide 3: Ventajas de UEFI sobre BIOS -->
+<div class="slide">
+    <h1>4.1.1 Ventajas de UEFI sobre BIOS</h1>
+    <h2>Características Principales de UEFI:</h2>
+    <ul>
+        <li><span class="key-term">Soporte para CPU de 64 bits</span>: Operación nativa en arquitecturas modernas</li>
+        <li><span class="key-term">Interfaz Gráfica de Usuario (GUI)</span>: Con soporte para mouse</li>
+        <li><span class="key-term">Capacidades de red durante el arranque</span>: Permite diagnósticos y actualizaciones remotas</li>
+        <li><span class="key-term">Mejor seguridad de arranque</span>: Incluye Secure Boot para prevenir malware</li>
+        <li><span class="key-term">Modo Legacy BIOS</span>: Compatibilidad con sistemas antiguos</li>
+    </ul>
+    
+    <h2>Acceso a la Configuración del Firmware</h2>
+    <ul>
+        <li>Presionar una tecla durante el proceso de arranque</li>
+        <li>Generalmente cuando aparece el logo del fabricante</li>
+        <li>Teclas comunes: <span class="key-term">Esc, Del, F1, F2, F10, o F12</span></li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>UEFI no es solo una actualización de BIOS, es un reemplazo completo con arquitectura moderna. La capacidad de usar mouse y tener una interfaz gráfica hace que sea mucho más fácil de usar. Secure Boot es especialmente importante para la seguridad moderna, ya que previene que software malicioso se ejecute durante el arranque.</p>
+    </div>
+</div>
+
+<!-- Slide 4: Navegación en BIOS/UEFI -->
+<div class="slide">
+    <h1>4.1.1 Navegación en Programas de Configuración</h1>
+    <h2>BIOS Legacy - Navegación por Teclado</h2>
+    <ul>
+        <li>Usar <span class="key-term">teclas de flecha</span> para navegar entre opciones</li>
+        <li><span class="key-term">Esc</span>: Generalmente regresa a la pantalla anterior</li>
+        <li><span class="key-term">Enter</span>: Selecciona o ingresa a una opción</li>
+        <li><span class="key-term">F10</span>: Comúnmente guarda cambios y sale</li>
+        <li><span class="key-term">Esc sin guardar</span>: Descarta cambios</li>
+        <li>Opción para <span class="key-term">cargar configuración predeterminada</span></li>
+    </ul>
+    
+    <h2>UEFI - Interfaz Moderna</h2>
+    <ul>
+        <li>Interfaz gráfica con <span class="key-term">soporte para mouse</span></li>
+        <li>Menús más intuitivos y visuales</li>
+        <li>Algunos menús avanzados aún pueden requerir navegación por teclado</li>
+        <li>Indicadores visuales de temperatura y estado del sistema</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>Es importante practicar la navegación en ambos tipos de interfaces. En computadoras modernas con arranque rápido, puede ser necesario usar Shift+Reiniciar desde Windows para acceder a las opciones de UEFI. Siempre documenta los cambios realizados en la configuración del firmware.</p>
+    </div>
+</div>
+
+<!-- Slide 5: Opciones de Arranque y Dispositivos -->
+<div class="slide">
+    <h1>4.1.3 Opciones de Arranque y Dispositivos</h1>
+    <h2>Secuencia de Arranque</h2>
+    <p>La <span class="key-term">secuencia de arranque</span> o <span class="key-term">prioridad de dispositivos de arranque</span> determina el orden en que el firmware busca un gestor de arranque.</p>
+    
+    <h2>Dispositivos de Arranque Típicos:</h2>
+    <ul>
+        <li><span class="key-term">Disco Fijo (HDD/SSD)</span>:
+            <ul>
+                <li>SATA: Conectar disco de arranque al puerto de menor número</li>
+                <li>NVMe/M.2: Ofrece velocidades superiores a SATA</li>
+            </ul>
+        </li>
+        <li><span class="key-term">Unidad Óptica (CD/DVD/Blu-ray)</span>: Para instalación o reparación desde medios ópticos</li>
+        <li><span class="key-term">USB</span>: Común para instalaciones de SO y utilidades de recuperación</li>
+        <li><span class="key-term">Red/PXE (Preboot Execution Environment)</span>: Arranque a través del adaptador de red</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>La configuración correcta del orden de arranque es crucial para la instalación del sistema operativo y la resolución de problemas. PXE es especialmente útil en entornos empresariales para despliegues masivos. Siempre verifica el orden de arranque cuando un sistema no arranca correctamente.</p>
+    </div>
+</div>
+
+<!-- Slide 6: Permisos USB y Seguridad -->
+<div class="slide">
+    <h1>4.1.4 Permisos USB</h1>
+    <h2>Control de Seguridad USB</h2>
+    <ul>
+        <li>El firmware del sistema permite <span class="key-term">habilitar o deshabilitar controladores y adaptadores</span></li>
+        <li>Los puertos USB pueden representar <span class="key-term">riesgos de seguridad</span></li>
+        <li>Control granular de permisos USB:
+            <ul>
+                <li>Deshabilitar puertos individuales</li>
+                <li>Deshabilitar todos los puertos USB</li>
+                <li>Configurar políticas de dispositivos específicos</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>Opciones de Configuración en UEFI:</h2>
+    <ul>
+        <li><span class="key-term">USB Interface</span>: Bloquear/Desbloquear</li>
+        <li><span class="key-term">External Ports</span>: Control de puertos externos</li>
+        <li><span class="key-term">Bluetooth</span>: Habilitar/Deshabilitar</li>
+        <li><span class="key-term">Camera</span>: Control de cámara integrada</li>
+        <li><span class="key-term">Card Reader</span>: Lector de tarjetas</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>La seguridad USB es crítica en entornos corporativos donde la fuga de datos es una preocupación. Deshabilitar puertos USB puede prevenir tanto el robo de datos como la introducción de malware. Sin embargo, esto debe equilibrarse con las necesidades operativas de los usuarios.</p>
+    </div>
+</div>
+
+<!-- Slide 7: Consideraciones de Ventiladores -->
+<div class="slide">
+    <h1>4.1.5 Consideraciones de Ventiladores</h1>
+    <h2>Mantenimiento y Configuración</h2>
+    <ul>
+        <li><span class="key-term">Limpieza regular</span>: Prevenir acumulación de polvo que obstruye el flujo de aire</li>
+        <li><span class="key-term">Flujo de aire balanceado</span>: Igual cantidad de aire entrando y saliendo</li>
+        <li><span class="key-term">Posicionamiento correcto</span>: Basado en termodinámica</li>
+        <li>Evitar configuraciones que empujen aire caliente hacia abajo</li>
+    </ul>
+    
+    <h2>Modos de Control de Ventiladores:</h2>
+    <ul>
+        <li><span class="key-term">Balanced (Balanceado)</span>: Configuración estándar para uso general</li>
+        <li><span class="key-term">Cool (Frío)</span>: Ventiladores a mayor velocidad para máximo enfriamiento</li>
+        <li><span class="key-term">Quiet (Silencioso)</span>: Reduce velocidad, permite temperaturas más altas</li>
+        <li><span class="key-term">Fanless (Sin ventilador)</span>: Desactiva ventiladores, usa enfriamiento pasivo</li>
+        <li><span class="key-term">Custom (Personalizado)</span>: Configuraciones personalizadas de velocidad</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>El control adecuado de ventiladores es esencial para el rendimiento y longevidad del sistema. El ciclo de trabajo (duty cycle) controla la frecuencia de pulsos de energía al ventilador. Existen muchas utilidades de terceros que pueden acceder a estas configuraciones desde el SO.</p>
+    </div>
+</div>
+
+<!-- Slide 8: Monitoreo de Temperatura -->
+<div class="slide">
+    <h1>4.1.5 Monitoreo de Temperatura</h1>
+    <h2>Métodos de Monitoreo</h2>
+    
+    <h3>1. <span class="key-term">Monitoreo Manual</span>:</h3>
+    <ul>
+        <li>Reiniciar la computadora y entrar a BIOS/UEFI</li>
+        <li>Presionar tecla específica durante el arranque (F2, Delete, F12, o ESC)</li>
+        <li>Buscar entrada relacionada con monitoreo o sensores</li>
+        <li>Ver lecturas en tiempo real incluyendo temperatura del CPU</li>
+    </ul>
+    
+    <h3>2. <span class="key-term">Aplicaciones de Terceros</span>:</h3>
+    <ul>
+        <li>Monitorean temperaturas a través de sensores</li>
+        <li>Recolectan datos continuamente</li>
+        <li>Muchos sensores tienen <span class="key-term">umbrales preestablecidos</span></li>
+        <li>Generan alertas cuando se exceden límites seguros</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>El monitoreo de temperatura es crítico para prevenir daños por sobrecalentamiento. Las aplicaciones de terceros como HWMonitor, Core Temp, o SpeedFan proporcionan monitoreo en tiempo real sin necesidad de reiniciar. Los umbrales típicos de temperatura para CPUs están entre 60-80°C bajo carga.</p>
+    </div>
+</div>
+
+<!-- Slide 9: Contraseñas de Arranque y Secure Boot -->
+<div class="slide">
+    <h1>4.1.6 Contraseñas de Arranque y Secure Boot</h1>
+    <h2>Tipos de Contraseñas de Arranque</h2>
+    <ul>
+        <li><span class="key-term">Contraseña de Supervisor/Administrador/Setup/BIOS</span>:
+            <ul>
+                <li>Restringe acceso al programa de configuración BIOS/UEFI</li>
+                <li>Protege configuraciones del sistema</li>
+            </ul>
+        </li>
+        <li><span class="key-term">Contraseña de Usuario/Sistema</span>:
+            <ul>
+                <li>Bloquea todo el sistema hasta autenticación</li>
+                <li>Previene cualquier acción hasta que el firmware inicialice</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2><span class="key-term">Secure Boot</span></h2>
+    <ul>
+        <li>Característica UEFI que protege contra malware</li>
+        <li>Asegura que solo se usen <span class="key-term">bootloaders firmados digitalmente</span></li>
+        <li>Verifica integridad del bootloader contra claves criptográficas precargadas</li>
+        <li>Si el bootloader está modificado o sin firmar, no se ejecutará</li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>Las contraseñas de arranque son una capa adicional de seguridad pero pueden ser problemáticas si se olvidan. Secure Boot es esencial para sistemas modernos y es requerido por Windows 11. Las claves de Microsoft, Fedora, openSUSE y Ubuntu vienen precargadas.</p>
+    </div>
+</div>
+
+<!-- Slide 10: Módulos de Plataforma Confiable (TPM) -->
+<div class="slide">
+    <h1>4.1.8 Módulos de Plataforma Confiable (TPM)</h1>
+    <h2>¿Qué es TPM?</h2>
+    <ul>
+        <li><span class="key-term">Trusted Platform Module</span>: Hardware que almacena de forma segura certificados digitales, claves criptográficas y contraseñas hasheadas</li>
+        <li>Cada chip TPM tiene una <span class="key-term">clave de respaldo única e inmutable</span></li>
+        <li>Establece una <span class="key-term">raíz de confianza</span></li>
+    </ul>
+    
+    <h2>Funciones del TPM</h2>
+    <ul>
+        <li>Durante el arranque, compara hashes de datos clave del sistema</li>
+        <li>Verifica que firmware, bootloader y kernel del SO no hayan sido alterados</li>
+        <li>Almacena claves en <span class="key-term">hardware resistente a manipulación</span></li>
+        <li>Aísla claves del SO y aplicaciones</li>
+        <li>Usado por programas como <span class="key-term">Windows BitLocker</span></li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>TPM es requerido para Windows 11 y proporciona seguridad superior al almacenar claves en hardware dedicado. La diferencia entre encriptación y hashing es importante: la encriptación es reversible con la clave correcta, mientras que el hashing genera un código único pero no puede revertirse.</p>
+    </div>
+</div>
+
+<!-- Slide 11: Módulo de Seguridad de Hardware (HSM) -->
+<div class="slide">
+    <h1>4.1.8 Módulo de Seguridad de Hardware (HSM)</h1>
+    <h2>Alternativas al TPM</h2>
+    <ul>
+        <li>Una <span class="key-term">unidad USB extraíble</span> puede almacenar claves criptográficas</li>
+        <li>Útil cuando:
+            <ul>
+                <li>La computadora no soporta TPM</li>
+                <li>Como mecanismo de recuperación si el TPM está dañado</li>
+                <li>Si un disco necesita moverse a otra computadora</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>Características del HSM</h2>
+    <ul>
+        <li><span class="key-term">Hardware Security Module</span>: USB seguro para almacenar material criptográfico</li>
+        <li>"Seguro" significa que requiere autenticación:
+            <ul>
+                <li>Contraseña</li>
+                <li>PIN (Número de Identificación Personal)</li>
+                <li>Huella digital</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>Los HSM proporcionan portabilidad y flexibilidad que el TPM integrado no puede ofrecer. Son especialmente útiles en entornos donde los discos duros necesitan moverse entre sistemas o para recuperación de emergencia. La autenticación multifactor añade una capa adicional de seguridad.</p>
+    </div>
+</div>
+
+<!-- Slide 12: Solución de Problemas de Energía -->
+<div class="slide">
+    <h1>4.2.1 Solución de Problemas de Energía</h1>
+    <h2>Proceso de Encendido</h2>
+    <ul>
+        <li>PSU convierte <span class="key-term">voltaje AC (VAC) a voltaje DC (VDC)</span></li>
+        <li>PSU suministra <span class="key-term">12V inmediatamente</span> - ventiladores y discos duros giran</li>
+        <li>Prueba suministros de <span class="key-term">5V y 3.3V</span></li>
+        <li>Una vez estables, envía <span class="key-term">señal power good</span> al procesador</li>
+    </ul>
+    
+    <h2>Diagnóstico de "Sin Energía"</h2>
+    <ol>
+        <li><span class="key-term">Verificar otros equipos</span>: Descartar falla del circuito o apagón</li>
+        <li><span class="key-term">Probar el tomacorriente</span>: Conectar dispositivo conocido (lámpara)</li>
+        <li><span class="key-term">Verificar conexiones PSU</span>: Todos los interruptores en "encendido"</li>
+        <li><span class="key-term">Probar otro cable de energía</span>: Verificar fusible con multímetro</li>
+        <li><span class="key-term">Desconectar dispositivos extra</span>: PSU puede estar subdimensionada</li>
+        <li><span class="key-term">Probar la PSU</span>: Usar multímetro o probador de fuente</li>
+    </ol>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>¡ADVERTENCIA! Las fuentes de alimentación de PC NO son reparables por el usuario. Nunca quites la cubierta de una fuente de alimentación. Si sospechas de la fuente, no la dejes encendida más tiempo del necesario. Observa señales externas como humo o fuego.</p>
+    </div>
+</div>
+
+<!-- Slide 13: Solución de Problemas POST -->
+<div class="slide">
+    <h1>4.2.3 Solución de Problemas POST</h1>
+    <h2>Power-On Self-Test (POST)</h2>
+    <ul>
+        <li><span class="key-term">POST</span>: Programa diagnóstico en el firmware del sistema</li>
+        <li>Verifica componentes de hardware requeridos para arrancar</li>
+        <li>En computadoras modernas ocurre muy rápidamente</li>
+    </ul>
+    
+    <h2>Síntoma: Pantalla en Blanco con Energía Presente</h2>
+    <ol>
+        <li><span class="key-term">Preguntar qué ha cambiado</span>: ¿Actualización de firmware reciente?</li>
+        <li><span class="key-term">Verificar cables y conexiones</span>: Especialmente después de mantenimiento</li>
+        <li><span class="key-term">Verificar interfaces y dispositivos defectuosos</span>: Quitar uno por uno</li>
+        <li><span class="key-term">Verificar la PSU</span>: Puede no estar enviando señal power good</li>
+        <li><span class="key-term">Verificar CPU o firmware defectuoso</span>: Reemplazar si es posible</li>
+    </ol>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>Los códigos de beep son cruciales para diagnóstico cuando no hay pantalla. Algunos motherboards tienen jumpers para configuración que pueden prevenir el arranque si están mal configurados. Siempre verifica los jumpers después del servicio.</p>
+    </div>
+</div>
+
+<!-- Slide 14: Códigos de Beep POST -->
+<div class="slide">
+    <h1>4.2.3 Códigos de Beep POST</h1>
+    <h2>Códigos de Beep Estándar IBM PC</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr style="background-color: #3498db; color: white;">
+            <th style="padding: 10px; border: 1px solid #ddd;">Código</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Significado</th>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><span class="key-term">1 beep corto</span></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">POST normal - sistema OK</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><span class="key-term">2 beeps cortos</span></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Error POST - código mostrado en pantalla</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><span class="key-term">Sin beep</span></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">PSU, motherboard o altavoz defectuoso</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><span class="key-term">Beep continuo</span></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Problema con memoria o controlador</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><span class="key-term">Beeps cortos repetidos</span></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Falla PSU o problema motherboard</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><span class="key-term">1 largo, 2-3 cortos</span></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Error de adaptador de video</td>
+        </tr>
+    </table>
+    
+    <div class="notes">
+        <h3>Notas del Presentador:</h3>
+        <p>Los códigos de beep varían según el fabricante del BIOS. Siempre consulta la documentación del fabricante. Algunas PCs no arrancarán si una tecla está presionada - verifica que nada esté sobre el teclado.</p>
+    </div>
+</div>
+
+<!-- Slide 15: Problemas de Arranque -->
+<div class="slide">
+    <h1>4.2.5 Solución de Problemas de Arranque</h1>
+    <h2>Proceso de Arranque Post-POST</h2>
+    <ul>
+        <li>Sistema busca dispositivos de arranque en orden especificado</li>
+        <li>Si no encuentra el primero, intenta el siguiente</li>
+        <li>Error si no encuentra <span class="key-term">dispositivo arrancable</span></li>
+    </ul>
+    
+    <h2>Si el Disco Fijo No es Detectado:</h2>
+    <ul>
+        <li><span class="key-term">Verificación de Energía</span>:
+            <ul>
+                <li>Buscar LED de actividad</li>
+                <li>Escuchar si el disco gira</li>
+                <li>Verificar conectores de energía</li>
+            </ul>
+        </li>
+        <li><span class="key-term">Conexiones de Datos</span>: Inspeccionar cables por daños</li>
+        <li><span class="key-term">Configuración UEFI/BIOS</span>:
+            <ul>
+                <li>Confirmar que la unidad está habilitada</li>
+                

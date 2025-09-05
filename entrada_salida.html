@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispositivos Externos - Periféricos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 700px;
+            animation: slideIn 0.4s ease-in-out;
+            position: relative;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.2rem;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        
+        .slide h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+            margin: 20px 0 15px 0;
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+        }
+        
+        .slide h3 {
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin: 15px 0 10px 0;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .slide ul, .slide ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .slide li {
+            margin-bottom: 8px;
+        }
+        
+        .content-with-image {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .content-left {
+            flex: 1;
+        }
+        
+        .content-right {
+            flex: 1;
+        }
+        
+        .image-container {
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .slide-image {
+            width: 100%;
+            height: 350px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            object-fit: contain;
+        }
+        
+        .image-caption {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .security-alert {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #0284c7;
+        }
+        
+        .protocol-card h4 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(30, 58, 138, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            background: #1e3a8a;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .red-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #10b981;
+        }
+        
+        .feature-card h4 {
+            color: #047857;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table {
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+        
+        @media (max-width: 768px) {
+            .content-with-image {
+                flex-direction: column;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Título Principal -->
+        <div class="slide active">
+            <h1>Dispositivos Externos - Periféricos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Módulo IV: Entrada/Salida</h2>
+                    <ul>
+                        <li><strong class="red-text">Categorías:</strong> Clasificación por función, velocidad y método de acceso</li>
+                        <li><strong class="red-text">Señales de Comunicación:</strong> Control, estado y datos</li>
+                        <li><strong class="red-text">Dispositivos:</strong> Análisis detallado de periféricos principales</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Objetivo:</strong> Comprender la arquitectura y funcionamiento de los dispositivos de entrada/salida en sistemas de computación modernos.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://www.areatecnologia.com/informatica/imagenes/tipos-de-perifericos.jpg" alt="Sistema de computación con periféricos" class="slide-image">
+                    <p class="image-caption">Sistema de computación con dispositivos periféricos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introducción a Dispositivos Externos -->
+        <div class="slide">
+            <h1>¿Qué son los Dispositivos Externos?</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Definición</h2>
+                    <p>Los dispositivos externos o periféricos son componentes hardware que permiten la comunicación entre el sistema de computación y el mundo exterior.</p>
+                    
+                    <h3>Características Principales</h3>
+                    <ul>
+                        <li><strong class="red-text">Interfaz:</strong> Proporcionan punto de contacto con usuarios</li>
+                        <li><strong class="red-text">Transducción:</strong> Convierten entre dominios físicos y eléctricos</li>
+                        <li><strong class="red-text">Heterogeneidad:</strong> Gran variedad de tipos y velocidades</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://eb56810a5a.cbaul-cdnwnd.com/185ec7719de09a7ac26b3477040faa90/200000026-757f475d80/maithe.jpg" alt="PC con periféricos históricos" class="slide-image">
+                    <p class="image-caption">IBM PC 5150 con periféricos básicos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Evolución Histórica -->
+        <div class="slide">
+            <h1>Evolución Histórica de Periféricos</h1>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Era</th>
+                            <th>Periodo</th>
+                            <th>Dispositivos Típicos</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Mainframes</strong></td>
+                            <td>1940s-1960s</td>
+                            <td>Tarjetas perforadas, teletipos</td>
+                            <td>Procesamiento batch, baja interactividad</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mini-computadores</strong></td>
+                            <td>1960s-1980s</td>
+                            <td>Terminales CRT, impresoras línea</td>
+                            <td>Tiempo compartido, multi-usuario</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PCs</strong></td>
+                            <td>1980s-2000s</td>
+                            <td>Teclado, ratón, monitor color</td>
+                            <td>Interfaz gráfica, personal</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Era Digital</strong></td>
+                            <td>2000s-presente</td>
+                            <td>Táctil, cámaras, sensores IoT</td>
+                            <td>Movilidad, conectividad ubicua</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 4: Arquitectura General de Periféricos -->
+        <div class="slide">
+            <h1>Arquitectura General de Periféricos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Componentes Comunes</h2>
+                    <ul>
+                        <li><strong class="red-text">Transductor:</strong> Convierte señales entre dominios</li>
+                        <li><strong class="red-text">Buffer:</strong> Almacenamiento temporal de datos</li>
+                        <li><strong class="red-text">Controlador:</strong> Lógica de control y protocolo</li>
+                        <li><strong class="red-text">Interfaz:</strong> Conexión con bus del sistema</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Nota:</strong> Cada componente puede implementarse en hardware, software, o combinación de ambos.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://arquitecturadecomputadora.wordpress.com/wp-content/uploads/2013/06/bus-de-datos.jpg" alt="Arquitectura de sistema con bus" class="slide-image">
+                    <p class="image-caption">Arquitectura típica de sistema con bus</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Introducción a Categorías -->
+        <div class="slide">
+            <h1>Categorización de Dispositivos</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Por Función</h4>
+                    <p>Entrada, Salida, Entrada/Salida</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Por Velocidad</h4>
+                    <p>Baja, Media, Alta velocidad</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Por Acceso</h4>
+                    <p>Secuencial, Aleatorio, Directo</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Por Datos</h4>
+                    <p>Caracteres, Bloques, Flujo</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p><strong>Importancia:</strong> La categorización permite al sistema operativo aplicar estrategias específicas de optimización y gestión.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Categorías por Función - Entrada -->
+        <div class="slide">
+            <h1>Dispositivos de Entrada</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Función Principal</h2>
+                    <p>Convierten información del mundo físico en datos digitales que el sistema puede procesar.</p>
+                    
+                    <h3>Ejemplos Principales</h3>
+                    <ul>
+                        <li><strong class="red-text">Teclado:</strong> Texto y comandos</li>
+                        <li><strong class="red-text">Ratón:</strong> Posición y clics</li>
+                        <li><strong class="red-text">Micrófono:</strong> Audio</li>
+                        <li><strong class="red-text">Cámara:</strong> Imágenes y video</li>
+                        <li><strong class="red-text">Sensores:</strong> Datos ambientales</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://cloudfront-us-east-1.images.arcpublishing.com/vanguardiaeluniversal/JFGV3OG3NZB4NIQZNRHZ6SU5GA.jpg" alt="Teclado de computadora" class="slide-image">
+                    <p class="image-caption">Teclado - Dispositivo de entrada básico</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Dispositivos de Entrada - Características -->
+        <div class="slide">
+            <h1>Características de Dispositivos de Entrada</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Precisión</h4>
+                    <p>Fidelidad en captura de información del mundo real</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Resolución</h4>
+                    <p>Nivel de detalle que puede capturar</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Velocidad de Muestreo</h4>
+                    <p>Frecuencia de captura de datos</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Latencia</h4>
+                    <p>Tiempo entre evento físico y dato digital</p>
+                </div>
+            </div>
+            <div class="important-note">
+                <p><strong>Trade-offs:</strong> Mayor precisión y resolución típicamente implican mayor latencia y costo computacional.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Categorías por Función - Salida -->
+        <div class="slide">
+            <h1>Dispositivos de Salida</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Función Principal</h2>
+                    <p>Convierten datos digitales en información que puede ser percibida por usuarios o utilizada por otros sistemas.</p>
+                    
+                    <h3>Ejemplos Principales</h3>
+                    <ul>
+                        <li><strong class="red-text">Monitor:</strong> Información visual</li>
+                        <li><strong class="red-text">Impresora:</strong> Documentos físicos</li>
+                        <li><strong class="red-text">Altavoces:</strong> Audio</li>
+                        <li><strong class="red-text">Actuadores:</strong> Movimiento físico</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://i0.wp.com/folou.co/wp-content/uploads/2022/04/PANTALLA-LCD-DICCIONARIO-FOLOU.jpg" alt="Monitor LCD" class="slide-image">
+                    <p class="image-caption">Monitor LCD - Dispositivo de salida visual</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Dispositivos de Salida - Características -->
+        <div class="slide">
+            <h1>Características de Dispositivos de Salida</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Fidelidad</h4>
+                    <p>Precisión en reproducción de información</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Resolución de Salida</h4>
+                    <p>Calidad del medio de salida</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Velocidad de Reproducción</h4>
+                    <p>Tiempo para generar salida completa</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Persistencia</h4>
+                    <p>Duración de la información de salida</p>
+                </div>
+            </div>
+            <div class="security-alert">
+                <p><strong>Consideración:</strong> Dispositivos de salida permanente (impresoras) requieren consideraciones especiales de seguridad.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Categorías por Función - Entrada/Salida -->
+        <div class="slide">
+            <h1>Dispositivos de Entrada/Salida</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Funcionalidad Dual</h2>
+                    <p>Combinan capacidades de entrada y salida, frecuentemente con funciones de almacenamiento.</p>
+                    
+                    <h3>Ejemplos Principales</h3>
+                    <ul>
+                        <li><strong class="red-text">Discos Duros:</strong> Almacenamiento masivo</li>
+                        <li><strong class="red-text">USB Drives:</strong> Almacenamiento portátil</li>
+                        <li><strong class="red-text">Tarjetas de Red:</strong> Comunicación</li>
+                        <li><strong class="red-text">Pantallas Táctiles:</strong> Entrada y salida visual</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://economipedia.com/wp-content/uploads/4-4.png" alt="Disco duro" class="slide-image">
+                    <p class="image-caption">Disco duro - Dispositivo de E/S y almacenamiento</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Complejidades de Dispositivos E/S -->
+        <div class="slide">
+            <h1>Complejidades de Dispositivos E/S</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Arbitraje de Acceso</h4>
+                    <p>Gestión de operaciones simultáneas de lectura y escritura</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Sincronización</h4>
+                    <p>Coordinación entre operaciones bidireccionales</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Buffering Complejo</h4>
+                    <p>Múltiples buffers para diferentes direcciones</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Protocolo Avanzado</h4>
+                    <p>Manejo de comandos complejos y estados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Categorías por Velocidad - Introducción -->
+        <div class="slide">
+            <h1>Clasificación por Velocidad de Transferencia</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Importancia de la Velocidad</h2>
+                    <p>La velocidad de transferencia determina estrategias de buffering, protocolos de comunicación y arquitectura de controladores.</p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Desafío:</strong> Manejar eficientemente dispositivos con velocidades que difieren por varios órdenes de magnitud.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://sodeys.weebly.com/uploads/1/8/1/4/18149505/803833835.JPG" alt="Comparación de throughput" class="slide-image">
+                    <p class="image-caption">Comparación de velocidades de transferencia</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Dispositivos de Baja Velocidad -->
+        <div class="slide">
+            <h1>Dispositivos de Baja Velocidad</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Rango: 1-100 bytes/segundo</h2>
+                    
+                    <h3>Características</h3>
+                    <ul>
+                        <li><strong class="red-text">Limitados por humanos:</strong> Velocidad de tipeo, movimiento</li>
+                        <li><strong class="red-text">Eventos esporádicos:</strong> No transferencia continua</li>
+                        <li><strong class="red-text">Baja latencia requerida:</strong> Respuesta inmediata</li>
+                    </ul>
+                    
+                    <h3>Ejemplos</h3>
+                    <ul>
+                        <li>Teclados (5-10 caracteres/seg típico)</li>
+                        <li>Ratones (posición + clics)</li>
+                        <li>Sensores ambientales</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://www.mundodeportivo.com/elrecomendador/comparativas/wp-content/uploads/2023/03/ComparativaRatonesErgonomicos.jpg" alt="Ratón de computadora" class="slide-image">
+                    <p class="image-caption">Ratón - Ejemplo de dispositivo de baja velocidad</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Gestión de Dispositivos de Baja Velocidad -->
+        <div class="slide">
+            <h1>Gestión de Dispositivos de Baja Velocidad</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Interrupciones</h4>
+                    <p>Manejo por interrupciones para respuesta inmediata</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Buffering Mínimo</h4>
+                    <p>Buffers pequeños, procesamiento inmediato</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Polling Opcional</h4>
+                    <p>Para sistemas con muchos dispositivos</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Baja Prioridad CPU</h4>
+                    <p>Overhead mínimo del procesador</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Dispositivos de Velocidad Media -->
+        <div class="slide">
+            <h1>Dispositivos de Velocidad Media</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Rango: 100 bytes - 1MB/segundo</h2>
+                    
+                    <h3>Características</h3>
+                    <ul>
+                        <li><strong class="red-text">Transferencias sustanciales:</strong> Bloques de datos</li>
+                        <li><strong class="red-text">Buffering importante:</strong> Suavizar variaciones</li>
+                        <li><strong class="red-text">Operación continua:</strong> Flujos de datos</li>
+                    </ul>
+                    
+                    <h3>Ejemplos</h3>
+                    <ul>
+                        <li>Impresoras de inyección (~1-10 KB/s)</li>
+                        <li>Escáneres de documentos</li>
+                        <li>Audio CD calidad (~176 KB/s)</li>
+                        <li>Modems dial-up (~7 KB/s)</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://www.kyoceradocumentsolutions.mx/renditions/content/dam/kyocera-americas/mx/atriculos/hero-image-mx/Impresora-inyecci%C3%B3n-tinta.jpg/jcr%3Acontent/renditions/cq5dam.resized.img.1536.large.time1714382589791.jpg" alt="Impresora de inyección" class="slide-image">
+                    <p class="image-caption">Impresora de inyección - Velocidad media</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Dispositivos de Alta Velocidad -->
+        <div class="slide">
+            <h1>Dispositivos de Alta Velocidad</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Rango: >1MB/segundo</h2>
+                    
+                    <h3>Características</h3>
+                    <ul>
+                        <li><strong class="red-text">Saturan buses:</strong> Pueden limitar sistema</li>
+                        <li><strong class="red-text">DMA esencial:</strong> Transferencia directa a memoria</li>
+                        <li><strong class="red-text">Buffering extensivo:</strong> Múltiples niveles</li>
+                        <li><strong class="red-text">Optimización crítica:</strong> Impacto en rendimiento</li>
+                    </ul>
+                    
+                    <h3>Ejemplos</h3>
+                    <ul>
+                        <li>Discos duros (100-200 MB/s)</li>
+                        <li>SSD (500-7000 MB/s)</li>
+                        <li>Video HD sin comprimir (>100 MB/s)</li>
+                        <li>Red Gigabit Ethernet (~125 MB/s)</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZBqw4_z7G91TZ4DKOVhh40Bt-JMlrcPE4HA&s" alt="SSD SATA" class="slide-image">
+                    <p class="image-caption">SSD - Ejemplo de dispositivo de alta velocidad</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Comparación de Velocidades -->
+        <div class="slide">
+            <h1>Comparación de Velocidades de Dispositivos</h1>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dispositivo</th>
+                            <th>Velocidad Típica</th>
+                            <th>Categoría</th>
+                            <th>Método de Gestión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Teclado</td>
+                            <td>10 bytes/s</td>
+                            <td>Baja</td>
+                            <td>Interrupciones</td>
+                        </tr>
+                        <tr>
+                            <td>Ratón</td>
+                            <td>100 bytes/s</td>
+                            <td>Baja</td>
+                            <td>Interrupciones</td>
+                        </tr>
+                        <tr>
+                            <td>Audio CD</td>
+                            <td>176 KB/s</td>
+                            <td>Media</td>
+                            <td>Buffering + DMA</td>
+                        </tr>
+                        <tr>
+                            <td>Impresora Láser</td>
+                            <td>1 MB/s</td>
+                            <td>Media-Alta</td>
+                            <td>DMA + Spooling</td>
+                        </tr>
+                        <tr>
+                            <td>Disco Duro</td>
+                            <td>150 MB/s</td>
+                            <td>Alta</td>
+                            <td>DMA + Cache</td>
+                        </tr>
+                        <tr>
+                            <td>SSD NVMe</td>
+                            <td>3500 MB/s</td>
+                            <td>Muy Alta</td>
+                            <td>DMA + Queue Deep</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 18: Categorías por Método de Acceso -->
+        <div class="slide">
+            <h1>Categorías por Método de Acceso</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Importancia del Método de Acceso</h2>
+                    <p>El método de acceso determina cómo se organizan y recuperan los datos, afectando directamente el rendimiento y las estrategias de optimización.</p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Impacto:</strong> Algoritmos de scheduling, cacheing y buffering dependen fundamentalmente del método de acceso.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://www.nakivo.com/blog/wp-content/uploads/2019/11/Inserting-a-cartridge-into-a-tape-backup-drive.webp" alt="Cinta magnética" class="slide-image">
+                    <p class="image-caption">Cinta magnética - Acceso secuencial</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Acceso Secuencial -->
+        <div class="slide">
+            <h1>Acceso Secuencial</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Características</h2>
+                    <ul>
+                        <li><strong class="red-text">Orden fijo:</strong> Datos deben accederse en secuencia</li>
+                        <li><strong class="red-text">Tiempo variable:</strong> Depende de posición actual</li>
+                        <li><strong class="red-text">Rewind necesario:</strong> Para volver al inicio</li>
+                        <li><strong class="red-text">Optimización específica:</strong> Minimizar movimientos</li>
+                    </ul>
+                    
+                    <h3>Aplicaciones</h3>
+                    <ul>
+                        <li>Backup y archivado</li>
+                        <li>Procesamiento batch</li>
+                        <li>Streaming de media</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.blogs.es/66fe7b/captura-de-pantalla-2022-01-28-a-las-11.46.50/1366_2000.jpeg" alt="Cartucho LTO" class="slide-image">
+                    <p class="image-caption">Cartucho LTO - Almacenamiento secuencial moderno</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Optimización para Acceso Secuencial -->
+        <div class="slide">
+            <h1>Optimización para Acceso Secuencial</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Batch Processing</h4>
+                    <p>Agrupar operaciones para minimizar seeks</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Read-Ahead</h4>
+                    <p>Prefetch de datos siguientes en secuencia</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Large Buffers</h4>
+                    <p>Buffers grandes para amortizar latencia</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Sequential Scheduling</h4>
+                    <p>Algoritmos específicos para orden secuencial</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Acceso Aleatorio -->
+        <div class="slide">
+            <h1>Acceso Aleatorio</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Características</h2>
+                    <ul>
+                        <li><strong class="red-text">Flexibilidad:</strong> Cualquier ubicación accesible</li>
+                        <li><strong class="red-text">Tiempo variable:</strong> Depende de distancia a recorrer</li>
+                        <li><strong class="red-text">Seek time:</strong> Tiempo de posicionamiento</li>
+                        <li><strong class="red-text">Optimizable:</strong> Algoritmos de scheduling</li>
+                    </ul>
+                    
+                    <h3>Ventajas</h3>
+                    <ul>
+                        <li>Acceso directo a cualquier dato</li>
+                        <li>Ideal para bases de datos</li>
+                        <li>Soporte para multitasking</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Hard_drive-es.svg/800px-Hard_drive-es.svg.png" alt="Mecanismo interno de disco duro" class="slide-image">
+                    <p class="image-caption">Mecanismo interno - Acceso aleatorio con seek</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Algoritmos de Scheduling para Acceso Aleatorio -->
+        <div class="slide">
+            <h1>Algoritmos de Scheduling para Acceso Aleatorio</h1>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Estrategia</th>
+                            <th>Ventajas</th>
+                            <th>Desventajas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FIFO</strong></td>
+                            <td>Primero en llegar</td>
+                            <td>Simple, equitativo</td>
+                            <td>No optimiza seeks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SSTF</strong></td>
+                            <td>Seek más corto</td>
+                            <td>Minimiza tiempo seek</td>
+                            <td>Puede causar starvation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SCAN</strong></td>
+                            <td>Elevator algorithm</td>
+                            <td>Evita starvation</td>
+                            <td>Favorece centro del disco</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C-SCAN</strong></td>
+                            <td>Circular scan</td>
+                            <td>Tiempo uniforme</td>
+                            <td>Overhead de retorno</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 23: Acceso Directo -->
+        <div class="slide">
+            <h1>Acceso Directo</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Características</h2>
+                    <ul>
+                        <li><strong class="red-text">Sin movimiento mecánico:</strong> Acceso electrónico puro</li>
+                        <li><strong class="red-text">Tiempo constante:</strong> Latencia uniforme</li>
+                        <li><strong class="red-text">Alta velocidad:</strong> Sin delays de posicionamiento</li>
+                        <li><strong class="red-text">Desgaste uniforme:</strong> Wear leveling</li>
+                    </ul>
+                    
+                    <h3>Ventajas</h3>
+                    <ul>
+                        <li>Latencia mínima y predecible</li>
+                        <li>Sin ruido mecánico</li>
+                        <li>Menor consumo energético</li>
+                        <li>Mayor durabilidad física</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/2.5%22_and_3.5%22_SATA_SSDs.jpg/1024px-2.5%22_and_3.5%22_SATA_SSDs.jpg" alt="SSDs SATA" class="slide-image">
+                    <p class="image-caption">SSDs - Ejemplo de acceso directo</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Categorías por Naturaleza de Datos -->
+        <div class="slide">
+            <h1>Categorías por Naturaleza de Datos</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Dispositivos de Caracteres</h4>
+                    <p>Transfieren datos byte a byte</p>
+                    <ul>
+                        <li>Teclados</li>
+                        <li>Puertos serie</li>
+                        <li>Ratones</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Dispositivos de Bloques</h4>
+                    <p>Transfieren bloques de tamaño fijo</p>
+                    <ul>
+                        <li>Discos duros</li>
+                        <li>SSD</li>
+                        <li>CD/DVD</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Dispositivos de Flujo</h4>
+                    <p>Manejan streams continuos</p>
+                    <ul>
+                        <li>Audio</li>
+                        <li>Video</li>
+                        <li>Sensores</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: Introducción a Señales de Comunicación -->
+        <div class="slide">
+            <h1>Señales de Comunicación</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Importancia Fundamental</h2>
+                    <p>Las señales de comunicación forman el "lenguaje" mediante el cual el procesador y los dispositivos periféricos coordinan sus operaciones.</p>
+                    
+                    <h3>Tipos Principales</h3>
+                    <ul>
+                        <li><strong class="red-text">Control:</strong> Coordinan operaciones</li>
+                        <li><strong class="red-text">Estado:</strong> Informan condiciones</li>
+                        <li><strong class="red-text">Datos:</strong> Transportan información</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Sin estas señales:</strong> No habría comunicación organizada entre componentes del sistema.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Data_flow_diagram_example.svg/1024px-Data_flow_diagram_example.svg.png" alt="Diagrama de flujo de datos" class="slide-image">
+                    <p class="image-caption">Flujo de señales en sistema de E/S</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Arquitectura de Señalización -->
+        <div class="slide">
+            <h1>Arquitectura de Señalización</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Niveles de Abstracción</h2>
+                    <ul>
+                        <li><strong class="red-text">Físico:</strong> Voltajes, corrientes, timing</li>
+                        <li><strong class="red-text">Enlace:</strong> Protocolos de señalización</li>
+                        <li><strong class="red-text">Protocolo:</strong> Reglas de comunicación</li>
+                    </ul>
+                    
+                    <h3>Consideraciones de Diseño</h3>
+                    <ul>
+                        <li>Inmunidad al ruido</li>
+                        <li>Sincronización temporal</li>
+                        <li>Detección de errores</li>
+                        <li>Eficiencia energética</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cpumemorybus.svg/1024px-Cpumemorybus.svg.png" alt="Bus del sistema" class="slide-image">
+                    <p class="image-caption">Bus del sistema con señales de control</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Señales de Control - Funciones -->
+        <div class="slide">
+            <h1>Señales de Control - Funciones</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Device Select</h4>
+                    <p>Selecciona dispositivo específico en bus compartido</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Read/Write</h4>
+                    <p>Indica dirección de transferencia de datos</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Enable</h4>
+                    <p>Controla cuándo dispositivo puede acceder al bus</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Clock/Strobe</h4>
+                    <p>Proporciona referencia temporal para sincronización</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Reset</h4>
+                    <p>Inicializa dispositivo a estado conocido</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Interrupt</h4>
+                    <p>Solicita atención inmediata del procesador</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: Protocolos de Handshaking -->
+        <div class="slide">
+            <h1>Protocolos de Handshaking</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Handshaking Asíncrono</h2>
+                    <ol>
+                        <li><strong class="red-text">Strobe:</strong> Transmisor indica datos válidos</li>
+                        <li><strong class="red-text">Acknowledge:</strong> Receptor confirma recepción</li>
+                        <li><strong class="red-text">Release:</strong> Transmisor libera strobe</li>
+                        <li><strong class="red-text">Ready:</strong> Receptor libera acknowledge</li>
+                    </ol>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Ventaja:</strong> Funciona con dispositivos de diferentes velocidades sin sincronización externa.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Async_handshake.svg/1024px-Async_handshake.svg.png" alt="Handshaking asíncrono" class="slide-image">
+                    <p class="image-caption">Diagrama de timing de handshaking asíncrono</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Arbitraje de Bus -->
+        <div class="slide">
+            <h1>Arbitraje de Bus</h1>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Descripción</th>
+                            <th>Ventajas</th>
+                            <th>Desventajas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Centralizado</strong></td>
+                            <td>Árbitro central controla acceso</td>
+                            <td>Simple, control total</td>
+                            <td>Punto único de falla</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Distribuido</strong></td>
+                            <td>Dispositivos negocian entre sí</td>
+                            <td>Sin punto único de falla</td>
+                            <td>Más complejo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prioridad Fija</strong></td>
+                            <td>Jerarquía predeterminada</td>
+                            <td>Predecible, simple</td>
+                            <td>Puede causar starvation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Round Robin</strong></td>
+                            <td>Turnos rotativos</td>
+                            <td>Equitativo</td>
+                            <td>No considera urgencia</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 30: Señales de Estado - Tipos -->
+        <div class="slide">
+            <h1>Señales de Estado - Tipos</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Ready/Busy</h4>
+                    <p>Indica disponibilidad para nueva operación</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Error Flags</h4>
+                    <p>Señalan condiciones de error específicas</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Complete</h4>
+                    <p>Confirma finalización de operación</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Overflow/Underflow</h4>
+                    <p>Indica problemas de buffer</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Device Present</h4>
+                    <p>Confirma conexión física del dispositivo</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Power Status</h4>
+                    <p>Informa estado de alimentación</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: Registro de Estado -->
+        <div class="slide">
+            <h1>Registro de Estado del Dispositivo</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Organización Típica</h2>
+                    <ul>
+                        <li><strong class="red-text">Bit 0:</strong> Ready - Dispositivo listo</li>
+                        <li><strong class="red-text">Bit 1:</strong> Busy - Operación en curso</li>
+                        <li><strong class="red-text">Bit 2:</strong> Error - Error detectado</li>
+                        <li><strong class="red-text">Bit 3:</strong> IRQ - Interrupción pendiente</li>
+                        <li><strong class="red-text">Bits 4-7:</strong> Código de error específico</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Polling:</strong> El sistema puede leer este registro periódicamente para monitorear estado.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/8bit_register.svg/1024px-8bit_register.svg.png" alt="Registro de 8 bits" class="slide-image">
+                    <p class="image-caption">Estructura típica de registro de estado</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 32: Detección y Manejo de Errores -->
+        <div class="slide">
+            <h1>Detección y Manejo de Errores</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Errores de Paridad</h4>
+                    <p>Corrupción de datos durante transferencia</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Errores de Timeout</h4>
+                    <p>Operación no completada en tiempo esperado</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Errores de Dispositivo</h4>
+                    <p>Fallas específicas del hardware</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Errores de Protocolo</h4>
+                    <p>Violaciones de secuencia de comunicación</p>
+                </div>
+            </div>
+            <div class="security-alert">
+                <p><strong>Estrategias:</strong> Reintentos automáticos, notificación al SO, corrección por hardware, terminación graceful.</p>
+            </div>
+        </div>
+
+        <!-- Slide 33: Señales de Datos - Características -->
+        <div class="slide">
+            <h1>Señales de Datos - Características</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Parámetros Principales</h2>
+                    <ul>
+                        <li><strong class="red-text">Ancho de Bus:</strong> 8, 16, 32, 64 bits</li>
+                        <li><strong class="red-text">Direccionalidad:</strong> Unidireccional o bidireccional</li>
+                        <li><strong class="red-text">Velocidad:</strong> Frecuencia de transferencia</li>
+                        <li><strong class="red-text">Formato:</strong> Paralelo vs. serie</li>
+                    </ul>
+                    
+                    <h3>Consideraciones de Diseño</h3>
+                    <ul>
+                        <li>Integridad de señal</li>
+                        <li>Interferencia electromagnética</li>
+                        <li>Skew entre líneas</li>
+                        <li>Consumo energético</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Parallel_and_Serial_Transmission.gif/800px-Parallel_and_Serial_Transmission.gif" alt="Transmisión paralela vs serie" class="slide-image">
+                    <p class="image-caption">Comparación: transmisión paralela vs. serie</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 34: Integridad de Datos -->
+        <div class="slide">
+            <h1>Integridad de Datos</h1>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Capacidad</th>
+                            <th>Overhead</th>
+                            <th>Aplicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Paridad Simple</strong></td>
+                            <td>Detecta errores de 1 bit</td>
+                            <td>1 bit extra</td>
+                            <td>Comunicaciones básicas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Checksum</strong></td>
+                            <td>Detecta errores múltiples</td>
+                            <td>16-32 bits</td>
+                            <td>Protocolos de red</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CRC</strong></td>
+                            <td>Detecta ráfagas de errores</td>
+                            <td>16-32 bits</td>
+                            <td>Almacenamiento, ethernet</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ECC</strong></td>
+                            <td>Detecta y corrige errores</td>
+                            <td>12.5% - 25%</td>
+                            <td>Memoria, almacenamiento crítico</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 35: Multiplexación de Señales -->
+        <div class="slide">
+            <h1>Multiplexación de Señales</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Multiplexación Temporal</h4>
+                    <p>Mismas líneas para diferentes tipos de información en tiempos distintos</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Multiplexación Espacial</h4>
+                    <p>Líneas dedicadas para cada tipo de señal</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Multiplexación por Frecuencia</h4>
+                    <p>Diferentes frecuencias para diferentes señales</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Multiplexación por Código</h4>
+                    <p>Códigos únicos para identificar fuentes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 36: Resumen Final -->
+        <div class="slide">
+            <h1>Resumen: Categorías y Señales de Comunicación</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Puntos Clave</h2>
+                    <ul>
+                        <li><strong class="red-text">Categorización multidimensional</strong> permite optimización específica</li>
+                        <li><strong class="red-text">Velocidad determina</strong> estrategias de buffering y DMA</li>
+                        <li><strong class="red-text">Método de acceso</strong> influye en algoritmos de scheduling</li>
+                        <li><strong class="red-text">Señales de comunicación</strong> son fundamentales para coordinación</li>
+                        <li><strong class="red-text">Integridad de datos</strong> es crítica en todas las transferencias</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Próximo:</strong> Análisis detallado de dispositivos específicos comenzando con teclados, ratones, monitores, impresoras, etc.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Personal_computer%2C_exploded_6.svg/1024px-Personal_computer%2C_exploded_6.svg.png" alt="Componentes de PC explodidos" class="slide-image">
+                    <p class="image-caption">Ecosistema completo de dispositivos E/S</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+            <a href="index.html"><button class="btn">Volver inicio</button"></a>
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">36</span>
+            </span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializar
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte de Dispositivos de Impresión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 700px;
+            animation: slideIn 0.4s ease-in-out;
+            position: relative;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.2rem;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        
+        .slide h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+            margin: 20px 0 15px 0;
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+        }
+        
+        .slide h3 {
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin: 15px 0 10px 0;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .slide ul, .slide ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .slide li {
+            margin-bottom: 8px;
+        }
+        
+        .content-with-image {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .content-left {
+            flex: 1;
+        }
+        
+        .content-right {
+            flex: 1;
+        }
+        
+        .image-container {
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .slide-image {
+            width: 100%;
+            height: 450px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            object-fit: contain;
+        }
+        
+        .image-caption {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .security-alert {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #0284c7;
+        }
+        
+        .protocol-card h4 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(30, 58, 138, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            background: #1e3a8a;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .red-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #10b981;
+        }
+        
+        .feature-card h4 {
+            color: #047857;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table {
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+        
+        .title-slide {
+            text-align: center;
+            padding: 60px 40px;
+        }
+        
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+        
+        .title-slide h2 {
+            font-size: 1.5rem;
+            color: #6b7280;
+            margin-bottom: 40px;
+            border: none;
+            padding: 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            border: 2px solid #1e3a8a;
+            padding: 20px 30px;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-with-image {
+                flex-direction: column;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2rem;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Página de Presentación -->
+        <div class="slide active">
+            <div class="title-slide">
+                <h1>Soporte de Dispositivos de Impresión</h1>
+                <h2>Trabajas para una empresa de diseño gráfico que se especializa en crear materiales de marketing</h2>
+                <div class="logo-container">
+                    <div class="logo">EDUPAN</div>
+                    <div class="logo">CompTIA Core Certification</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Escenario Empresarial -->
+        <div class="slide">
+            <h1>Escenario Empresarial</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <p>Trabajas para una empresa de diseño gráfico que se especializa en crear materiales de marketing, incluyendo folletos, carteles y contenido digital para varios clientes. La empresa depende en gran medida de una gama de <strong class="red-text">dispositivos de impresión</strong>.</p>
+                    
+                    <h2>Tipos de Dispositivos</h2>
+                    <ul>
+                        <li>Impresoras multifuncionales</li>
+                        <li>Impresoras láser</li>
+                        <li>Impresoras de inyección de tinta</li>
+                        <li>Impresoras 3D</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Objetivo Principal:</strong> Asegurar que todos los dispositivos de impresión funcionen de manera óptima, estén bien mantenidos y que cualquier problema se resuelva rápidamente para minimizar el tiempo de inactividad y mantener la productividad.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/8911-1639078991901-mfd.png" alt="Dispositivos de impresión" class="slide-image">
+                    <p class="image-caption">Dispositivo multifuncional que puede escanear, imprimir y enviar fax</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Principales Fabricantes -->
+        <div class="slide">
+            <h1>Principales Fabricantes de Dispositivos de Impresión</h1>
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h4>HP</h4>
+                    <p>Hewlett-Packard</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Epson</h4>
+                    <p>Seiko Epson</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Canon</h4>
+                    <p>Canon Inc.</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Xerox</h4>
+                    <p>Xerox Corporation</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Brother</h4>
+                    <p>Brother Industries</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>OKI</h4>
+                    <p>Oki Electric Industry</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Konica/Minolta</h4>
+                    <p>Konica Minolta</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Lexmark</h4>
+                    <p>Lexmark International</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Ricoh</h4>
+                    <p>Ricoh Company</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>Samsung</h4>
+                    <p>Samsung Electronics</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Nota Importante:</strong> El término <strong>"objeto de impresora"</strong> o <strong>"impresora lógica"</strong> se refiere a la representación de software de la impresora, mientras que <strong>"dispositivo de impresión"</strong> o <strong>"impresora física"</strong> denota el hardware real.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Criterios de Selección -->
+        <div class="slide">
+            <h1>Criterios para Seleccionar una Impresora</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Velocidad</h4>
+                    <p>Medida en <strong>páginas por minuto (ppm)</strong>. El texto monocromo imprime más rápido que las fotos en color.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Resolución</h4>
+                    <p>Medida en <strong>puntos por pulgada (dpi)</strong>. Mayor dpi significa mejor calidad. Las resoluciones vertical y horizontal pueden diferir (ej. 2400x600 dpi).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Manejo de Papel</h4>
+                    <p>Tipos y tamaños de papel que la impresora puede manejar, incluyendo etiquetas, sobres y cartulina. También considera la capacidad de la bandeja.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Opciones Adicionales</h4>
+                    <p>Características como <strong>unidad dúplex automática</strong> para impresión a doble cara y unidades de acabado para plegado, grapado y perforado.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Consideración Clave:</strong> La <strong>unidad dúplex</strong> permite la impresión automática a doble cara, reduciendo el consumo de papel y mejorando la eficiencia.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Ubicación de Instalación -->
+        <div class="slide">
+            <h1>Ubicación de Instalación</h1>
+            <h2>Factores Críticos a Considerar</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Energía y Red</h4>
+                    <p>Asegurar acceso a una toma de corriente y puerto de datos de red. Evitar riesgos de tropiezos con cables.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Entorno</h4>
+                    <p>Colocar la impresora en una superficie estable y plana, lejos de la luz solar directa. Asegurar buena ventilación para disipar vapores.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Accesibilidad</h4>
+                    <p>La impresora debe ser fácilmente accesible pero no disruptiva. Para impresión confidencial, considerar un área con control de acceso.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Almacenamiento</h4>
+                    <p>Almacenar consumibles en un área seca y con temperatura controlada.</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <p><strong>Alerta de Seguridad:</strong> Para documentos confidenciales, ubique la impresora en un área con control de acceso para evitar la interceptación de documentos sensibles.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Proceso de Desempaquetado -->
+        <div class="slide">
+            <h1>Proceso de Desempaquetado</h1>
+            <h2>Factores Generales a Tener en Cuenta</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Levantamiento Seguro</h4>
+                    <p>Muchas impresoras son pesadas y pueden requerir dos personas. Usar técnicas de levantamiento seguro, doblar las rodillas y agarrar solo las ubicaciones de manija designadas.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Materiales de Empaque</h4>
+                    <p>Remover todas las tiras de empaque y soportes antes de encender la impresora. Verificar tiras en componentes removibles ocultos por paneles.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Aclimatación</h4>
+                    <p>Permitir que la impresora se aclimate después del desempaquetado. Dejarla apagada por unas horas para prevenir problemas de condensación.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Papel de Impresora</h4>
+                    <p>Almacenar el papel por un día o más para ajustarse a la temperatura y humedad del lugar de instalación.</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Importante:</strong> Seguir siempre las instrucciones del fabricante y asegurar que el camino esté libre de obstáculos antes del movimiento.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Gestión de Firmware -->
+        <div class="slide">
+            <h1>Gestión de Firmware en MFD e Impresoras</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>¿Qué es el Firmware?</h2>
+                    <p>El <strong class="red-text">firmware</strong> en dispositivos multifuncionales (MFD) e impresoras controla funciones como impresión, escaneo y conectividad de red. Las actualizaciones regulares mejoran el rendimiento, corrigen errores y abordan vulnerabilidades de seguridad.</p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Beneficios del Firmware:</strong></p>
+                        <ul>
+                            <li>Compatibilidad con controladores y sistemas operativos</li>
+                            <li>Acceso a configuraciones avanzadas</li>
+                            <li>Direcciones IP y configuraciones DNS</li>
+                            <li>Características de seguridad</li>
+                            <li>Opciones de escaneo de red</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/9310-1644816002623-a_fig09_01.png" alt="Gestión de firmware" class="slide-image">
+                    <p class="image-caption">Gestión de impresora usando navegador</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Verificación y Actualización de Firmware -->
+        <div class="slide">
+            <h1>Verificación y Actualización de Firmware</h1>
+            
+            <h2>Verificar Versión de Firmware</h2>
+            <ul>
+                <li>Usar el panel de control bajo <strong>Información del Sistema</strong></li>
+                <li>Acceder a la interfaz web del dispositivo ingresando su dirección IP en un navegador</li>
+            </ul>
+            
+            <h2>Actualizar Firmware</h2>
+            <ul>
+                <li>Descargar e instalar actualizaciones vía panel de control</li>
+                <li>Interfaz web del dispositivo</li>
+                <li>Herramientas del fabricante como HP Web Jetadmin o Canon imageWARE</li>
+            </ul>
+            
+            <div class="security-alert">
+                <p><strong>Alerta de Seguridad:</strong> Las actualizaciones regulares aseguran que los dispositivos permanezcan seguros, compatibles y funcionen de manera óptima, especialmente crucial para impresoras en red que manejan datos sensibles.</p>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Mejores Prácticas:</strong> Siempre respaldar configuraciones antes de realizar actualizaciones. Probar nuevo firmware en un solo dispositivo antes de implementarlo en múltiples dispositivos.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Conectividad USB -->
+        <div class="slide">
+            <h1>Conectividad USB</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Instalación USB</h2>
+                    <p>Para instalar una impresora con <strong class="red-text">conectividad USB</strong>:</p>
+                    <ul>
+                        <li>Conectar el conector Tipo B a la impresora</li>
+                        <li>Conectar el conector Tipo A a un puerto USB de la computadora</li>
+                        <li>Si solo hay puertos USB C, puede ser necesario un adaptador USB B a USB C</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Plug and Play:</strong> El sistema operativo típicamente detectará la impresora automáticamente y instalará el controlador necesario. Para confirmar la instalación, puedes imprimir una página de prueba.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/2771-1638811592631-windows_10_settings_printer_usb_port.png" alt="Configuración USB" class="slide-image">
+                    <p class="image-caption">Uso de configuración de Windows para verificar instalación de impresora en puerto USB</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Conectividad Ethernet -->
+        <div class="slide">
+            <h1>Conectividad Ethernet</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Configuración de Red</h2>
+                    <p>La mayoría de las impresoras vienen con un adaptador Ethernet y puerto RJ45. Pueden:</p>
+                    <ul>
+                        <li>Obtener una dirección <strong class="red-text">IP</strong> automáticamente de un servidor DHCP</li>
+                        <li>Ser configuradas manualmente</li>
+                        <li>Registrar la dirección IP en un servidor DNS para conexiones más fáciles vía <strong>FQDN</strong></li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Configuración Local:</strong> Las impresoras típicamente ofrecen configuración de red local a través de un sistema de menú LCD con botones o pantalla táctil.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/9524-1638811618740-hp_printer_network_setup_control_panel_sized.jpg" alt="Panel de control de red" class="slide-image">
+                    <p class="image-caption">Configuración del método de dirección IP vía panel de control de la impresora</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conectividad Inalámbrica -->
+        <div class="slide">
+            <h1>Conectividad Inalámbrica</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Bluetooth</h4>
+                    <p>Para conexiones <strong>Bluetooth</strong> en Windows, hacer la impresora detectable vía su panel de control, luego agregar el dispositivo a través de la configuración de Bluetooth.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Wi-Fi - Modo Infraestructura</h4>
+                    <p>Conectar la impresora a un punto de acceso Wi-Fi, haciéndola disponible a clientes en la red vía dirección IP o FQDN.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Wi-Fi Direct</h4>
+                    <p>Configurar un punto de acceso implementado por software en la impresora para permitir conexiones directas desde dispositivos cliente.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Impresión Móvil</h4>
+                    <p>Características como Apple AirPrint, Mopria y soluciones basadas en la nube como HP ePrint.</p>
+                </div>
+            </div>
+            
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/5624-1638811676317-hp_printer_wifi_setup.jpg" alt="Configuración Wi-Fi" class="slide-image">
+                    <p class="image-caption">Uso del panel de control para verificar estado de conexión Wi-Fi en modo infraestructura</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Controladores y Lenguajes PDL -->
+        <div class="slide">
+            <h1>Controladores y Lenguajes de Descripción de Página</h1>
+            
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Principio WYSIWYG</h2>
+                    <p>Las aplicaciones que soportan impresión típicamente siguen el principio <strong class="red-text">"lo que ves es lo que obtienes"</strong> (WYSIWYG). Los controladores de impresora sirven como interfaz entre el dispositivo de impresión y el sistema operativo.</p>
+                    
+                    <div class="important-note">
+                        <p><strong>Compatibilidad:</strong> Los sistemas operativos de 64 bits requieren controladores de 64 bits. Muchas impresoras antiguas se han vuelto inutilizables porque los fabricantes no han desarrollado controladores de 64 bits.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/5092-1638811709741-windows_10_printer_properties_driver_ps_and_pcl.png" alt="Controladores PDL" class="slide-image">
+                    <p class="image-caption">Esta impresora HP soporta tanto Printer Control Language (PCL) como PostScript (PS)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Tipos de PDL -->
+        <div class="slide">
+            <h1>Tipos de Lenguajes de Descripción de Página (PDL)</h1>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PDL (Nombre completo)</th>
+                            <th>Características</th>
+                            <th>Uso Recomendado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>PostScript (PostScript Language)</strong></td>
+                            <td>Independiente del dispositivo, consistencia superior, más lento</td>
+                            <td>Diseño gráfico profesional, autoedición</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PCL (Printer Command Language)</strong></td>
+                            <td>Dependiente del dispositivo, más rápido, menos memoria requerida</td>
+                            <td>Entornos de oficina, documentos de texto</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XPS (XML Paper Specification)</strong></td>
+                            <td>Alternativa de Microsoft a PostScript, basado en XML</td>
+                            <td>Documentos de Windows, especialmente con fuentes complejas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GDI (Graphics Device Interface)</strong></td>
+                            <td>Windows solo, sin procesamiento en la impresora</td>
+                            <td>Impresoras económicas para uso doméstico</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Nota:</strong> Algunas impresoras pueden soportar múltiples PDLs, permitiendo al usuario seleccionar el más apropiado para cada trabajo de impresión.</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Conclusión -->
+        <div class="slide">
+            <h1>Conclusión</h1>
+            
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Puntos Clave</h2>
+                    <ul>
+                        <li>Los dispositivos de impresión son componentes críticos en entornos empresariales modernos</li>
+                        <li>La selección adecuada del dispositivo depende de múltiples factores técnicos y organizacionales</li>
+                        <li>La instalación y configuración correctas son esenciales para un funcionamiento óptimo</li>
+                        <li>El mantenimiento regular y las actualizaciones de firmware mejoran la seguridad y el rendimiento</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Recomendación Final:</strong> Implementar un programa de mantenimiento preventivo para todos los dispositivos de impresión, incluyendo limpieza regular, reemplazo de consumibles y actualizaciones de firmware.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_printers_and_multifunction_devices/8911-1639078991901-mfd.png" alt="Conclusión" class="slide-image">
+                    <p class="image-caption">Dispositivo multifuncional moderno con capacidades de red</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+             <a href="index.html"><button class="btn">Volver inicio</button></a> 
+            <button class="btn" id="prevBtn">Anterior</button>
+            <div class="slide-counter" id="slideCounter">1 / 14</div>
+            <button class="btn" id="nextBtn">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            
+            let currentSlide = 0;
+            
+            // Mostrar el slide actual
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                
+                // Actualizar contador
+                slideCounter.textContent = `${index + 1} / ${slides.length}`;
+                
+                // Habilitar/deshabilitar botones según la posición
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === slides.length - 1;
+            }
+            
+            // Event listeners para los botones
+            prevBtn.addEventListener('click', function() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            });
+            
+            // Navegación con teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                } else if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            });
+            
+            // Inicializar
+            showSlide(currentSlide);
+        });
+    </script>
+</body>
+</html>

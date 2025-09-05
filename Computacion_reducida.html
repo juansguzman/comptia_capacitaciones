@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo V: Placas Reducidas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #eee;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: #0f3460;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .slide-counter {
+            color: #16a085;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: #16213e;
+            width: 100%;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .slide-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #0f3460;
+        }
+        
+        .slides {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .slide {
+            min-width: 100%;
+            padding: 40px 60px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .slide::-webkit-scrollbar-track {
+            background: #16213e;
+        }
+        
+        .slide::-webkit-scrollbar-thumb {
+            background: #3a47d5;
+            border-radius: 4px;
+        }
+        
+        h1 {
+            color: #00d2ff;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h2 {
+            color: #3a47d5;
+            font-size: 2.2em;
+            margin: 30px 0 20px 0;
+            border-bottom: 3px solid #3a47d5;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #00d2ff;
+            font-size: 1.6em;
+            margin: 20px 0 15px 0;
+        }
+        
+        h4 {
+            color: #16a085;
+            font-size: 1.3em;
+            margin: 15px 0 10px 0;
+        }
+        
+        p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .img-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .img-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .feature-box {
+            background: rgba(58, 71, 213, 0.1);
+            border: 1px solid #3a47d5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #00d2ff22 0%, #3a47d522 100%);
+            border-left: 4px solid #00d2ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .specs-table th,
+        .specs-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #3a47d5;
+        }
+        
+        .specs-table th {
+            background: #3a47d5;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .specs-table tr:hover {
+            background: rgba(58, 71, 213, 0.1);
+        }
+        
+        .nav-controls {
+            background-color: #16213e;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a47d5 100%);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1em;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+        }
+        
+        .nav-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .slide-dots {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background: #00d2ff;
+            width: 30px;
+            border-radius: 5px;
+        }
+        
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .video-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+        
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.6em;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .img-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-container">
+    <div class="header">
+        <h3 style="margin: 0; color: #00d2ff;">Módulo V: Placas Reducidas</h3>
+        <div class="slide-counter" id="slide-counter">Slide 1 de 20</div>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+    
+    <div class="slide-area">
+        <div class="slides" id="slides">
+            
+            <!-- Slide 1: Portada -->
+            <div class="slide">
+                <h1>Módulo V: Placas Reducidas</h1>
+                <h2 style="text-align: center; border: none;">Tecnologías de Computación Embebida</h2>
+                
+                <div class="img-grid">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" alt="Raspberry Pi">
+                    <img src="https://images.unsplash.com/photo-1573496774379-b930dba17d8b?w=400" alt="Circuitos">
+                    <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=400" alt="Arduino">
+                    <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400" alt="Electrónica">
+                </div>
+                
+                <div class="feature-box" style="margin-top: 40px;">
+                    <h3 style="text-align: center;">Explorando las plataformas de desarrollo más populares</h3>
+                    <p style="text-align: center; font-size: 1.2em;">IoT • Robótica • Inteligencia Artificial • Proyectos Embebidos</p>
+                </div>
+                
+                <div class="highlight">
+                    <h4>Objetivos de aprendizaje:</h4>
+                    <ul>
+                        <li>Comprender qué son las placas reducidas (SBC) y sus aplicaciones</li>
+                        <li>Conocer las características de Raspberry Pi y su ecosistema</li>
+                        <li>Explorar alternativas especializadas: Jetson Nano, LattePanda, etc.</li>
+                        <li>Aprender a seleccionar la placa adecuada para cada proyecto</li>
+                        <li>Entender las tendencias futuras en computación embebida</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 8: Aplicaciones Raspberry Pi -->
+            <div class="slide">
+                <h2>Aplicaciones Prácticas de Raspberry Pi</h2>
+                
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800" alt="Raspberry Pi Projects" style="max-width: 600px;">
+                
+                <h3>Proyectos populares con Raspberry Pi:</h3>
+                
+                <div class="two-column">
+                    <div>
+                        <div class="feature-box">
+                            <h4>🏠 Proyectos domésticos:</h4>
+                            <ul>
+                                <li><strong>Media Center:</strong> Kodi/Plex para streaming</li>
+                                <li><strong>NAS casero:</strong> Servidor de archivos en red</li>
+                                <li><strong>Pi-hole:</strong> Bloqueador de anuncios DNS</li>
+                                <li><strong>Home Assistant:</strong> Automatización del hogar</li>
+                                <li><strong>Retro Gaming:</strong> Emulador de consolas clásicas</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-box">
+                            <h4>🎓 Proyectos educativos:</h4>
+                            <ul>
+                                <li><strong>Estación meteorológica:</strong> Con sensores ambientales</li>
+                                <li><strong>Cámara de seguridad:</strong> Con detección de movimiento</li>
+                                <li><strong>Servidor web:</strong> Apache/Nginx para aprender</li>
+                                <li><strong>Robot básico:</strong> Control de motores y sensores</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="feature-box">
+                            <h4>💼 Proyectos avanzados:</h4>
+                            <ul>
+                                <li><strong>Cluster computing:</strong> Múltiples Pi en paralelo</li>
+                                <li><strong>Drone autónomo:</strong> Con GPS y cámara</li>
+                                <li><strong>Reconocimiento facial:</strong> Con OpenCV</li>
+                                <li><strong>Bitcoin node:</strong> Nodo completo de blockchain</li>
+                                <li><strong>SDR (Radio):</strong> Receptor de radio definido por software</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-box">
+                            <h4>🏭 Aplicaciones industriales:</h4>
+                            <ul>
+                                <li><strong>IoT Gateway:</strong> Recolección de datos de sensores</li>
+                                <li><strong>HMI industrial:</strong> Interfaz hombre-máquina</li>
+                                <li><strong>Control de calidad:</strong> Visión artificial</li>
+                                <li><strong>Monitoreo remoto:</strong> Sistemas SCADA básicos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Caso real:</strong> La NASA usa Raspberry Pi en la ISS para el proyecto Astro Pi, donde estudiantes pueden ejecutar sus experimentos en el espacio.
+                </div>
+            </div>
+
+            <!-- Slide 9: Otras SBC Introducción -->
+            <div class="slide">
+                <h2>5.2 Otras Placas Reducidas</h2>
+                
+                <img src="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=800" alt="Various SBCs" style="max-width: 700px;">
+                
+                <h3>Alternativas especializadas a Raspberry Pi:</h3>
+                
+                <div class="feature-box">
+                    <p>Aunque Raspberry Pi domina el mercado, existen otras SBCs con características únicas diseñadas para aplicaciones específicas. Cada una tiene sus fortalezas según el tipo de proyecto.</p>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Por qué considerar alternativas:</h4>
+                        <ul>
+                            <li><strong>Mayor rendimiento:</strong> CPUs más potentes o GPUs especializadas</li>
+                            <li><strong>Características únicas:</strong> Windows nativo, SATA, NPU para IA</li>
+                            <li><strong>Mejor precio/rendimiento:</strong> Para aplicaciones específicas</li>
+                            <li><strong>Disponibilidad:</strong> Durante escasez de Raspberry Pi</li>
+                            <li><strong>Soporte empresarial:</strong> Para aplicaciones comerciales</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Principales competidores:</h4>
+                        <ul>
+                            <li><strong>NVIDIA Jetson:</strong> Líder en IA embebida</li>
+                            <li><strong>LattePanda:</strong> Windows completo en SBC</li>
+                            <li><strong>ODROID:</strong> Alto rendimiento ARM</li>
+                            <li><strong>Orange Pi:</strong> Alternativa económica</li>
+                            <li><strong>BeagleBone:</strong> Enfoque industrial</li>
+                            <li><strong>Pine64:</strong> Open source hardware</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Importante:</strong> La elección de SBC debe basarse en los requisitos específicos del proyecto, no solo en el precio o popularidad.
+                </div>
+            </div>
+
+            <!-- Slide 10: LattePanda -->
+            <div class="slide">
+                <h2>5.2.1 LattePanda - Windows en tu palma</h2>
+                
+                <img src="https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?w=800" alt="LattePanda Board" style="max-width: 600px;">
+                
+                <div class="feature-box">
+                    <h3>¿Qué es LattePanda?</h3>
+                    <p>LattePanda es una serie de SBCs x86 que pueden ejecutar Windows 10/11 completo. Única en su categoría por incluir un Arduino Leonardo integrado, permitiendo control en tiempo real junto con aplicaciones Windows.</p>
+                </div>
+                
+                <h3>Especificaciones LattePanda 3 Delta:</h3>
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Característica</th>
+                            <th>Especificación</th>
+                        </tr>
+                        <tr>
+                            <td><strong>CPU</strong></td>
+                            <td>Intel Celeron N5105 (4 cores @ 2.9GHz)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPU</strong></td>
+                            <td>Intel UHD Graphics (24 EU)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RAM</strong></td>
+                            <td>8GB LPDDR4</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Almacenamiento</strong></td>
+                            <td>64GB eMMC + slot M.2 NVMe</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Arduino</strong></td>
+                            <td>ATmega32U4 integrado (Leonardo compatible)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Precio</strong></td>
+                            <td>$279 USD</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <div class="feature-box">
+                            <h4>✅ Ventajas:</h4>
+                            <ul>
+                                <li>Windows 10/11 Pro activado</li>
+                                <li>Compatibilidad total x86</li>
+                                <li>Arduino integrado para GPIO</li>
+                                <li>Puede ejecutar software legacy</li>
+                                <li>Excelente para kioscos y POS</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="feature-box">
+                            <h4>❌ Desventajas:</h4>
+                            <ul>
+                                <li>Precio elevado vs ARM</li>
+                                <li>Mayor consumo energético</li>
+                                <li>Requiere enfriamiento activo</li>
+                                <li>Comunidad más pequeña</li>
+                                <li>Menos documentación DIY</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: NVIDIA Jetson Nano -->
+            <div class="slide">
+                <h2>5.2.2 NVIDIA Jetson Nano - IA en el Edge</h2>
+                
+                <img src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=800" alt="AI Processing" style="max-width: 600px;">
+                
+                <div class="feature-box">
+                    <h3>¿Qué es Jetson Nano?</h3>
+                    <p>NVIDIA Jetson Nano es una SBC diseñada específicamente para aplicaciones de inteligencia artificial y visión por computadora. Incluye una GPU CUDA real con 128 cores, ideal para inferencia de redes neuronales.</p>
+                </div>
+                
+                <h3>Especificaciones técnicas:</h3>
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Característica</th>
+                            <th>Especificación</th>
+                        </tr>
+                        <tr>
+                            <td><strong>GPU</strong></td>
+                            <td>128-core NVIDIA Maxwell™</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CPU</strong></td>
+                            <td>Quad-core ARM A57 @ 1.43 GHz</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memoria</strong></td>
+                            <td>4GB 64-bit LPDDR4</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IA Performance</strong></td>
+                            <td>472 GFLOPS (FP16)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Video</strong></td>
+                            <td>4K @ 30fps encode/decode</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Precio</strong></td>
+                            <td>$99 USD (2GB) / $149 USD (4GB)</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Frameworks soportados:</h4>
+                        <ul>
+                            <li>TensorFlow / TensorFlow Lite</li>
+                            <li>PyTorch</li>
+                            <li>Caffe / Caffe2</li>
+                            <li>MXNet</li>
+                            <li>Keras</li>
+                            <li>ONNX</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Aplicaciones típicas:</h4>
+                        <ul>
+                            <li>Detección de objetos en tiempo real</li>
+                            <li>Reconocimiento facial</li>
+                            <li>Robots autónomos</li>
+                            <li>Drones inteligentes</li>
+                            <li>Cámaras de seguridad con IA</li>
+                            <li>Análisis de video industrial</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Rendimiento IA:</strong> Jetson Nano puede ejecutar múltiples redes neuronales en paralelo. Por ejemplo: YOLOv3 a 25 FPS para detección de objetos en tiempo real.
+                </div>
+            </div>
+
+            <!-- Slide 12: ODROID -->
+            <div class="slide">
+                <h2>5.2.3 ODROID - Potencia bruta ARM</h2>
+                
+                <img src="https://wiki.purduesigbots.com/~gitbook/image?url=https%3A%2F%2F3510336827-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-M7yGVyBrcpSR8SDSikj%252F-M860r0qPsJ8gOX5etrA%252F-M8616diF6-H1fXAMwHc%252Fodroid-xu4-octa-core-computer-with-samsung-exynos-5422-g143452239825-980.jpg%3Falt%3Dmedia%26token%3Dabc522ab-f0ba-456a-8dfa-6e2cdea4ee1a&width=768&dpr=4&quality=100&sign=b81ff230&sv=2" alt="ODROID Board" style="max-width: 600px;">
+                
+                <div class="feature-box">
+                    <h3>¿Qué es ODROID?</h3>
+                    <p>ODROID (Open + Android) es una línea de SBCs de Hardkernel (Corea del Sur) conocida por ofrecer alto rendimiento a precio competitivo. Popular entre entusiastas que buscan más potencia que Raspberry Pi.</p>
+                </div>
+                
+                <h3>Modelo destacado: ODROID-N2+</h3>
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Característica</th>
+                            <th>Especificación</th>
+                        </tr>
+                        <tr>
+                            <td><strong>CPU</strong></td>
+                            <td>4x Cortex-A73 @ 2.4GHz + 2x Cortex-A53 @ 2GHz</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPU</strong></td>
+                            <td>Mali-G52 MP4 @ 846MHz</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RAM</strong></td>
+                            <td>4GB DDR4</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ethernet</strong></td>
+                            <td>Gigabit real (no compartido con USB)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>USB</strong></td>
+                            <td>4x USB 3.0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Precio</strong></td>
+                            <td>$79 USD</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="feature-box">
+                    <h4>Serie ODROID popular:</h4>
+                    <ul>
+                        <li><strong>ODROID-C4:</strong> Alternativa directa a Pi 4 ($54)</li>
+                        <li><strong>ODROID-HC4:</strong> NAS con 2x SATA nativo</li>
+                        <li><strong>ODROID-GO:</strong> Consola gaming portátil</li>
+                        <li><strong>ODROID-XU4:</strong> 8 cores para servidores</li>
+                        <li><strong>ODROID-M1:</strong> Con NPU para IA</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Benchmark:</strong> ODROID-N2+ supera a Raspberry Pi 4 en un 40-50% en pruebas multi-core y tiene mejor rendimiento en emulación de juegos.
+                </div>
+            </div>
+
+            <!-- Slide 13: Arduino -->
+            <div class="slide">
+                <h2>5.2.4 Arduino - Microcontrolador, NO SBC</h2>
+                
+                <img src="https://images.unsplash.com/photo-1559819614-81fea9efd090?w=800" alt="Arduino Board" style="max-width: 600px;">
+                
+                <div class="feature-box" style="background: #ff5252; color: white;">
+                    <h3>⚠️ Aclaración importante</h3>
+                    <p><strong>Arduino NO es una SBC.</strong> Es una plataforma de microcontroladores para control de hardware en tiempo real. No ejecuta sistemas operativos.</p>
+                </div>
+                
+                <h3>Diferencias clave: Arduino vs SBC</h3>
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Característica</th>
+                            <th>Arduino</th>
+                            <th>SBC (ej: Raspberry Pi)</th>
+                        </tr>
+                        <tr>
+                            <td>Sistema Operativo</td>
+                            <td>❌ No tiene</td>
+                            <td>✅ Linux, Windows, etc.</td>
+                        </tr>
+                        <tr>
+                            <td>Tiempo real</td>
+                            <td>✅ Excelente</td>
+                            <td>❌ Limitado</td>
+                        </tr>
+                        <tr>
+                            <td>Consumo energético</td>
+                            <td>✅ Muy bajo (mW)</td>
+                            <td>❌ Alto (W)</td>
+                        </tr>
+                        <tr>
+                            <td>Precio</td>
+                            <td>✅ $10-30</td>
+                            <td>❌ $35+</td>
+                        </tr>
+                        <tr>
+                            <td>Complejidad</td>
+                            <td>✅ Simple</td>
+                            <td>❌ Complejo</td>
+                        </tr>
+                        <tr>
+                            <td>Potencia de cómputo</td>
+                            <td>❌ Limitada</td>
+                            <td>✅ Alta</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Cuándo usar Arduino:</h4>
+                        <ul>
+                            <li>Control de motores y servos</li>
+                            <li>Lectura de sensores</li>
+                            <li>Proyectos con batería</li>
+                            <li>Control en tiempo real</li>
+                            <li>Interfaces simples</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Cuándo usar SBC:</h4>
+                        <ul>
+                            <li>Procesamiento complejo</li>
+                            <li>Interfaces gráficas</li>
+                            <li>Conectividad internet</li>
+                            <li>Bases de datos</li>
+                            <li>Multitarea</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Combinación perfecta:</strong> Muchos proyectos usan Arduino para control en tiempo real + Raspberry Pi para procesamiento, comunicándose por serial o I2C.
+                </div>
+            </div>
+
+            <!-- Slide 14: Comparativa General -->
+            <div class="slide">
+                <h2>Comparativa completa entre placas</h2>
+                
+                <h3>Análisis técnico y de mercado:</h3>
+                
+                <div style="overflow-x: auto;">
+                    <table class="specs-table">
+                        <tr>
+                            <th>Placa</th>
+                            <th>CPU</th>
+                            <th>RAM</th>
+                            <th>GPU/IA</th>
+                            <th>Precio</th>
+                            <th>Mejor para</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Raspberry Pi 5</strong></td>
+                            <td>4x A76 @ 2.4GHz</td>
+                            <td>4-8GB</td>
+                            <td>VideoCore VII</td>
+                            <td>$60-80</td>
+                            <td>Propósito general</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jetson Nano</strong></td>
+                            <td>4x A57 @ 1.43GHz</td>
+                            <td>4GB</td>
+                            <td>128 CUDA cores</td>
+                            <td>$99-149</td>
+                            <td>IA y visión</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LattePanda 3</strong></td>
+                            <td>Intel N5105</td>
+                            <td>8GB</td>
+                            <td>Intel UHD</td>
+                            <td>$279</td>
+                            <td>Windows apps</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ODROID-N2+</strong></td>
+                            <td>6x cores ARM</td>
+                            <td>4GB</td>
+                            <td>Mali-G52</td>
+                            <td>$79</td>
+                            <td>Alto rendimiento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orange Pi 5</strong></td>
+                            <td>8x cores RK3588</td>
+                            <td>4-32GB</td>
+                            <td>Mali-G610 + NPU</td>
+                            <td>$60-150</td>
+                            <td>Mejor calidad/precio</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="two-column" style="margin-top: 30px;">
+                    <div>
+                        <div class="feature-box">
+                            <h4>🏆 Ganadores por categoría:</h4>
+                            <ul>
+                                <li><strong>Principiantes:</strong> Raspberry Pi</li>
+                                <li><strong>IA/ML:</strong> Jetson Nano</li>
+                                <li><strong>Windows:</strong> LattePanda</li>
+                                <li><strong>Rendimiento:</strong> Orange Pi 5</li>
+                                <li><strong>Servidores:</strong> ODROID</li>
+                                <li><strong>IoT básico:</strong> Pi Zero 2 W</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="feature-box">
+                            <h4>📊 Cuota de mercado (2023):</h4>
+                            <ul>
+                                <li><strong>Raspberry Pi:</strong> 70%</li>
+                                <li><strong>Arduino:</strong> 15%</li>
+                                <li><strong>NVIDIA Jetson:</strong> 5%</li>
+                                <li><strong>Otros ARM:</strong> 8%</li>
+                                <li><strong>x86 (LattePanda):</strong> 2%</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Guía de Selección -->
+            <div class="slide">
+                <h2>Guía de selección de SBC</h2>
+                
+                <img src="https://www.lacon.de/fileadmin/_processed_/6/0/csm_dr-ev-koffer-screen-close-platine-1089-in_8ba31fcb4d.jpg" alt="Decision Making" style="max-width: 600px;">
+                
+                <h3>¿Cómo elegir la placa correcta?</h3>
+                
+                <div class="feature-box">
+                    <h4>Preguntas clave antes de elegir:</h4>
+                    <ol>
+                        <li>¿Cuál es mi presupuesto total (incluyendo accesorios)?</li>
+                        <li>¿Qué tipo de proyecto voy a desarrollar?</li>
+                        <li>¿Necesito características específicas (IA, Windows, GPIO)?</li>
+                        <li>¿Qué tan importante es el soporte y la comunidad?</li>
+                        <li>¿Cuál es mi nivel de experiencia técnica?</li>
+                    </ol>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Por tipo de proyecto:</h4>
+                        <div class="feature-box">
+                            <p><strong>🎓 Educación/Aprendizaje</strong><br>
+                            → Raspberry Pi 4/5</p>
+                            
+                            <p><strong>🤖 IA/Machine Learning</strong><br>
+                            → NVIDIA Jetson Nano</p>
+                            
+                            <p><strong>💻 Aplicaciones Windows</strong><br>
+                            → LattePanda</p>
+                            
+                            <p><strong>🎮 Gaming/Emulación</strong><br>
+                            → ODROID o Orange Pi 5</p>
+                            
+                            <p><strong>🏠 Domótica/IoT</strong><br>
+                            → Raspberry Pi Zero 2 W</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Por presupuesto:</h4>
+                        <div class="feature-box">
+                            <p><strong>< $30</strong><br>
+                            Raspberry Pi Zero 2 W, Arduino</p>
+                            
+                            <p><strong>$30-60</strong><br>
+                            Raspberry Pi 4 (2GB), Orange Pi</p>
+                            
+                            <p><strong>$60-100</strong><br>
+                            Raspberry Pi 5, ODROID-N2+</p>
+                            
+                            <p><strong>$100-200</strong><br>
+                            Jetson Nano, Pine64 RockPro</p>
+                            
+                            <p><strong>> $200</strong><br>
+                            LattePanda, Jetson Xavier NX</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Consejo:</strong> Si es tu primera SBC, empieza con Raspberry Pi 4 (4GB). Tiene el mejor equilibrio entre precio, rendimiento, documentación y comunidad.
+                </div>
+            </div>
+
+            <!-- Slide 16: Ecosistema y Accesorios -->
+            <div class="slide">
+                <h2>Ecosistema y accesorios esenciales</h2>
+                
+                <img src="https://s3-ap-southeast-2.amazonaws.com/images.littlebird.com.au/uploads%2F1589177424848-Starter_Kit_for_Raspberry_Pi%2B_Arduino6.jpg" alt="Electronics accessories" style="max-width: 800px;">
+                
+                <h3>Componentes necesarios para empezar:</h3>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>🔌 Esenciales (obligatorios):</h4>
+                        <div class="feature-box">
+                            <ul>
+                                <li><strong>Fuente de alimentación:</strong>
+                                    <ul>
+                                        <li>Pi 4: USB-C 5V/3A</li>
+                                        <li>Pi 5: USB-C PD 5V/5A</li>
+                                        <li>Calidad importa para estabilidad</li>
+                                    </ul>
+                                </li>
+                                <li><strong>MicroSD Card:</strong>
+                                    <ul>
+                                        <li>Mínimo Class 10/A1</li>
+                                        <li>32GB+ recomendado</li>
+                                        <li>Marcas: Samsung, SanDisk</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Case/Carcasa:</strong>
+                                    <ul>
+                                        <li>Protección física</li>
+                                        <li>Mejor con ventilación</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>🛠️ Recomendados:</h4>
+                        <div class="feature-box">
+                            <ul>
+                                <li><strong>Refrigeración:</strong>
+                                    <ul>
+                                        <li>Disipadores de calor</li>
+                                        <li>Ventilador para cargas pesadas</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Display:</strong>
+                                    <ul>
+                                        <li>HDMI o touchscreen oficial</li>
+                                        <li>Pantallas GPIO para proyectos</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Expansiones:</strong>
+                                    <ul>
+                                        <li>HATs (Hardware Attached on Top)</li>
+                                        <li>Breakout boards para GPIO</li>
+                                        <li>Cámaras compatibles</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-box">
+                    <h4>💰 Presupuesto típico para empezar:</h4>
+                    <ul>
+                        <li>SBC (Raspberry Pi 4 4GB): $75</li>
+                        <li>Fuente oficial: $10</li>
+                        <li>MicroSD 64GB A2: $15</li>
+                        <li>Case con ventilador: $15</li>
+                        <li>Cable HDMI: $5</li>
+                        <li><strong>Total: ~$120 USD</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 17: Tendencias Futuras -->
+            <div class="slide">
+                <h2>Tendencias futuras en SBCs</h2>
+                
+                <img src="https://www.servethehome.com/wp-content/uploads/2022/05/Xilinx-Kria-KV260-v-KR260-Robotics-Kits.jpg" alt="Future Technology" style="max-width: 800px;">
+                
+                <h3>¿Hacia dónde va el mercado de SBCs?</h3>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>🚀 Innovaciones tecnológicas:</h4>
+                        <div class="feature-box">
+                            <ul>
+                                <li><strong>Procesadores más eficientes:</strong>
+                                    <ul>
+                                        <li>ARM v9 con +30% rendimiento</li>
+                                        <li>Procesos de 5nm y 3nm</li>
+                                        <li>RISC-V como alternativa open</li>
+                                    </ul>
+                                </li>
+                                <li><strong>IA en el edge:</strong>
+                                    <ul>
+                                        <li>NPUs de 10+ TOPS</li>
+                                        <li>Soporte para LLMs locales</li>
+                                        <li>Visión 3D y depth sensing</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Conectividad avanzada:</strong>
+                                    <ul>
+                                        <li>5G integrado</li>
+                                        <li>WiFi 7 (hasta 40 Gbps)</li>
+                                        <li>USB4 y Thunderbolt</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>📈 Tendencias del mercado:</h4>
+                        <div class="feature-box">
+                            <ul>
+                                <li><strong>Nuevos jugadores:</strong>
+                                    <ul>
+                                        <li>Google Coral</li>
+                                        <li>Qualcomm Robotics</li>
+                                        <li>AMD Xilinx Kria</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Aplicaciones emergentes:</strong>
+                                    <ul>
+                                        <li>Edge AI para industria 4.0</li>
+                                        <li>Robótica colaborativa</li>
+                                        <li>Smart cities</li>
+                                        <li>Agricultura de precisión</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Sostenibilidad:</strong>
+                                    <ul>
+                                        <li>Diseños modulares reparables</li>
+                                        <li>Eficiencia < 1W idle</li>
+                                        <li>Materiales reciclados</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Predicción 2025-2030:</strong> Las SBCs alcanzarán el rendimiento de laptops actuales, con capacidad para ejecutar modelos de IA complejos localmente y soporte nativo para realidad aumentada.
+                </div>
+            </div>
+
+            <!-- Slide 18: Recursos y Comunidad -->
+            <div class="slide">
+                <h2>Recursos y comunidades</h2>
+                
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800" alt="Community" style="max-width: 600px;">
+                
+                <h3>Dónde aprender y obtener ayuda:</h3>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>📚 Recursos oficiales:</h4>
+                        <div class="feature-box">
+                            <p><strong>Documentación:</strong></p>
+                            <ul>
+                                <li>raspberrypi.com/documentation</li>
+                                <li>developer.nvidia.com/jetson</li>
+                                <li>wiki.odroid.com</li>
+                                <li>docs.lattepanda.com</li>
+                            </ul>
+                            
+                            <p><strong>Tutoriales:</strong></p>
+                            <ul>
+                                <li>Raspberry Pi Foundation</li>
+                                <li>Adafruit Learning System</li>
+                                <li>Sparkfun Tutorials</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>🌐 Comunidades activas:</h4>
+                        <div class="feature-box">
+                            <p><strong>Foros:</strong></p>
+                            <ul>
+                                <li>Raspberry Pi Forums</li>
+                                <li>r/raspberry_pi (Reddit)</li>
+                                <li>Element14 Community</li>
+                            </ul>
+                            
+                            <p><strong>Canales YouTube:</strong></p>
+                            <ul>
+                                <li>ExplainingComputers</li>
+                                <li>Jeff Geerling</li>
+                                <li>The Pi Hut</li>
+                                <li>DroneBot Workshop</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-box">
+                    <h4>🎓 Cursos recomendados:</h4>
+                    <ul>
+                        <li><strong>Coursera:</strong> "An Introduction to Programming the Internet of Things"</li>
+                        <li><strong>edX:</strong> "Embedded Systems - Shape The World"</li>
+                        <li><strong>Udemy:</strong> "Raspberry Pi Complete Tutorial"</li>
+                        <li><strong>FutureLearn:</strong> "Physical Computing with Raspberry Pi"</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Tip:</strong> Únete a un makerspace o hackspace local. El aprendizaje práctico con otros entusiastas acelera tu progreso significativamente.
+                </div>
+            </div>
+
+            <!-- Slide 19: Proyectos para empezar -->
+            <div class="slide">
+                <h2>Proyectos para principiantes</h2>
+                
+                <img src="https://5.imimg.com/data5/SELLER/Default/2022/12/PA/LU/AZ/143426507/61iqhvgwxql-sl1024--500x500.jpg" alt="DIY Projects" style="max-width: 700px;">
+                
+                <h3>Ideas para tu primer proyecto:</h3>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>🌟 Nivel básico (1-2 días):</h4>
+                        <div class="feature-box">
+                            <ol>
+                                <li><strong>LED parpadeante:</strong> El "Hola Mundo" del hardware</li>
+                                <li><strong>Servidor web simple:</strong> Mostrar temperatura</li>
+                                <li><strong>Pi-hole:</strong> Bloqueador de anuncios</li>
+                                <li><strong>Media center:</strong> Instalar Kodi/OSMC</li>
+                                <li><strong>Retro gaming:</strong> RetroPie básico</li>
+                            </ol>
+                        </div>
+                        
+                        <h4>🔧 Nivel intermedio (1-2 semanas):</h4>
+                        <div class="feature-box">
+                            <ol>
+                                <li><strong>Estación meteorológica:</strong> Con sensores y web</li>
+                                <li><strong>Cámara seguridad:</strong> Detección movimiento</li>
+                                <li><strong>Robot seguidor de línea:</strong> Con motores</li>
+                                <li><strong>Sistema domótico:</strong> Control de luces</li>
+                                <li><strong>NAS casero:</strong> Servidor de archivos</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>🚀 Nivel avanzado (1+ mes):</h4>
+                        <div class="feature-box">
+                            <ol>
+                                <li><strong>Drone autónomo:</strong> Con GPS y cámara</li>
+                                <li><strong>Reconocimiento facial:</strong> Con OpenCV</li>
+                                <li><strong>Cluster Kubernetes:</strong> Multi-Pi</li>
+                                <li><strong>Robot con IA:</strong> Navegación autónoma</li>
+                                <li><strong>Sistema IoT completo:</strong> Sensores + cloud</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="feature-box">
+                            <h4>💡 Consejos para empezar:</h4>
+                            <ul>
+                                <li>Empieza simple, luego complica</li>
+                                <li>Documenta tu progreso</li>
+                                <li>No temas experimentar</li>
+                                <li>Comparte en la comunidad</li>
+                                <li>Aprende de los errores</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Recurso útil:</strong> GitHub tiene miles de proyectos open source para Raspberry Pi. Busca "awesome-raspberry-pi" para una lista curada de los mejores.
+                </div>
+            </div>
+
+            <!-- Slide 20: Conclusión -->
+            <div class="slide">
+                <h1>Conclusión</h1>
+                
+                <img src="https://robotica-educativa.hisparob.es/wp-content/uploads/2021/04/Seguimiento-facial-con-ARDUINO-UNO-por-Ademir-Bermudez.jpg" alt="Innovation" style="max-width: 600px;">
+                
+                <div class="feature-box" style="text-align: center; font-size: 1.2em;">
+                    <p><strong>"El mejor momento para empezar con SBCs fue hace 10 años.<br>
+                    El segundo mejor momento es ahora."</strong></p>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h3>🎯 Puntos clave del módulo:</h3>
+                        <div class="feature-box">
+                            <ul>
+                                <li>Las SBCs democratizan la tecnología</li>
+                                <li>Raspberry Pi lidera por su ecosistema</li>
+                                <li>Cada placa tiene su nicho específico</li>
+                                <li>El hardware es solo el comienzo</li>
+                                <li>La comunidad es tu mejor recurso</li>
+                                <li>Los proyectos prácticos enseñan más</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>🚀 Próximos pasos:</h3>
+                        <div class="feature-box">
+                            <ol>
+                                <li>Define qué quieres construir</li>
+                                <li>Elige tu placa (Pi 4 si dudas)</li>
+                                <li>Compra un kit completo</li>
+                                <li>Instala el SO y explora</li>
+                                <li>Empieza con LED parpadeante</li>
+                                <li>Únete a la comunidad</li>
+                                <li>¡Construye algo asombroso!</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="text-align: center; margin-top: 30px;">
+                    <h2 style="color: #00d2ff; border: none;">¡Gracias por tu atención!</h2>
+                    <p style="font-size: 1.3em;">El futuro de la computación está en tus manos</p>
+                    <p style="margin-top: 20px;">
+                        <strong>¿Preguntas?</strong> Es el momento perfecto para resolverlas.
+                    </p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://www.raspberrypi.com" class="video-link" style="margin: 0 10px;">Visitar Raspberry Pi</a>
+                    <a href="https://maker.pro" class="video-link" style="margin: 0 10px;">Proyectos Maker</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="nav-controls">
+        <a href="index.html"><button class="nav-btn">Volver inicio</button></a>
+        <button class="nav-btn" id="prev-btn" disabled>← Anterior</button>
+        <div class="slide-dots" id="slide-dots"></div>
+        <button class="nav-btn" id="next-btn">Siguiente →</button>
+    </div>
+</div>
+
+<script>
+    const slides = document.getElementById('slides');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progress = document.getElementById('progress');
+    const slideCounter = document.getElementById('slide-counter');
+    const slideDots = document.getElementById('slide-dots');
+    
+    const totalSlides = document.querySelectorAll('.slide').length;
+    let currentSlide = 0;
+    
+    // Crear dots de navegación
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        if (i === 0) dot.classList.add('active');
+        dot.onclick = () => goToSlide(i);
+        slideDots.appendChild(dot);
+    }
+    
+    const dots = document.querySelectorAll('.dot');
+    
+    function updateButtons() {
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+    
+    function updateProgress() {
+        const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+        progress.style.width = `${progressPercent}%`;
+        slideCounter.textContent = `Slide ${currentSlide + 1} de ${totalSlides}`;
+    }
+    
+    function updateDots() {
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    }
+    
+    function goToSlide(slideIndex) {
+        if (slideIndex >= 0 && slideIndex < totalSlides) {
+            currentSlide = slideIndex;
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateButtons();
+            updateProgress();
+            updateDots();
+            
+            // Scroll to top of new slide
+            document.querySelectorAll('.slide')[currentSlide].scrollTop = 0;
+        }
+    }
+    
+    prevBtn.addEventListener('click', () => {
+        goToSlide(currentSlide - 1);
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        goToSlide(currentSlide + 1);
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            goToSlide(currentSlide - 1);
+        } else if (e.key === 'ArrowRight') {
+            goToSlide(currentSlide + 1);
+        } else if (e.key === 'Home') {
+            goToSlide(0);
+        } else if (e.key === 'End') {
+            goToSlide(totalSlides - 1);
+        }
+    });
+    
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    slides.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    slides.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+            goToSlide(currentSlide + 1);
+        }
+        if (touchEndX > touchStartX + 50) {
+            goToSlide(currentSlide - 1);
+        }
+    }
+    
+    // Initialize
+    updateButtons();
+    updateProgress();
+</script>
+
+</body>
+</html>
+
+            <!-- Slide 2: Introducción a SBC -->
+            <div class="slide">
+                <h2>Introducción a las Placas Reducidas (SBC)</h2>
+                
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800" alt="Single Board Computer" style="max-width: 600px;">
+                
+                <div class="feature-box">
+                    <h3>¿Qué es una SBC?</h3>
+                    <p>Una <strong>Single Board Computer (SBC)</strong> es una computadora completa construida en una sola placa de circuito impreso. Incluye procesador, memoria, puertos de entrada/salida y todo lo necesario para funcionar como una computadora independiente.</p>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Características principales:</h4>
+                        <ul>
+                            <li><strong>Tamaño compacto:</strong> Típicamente menor a 100x100mm</li>
+                            <li><strong>Bajo consumo:</strong> Entre 2W y 20W de potencia</li>
+                            <li><strong>Costo accesible:</strong> Desde $20 hasta $200</li>
+                            <li><strong>Sistema completo:</strong> CPU, GPU, RAM, I/O integrados</li>
+                            <li><strong>Versátiles:</strong> Múltiples sistemas operativos</li>
+                            <li><strong>GPIO:</strong> Pines para proyectos electrónicos</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Aplicaciones comunes:</h4>
+                        <ul>
+                            <li><strong>Educación:</strong> Aprendizaje de programación</li>
+                            <li><strong>IoT:</strong> Dispositivos conectados</li>
+                            <li><strong>Servidores:</strong> Web, archivos, multimedia</li>
+                            <li><strong>Robótica:</strong> Control de robots y drones</li>
+                            <li><strong>Domótica:</strong> Automatización del hogar</li>
+                            <li><strong>Prototipado:</strong> Desarrollo de productos</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Dato importante:</strong> El mercado global de SBC se valoró en $1.5 mil millones en 2023 y se espera que alcance $2.5 mil millones para 2026, con un crecimiento anual del 12%.
+                </div>
+            </div>
+
+            <!-- Slide 3: Historia de Raspberry Pi -->
+            <div class="slide">
+                <h2>5.1 Raspberry Pi - Definición e Historia</h2>
+                
+                <img src="https://images.unsplash.com/photo-1640200300416-e6bdbdaa1ece?w=800" alt="Raspberry Pi Board" style="max-width: 600px;">
+                
+                <div class="feature-box">
+                    <h3>¿Qué es Raspberry Pi?</h3>
+                    <p>Raspberry Pi es una serie de computadoras de placa única desarrollada por la <strong>Raspberry Pi Foundation</strong> en el Reino Unido. Su objetivo principal es promover la enseñanza de ciencias de la computación en escuelas y países en desarrollo.</p>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Historia y evolución:</h4>
+                        <ul>
+                            <li><strong>2012:</strong> Lanzamiento del Model B original (256MB RAM)</li>
+                            <li><strong>2013:</strong> Model A más económico</li>
+                            <li><strong>2014:</strong> Model B+ con mejoras significativas</li>
+                            <li><strong>2015:</strong> Pi 2 con procesador quad-core</li>
+                            <li><strong>2016:</strong> Pi 3 añade WiFi y Bluetooth</li>
+                            <li><strong>2019:</strong> Pi 4 con USB 3.0 y soporte 4K</li>
+                            <li><strong>2023:</strong> Pi 5 con PCIe y mejor rendimiento</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Impacto global:</h4>
+                        <ul>
+                            <li>Más de <strong>45 millones</strong> de unidades vendidas</li>
+                            <li>Presente en <strong>170+ países</strong></li>
+                            <li><strong>Millones</strong> de estudiantes beneficiados</li>
+                            <li>Comunidad de <strong>desarrolladores</strong> activa</li>
+                            <li>Miles de <strong>proyectos open source</strong></li>
+                            <li>Usado en la <strong>Estación Espacial Internacional</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Fundadores:</strong> Eben Upton, Rob Mullins, Jack Lang y Alan Mycroft del Laboratorio de Computación de la Universidad de Cambridge crearon Raspberry Pi para abordar la disminución de habilidades de programación en estudiantes.
+                </div>
+            </div>
+
+            <!-- Slide 4: Diseño de Raspberry Pi -->
+            <div class="slide">
+                <h2>5.1.2 Diseño de Raspberry Pi</h2>
+                
+                <img src="https://images.unsplash.com/photo-1629654529004-bb894bfcc6e6?w=800" alt="Raspberry Pi Design" style="max-width: 700px;">
+                
+                <div class="two-column">
+                    <div>
+                        <h3>Elementos de diseño:</h3>
+                        <div class="feature-box">
+                            <h4>Componentes principales:</h4>
+                            <ul>
+                                <li><strong>SoC (System on Chip):</strong> Procesador + GPU integrados</li>
+                                <li><strong>RAM:</strong> Montada sobre el SoC (PoP)</li>
+                                <li><strong>GPIO Header:</strong> 40 pines multipropósito</li>
+                                <li><strong>Puertos USB:</strong> 2-4 según modelo</li>
+                                <li><strong>Ethernet:</strong> Gigabit en modelos recientes</li>
+                                <li><strong>HDMI:</strong> 1-2 puertos para display</li>
+                                <li><strong>Alimentación:</strong> Micro USB o USB-C</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>GPIO (General Purpose I/O):</h3>
+                        <div class="feature-box">
+                            <h4>40 pines incluyen:</h4>
+                            <ul>
+                                <li>28 pines GPIO configurables</li>
+                                <li>Alimentación: 3.3V y 5V</li>
+                                <li>Ground (tierra)</li>
+                                <li>Interfaces I2C (2 canales)</li>
+                                <li>SPI (2 chip selects)</li>
+                                <li>UART serial</li>
+                                <li>PWM para control de motores</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Modelo</th>
+                            <th>Dimensiones</th>
+                            <th>Peso</th>
+                            <th>Factor de forma</th>
+                        </tr>
+                        <tr>
+                            <td>Pi Model B/B+/2/3/4/5</td>
+                            <td>85.6 × 56.5 mm</td>
+                            <td>45g</td>
+                            <td>Estándar</td>
+                        </tr>
+                        <tr>
+                            <td>Pi Zero/Zero W/Zero 2</td>
+                            <td>65 × 30 mm</td>
+                            <td>9g</td>
+                            <td>Compacto</td>
+                        </tr>
+                        <tr>
+                            <td>Pi 400</td>
+                            <td>286 × 122 mm</td>
+                            <td>386g</td>
+                            <td>Teclado</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Slide 5: Hardware Raspberry Pi -->
+            <div class="slide">
+                <h2>5.1.3 Hardware de Raspberry Pi</h2>
+                
+                <img src="https://images.unsplash.com/photo-1609534830671-fa2e91c09e09?w=800" alt="Raspberry Pi Hardware" style="max-width: 600px;">
+                
+                <h3>Evolución del hardware a través de generaciones:</h3>
+                
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Modelo</th>
+                            <th>SoC</th>
+                            <th>CPU</th>
+                            <th>GPU</th>
+                            <th>RAM</th>
+                            <th>Lanzamiento</th>
+                        </tr>
+                        <tr>
+                            <td>Pi 1 Model B</td>
+                            <td>BCM2835</td>
+                            <td>700MHz ARM11</td>
+                            <td>VideoCore IV</td>
+                            <td>512MB</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Pi 2 Model B</td>
+                            <td>BCM2836</td>
+                            <td>900MHz Quad A7</td>
+                            <td>VideoCore IV</td>
+                            <td>1GB</td>
+                            <td>2015</td>
+                        </tr>
+                        <tr>
+                            <td>Pi 3 Model B+</td>
+                            <td>BCM2837B0</td>
+                            <td>1.4GHz Quad A53</td>
+                            <td>VideoCore IV</td>
+                            <td>1GB</td>
+                            <td>2018</td>
+                        </tr>
+                        <tr>
+                            <td>Pi 4 Model B</td>
+                            <td>BCM2711</td>
+                            <td>1.5GHz Quad A72</td>
+                            <td>VideoCore VI</td>
+                            <td>2/4/8GB</td>
+                            <td>2019</td>
+                        </tr>
+                        <tr>
+                            <td>Pi 5</td>
+                            <td>BCM2712</td>
+                            <td>2.4GHz Quad A76</td>
+                            <td>VideoCore VII</td>
+                            <td>4/8GB</td>
+                            <td>2023</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <div class="feature-box">
+                            <h4>Capacidades de procesamiento:</h4>
+                            <ul>
+                                <li><strong>Pi 1:</strong> ~0.04 GFLOPS</li>
+                                <li><strong>Pi 2:</strong> ~1.5 GFLOPS</li>
+                                <li><strong>Pi 3:</strong> ~3.2 GFLOPS</li>
+                                <li><strong>Pi 4:</strong> ~13.5 GFLOPS</li>
+                                <li><strong>Pi 5:</strong> ~30+ GFLOPS</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="feature-box">
+                            <h4>Mejoras clave Pi 5:</h4>
+                            <ul>
+                                <li>CPU 2-3x más rápida que Pi 4</li>
+                                <li>GPU con soporte Vulkan 1.2</li>
+                                <li>Dual 4Kp60 HDMI display</li>
+                                <li>PCIe 2.0 interface</li>
+                                <li>RTC (reloj tiempo real) integrado</li>
+                                <li>Botón de encendido dedicado</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Rendimiento:</strong> Raspberry Pi 5 ofrece un rendimiento comparable a una PC de entrada de 2015-2016, suficiente para tareas de oficina, navegación web y desarrollo de software.
+                </div>
+            </div>
+
+            <!-- Slide 6: Sistemas Operativos -->
+            <div class="slide">
+                <h2>5.1.4 Sistemas Operativos para Raspberry Pi</h2>
+                
+                <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800" alt="Raspberry Pi OS" style="max-width: 600px;">
+                
+                <h3>Sistema Operativo Oficial:</h3>
+                <div class="feature-box">
+                    <h4>Raspberry Pi OS (anteriormente Raspbian)</h4>
+                    <ul>
+                        <li>Basado en Debian Linux</li>
+                        <li>Optimizado específicamente para hardware Pi</li>
+                        <li>Tres versiones: Lite (sin GUI), Desktop, y Full (con software adicional)</li>
+                        <li>Disponible en 32-bit (compatible con todos) y 64-bit (Pi 3+)</li>
+                        <li>Incluye herramientas de programación: Python, Scratch, Java</li>
+                    </ul>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>Sistemas Linux compatibles:</h4>
+                        <ul>
+                            <li><strong>Ubuntu:</strong> Server y Desktop (20.04/22.04 LTS)</li>
+                            <li><strong>Manjaro:</strong> Rolling release basado en Arch</li>
+                            <li><strong>Kali Linux:</strong> Para seguridad y pentesting</li>
+                            <li><strong>DietPi:</strong> Minimalista y optimizado</li>
+                            <li><strong>Fedora:</strong> Versión ARM oficial</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Sistemas especializados:</h4>
+                        <ul>
+                            <li><strong>LibreELEC:</strong> Media center con Kodi</li>
+                            <li><strong>RetroPie:</strong> Emulación de juegos retro</li>
+                            <li><strong>Home Assistant OS:</strong> Domótica</li>
+                            <li><strong>OpenWrt:</strong> Router/firewall</li>
+                            <li><strong>Windows 10 IoT Core:</strong> Para Pi 2/3</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>Instalación fácil:</strong> Usa Raspberry Pi Imager oficial para escribir el SO a la tarjeta SD. Permite preconfigurar WiFi, SSH, nombre de usuario y contraseña antes del primer arranque.
+                </div>
+                
+                <a href="https://www.raspberrypi.com/software/" class="video-link" target="_blank">Descargar Raspberry Pi Imager</a>
+            </div>
+
+            <!-- Slide 7: Especificaciones Pi 5 -->
+            <div class="slide">
+                <h2>5.1.5 Especificaciones - Raspberry Pi 5</h2>
+                
+                <img src="https://images.unsplash.com/photo-1565587340540-670c9bd5129f?w=800" alt="Raspberry Pi 5" style="max-width: 500px;">
+                
+                <h3>El modelo más potente hasta la fecha:</h3>
+                
+                <div class="specs-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th style="width: 35%;">Componente</th>
+                            <th>Especificación</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Procesador</strong></td>
+                            <td>Broadcom BCM2712, Quad-core Cortex-A76 @ 2.4GHz</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPU</strong></td>
+                            <td>VideoCore VII @ 800MHz, OpenGL ES 3.1, Vulkan 1.2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memoria</strong></td>
+                            <td>4GB o 8GB LPDDR4X-4267</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Conectividad</strong></td>
+                            <td>802.11ac WiFi, Bluetooth 5.0/BLE, Gigabit Ethernet</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Display</strong></td>
+                            <td>2 × micro-HDMI (4Kp60 simultáneo)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>USB</strong></td>
+                            <td>2 × USB 3.0, 2 × USB 2.0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expansión</strong></td>
+                            <td>PCIe 2.0 x1 interface para NVMe</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Alimentación</strong></td>
+                            <td>5V/5A via USB-C con Power Delivery</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extras</strong></td>
+                            <td>RTC integrado, botón de encendido, conector de ventilador</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="feature-box">
+                    <h4>Mejoras clave sobre Pi 4:</h4>
+                    <ul>
+                        <li>CPU 2-3x más rápida en tareas single-thread</li>
+                        <li>GPU 2-2.5x mejor rendimiento gráfico</li>
+                        <li>Soporte nativo para SSDs NVMe via HAT M.2</li>
+                        <li>Chip RP1 personalizado para mejor I/O</li>
+                        <li>Menor latencia en operaciones GPIO</li>
+                    </ul>

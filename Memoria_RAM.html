@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module III: La Memoria</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #7f8c8d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: #333;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .presentation-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .module-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .slide-number {
+            font-size: 1.2rem;
+            background-color: var(--secondary);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .slides-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            background: white;
+            transform: translateX(100%);
+            transition: transform 0.6s ease-in-out;
+            opacity: 0;
+            z-index: 1;
+            overflow-y: auto; /* Scroll vertical cuando es necesario */
+        }
+        
+        .slide.active {
+            transform: translateX(0);
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .slide-title {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary);
+            position: relative;
+        }
+        
+        .slide-title::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        
+        .slide-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            height: calc(100% - 80px);
+            min-height: 450px;
+        }
+        
+        .text-content {
+            flex: 1;
+            min-width: 300px;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            overflow-y: auto; /* Scroll en el contenido de texto */
+            padding-right: 10px;
+            max-height: 70vh;
+        }
+        
+        /* Estilo de la barra de desplazamiento */
+        .text-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .text-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .text-content::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        .text-content::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        .image-content {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-height: 70vh;
+            overflow: hidden;
+        }
+        
+        .slide-image {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            object-fit: contain;
+        }
+        
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .navigation {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .nav-btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-container {
+            flex: 1;
+            max-width: 400px;
+            height: 10px;
+            background-color: #bdc3c7;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 20px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        .slide-indicators {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator.active {
+            background-color: var(--secondary);
+            transform: scale(1.2);
+        }
+        
+        .list-content {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .list-content li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .list-content li::before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #e9f7fe;
+        }
+        
+        @media (max-width: 768px) {
+            .slide-content {
+                flex-direction: column;
+                height: auto;
+                min-height: auto;
+            }
+            
+            .text-content, .image-content {
+                min-width: 100%;
+                max-height: none;
+            }
+            
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .text-content {
+                font-size: 1.1rem;
+                max-height: 50vh;
+            }
+            
+            .image-content {
+                height: 250px;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="header">
+            <div class="module-title">Module III: LA MEMORIA</div>
+            <div class="slide-number">Slide <span id="current-slide">1</span> de 30</div>
+        </div>
+        
+        <div class="slides-container">
+            <!-- Slides will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="footer">
+            <div class="navigation">
+                <a href="index.html"><button class="nav-btn">Volver inicio</button></a>
+                <button class="nav-btn" id="prev-btn" disabled>
+                    <span>◀</span> Anterior
+                </button>
+                <button class="nav-btn" id="next-btn">
+                    Siguiente <span>▶</span>
+                </button>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="slide-indicators" id="slide-indicators">
+                <!-- Indicators will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Slide data with content and images
+        const slides = [
+            {
+                title: "Introducción a la Memoria Interna",
+                content: `La <span class="highlight">memoria interna</span> es un componente esencial de cualquier sistema informático. Actúa como el área de trabajo principal donde la CPU almacena y accede a los datos que necesita para ejecutar programas y realizar operaciones. Sin memoria interna, las computadoras no podrían funcionar de manera eficiente ni ejecutar múltiples tareas simultáneamente.`,
+                image: "https://images.unsplash.com/photo-1593642634524-b40b5baae6bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Definición de Memoria Interna",
+                content: `La <span class="highlight">memoria interna</span>, también conocida como memoria principal o RAM (Random Access Memory), es un tipo de almacenamiento volátil que proporciona acceso rápido a los datos que la CPU necesita para procesar información. A diferencia del almacenamiento permanente (como discos duros o SSDs), la memoria interna pierde todos sus datos cuando se apaga la computadora.<br><br>Su función principal es servir como puente entre la CPU y el almacenamiento permanente, acelerando el acceso a datos y programas que se están utilizando activamente.`,
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Características Clave de la Memoria",
+                content: `Principales características:<ul class="list-content">
+                    <li><span class="highlight">Volatilidad</span>: Pierde datos al apagarse</li>
+                    <li><span class="highlight">Velocidad</span>: Acceso mucho más rápido que almacenamiento permanente (nanosegundos vs milisegundos)</li>
+                    <li><span class="highlight">Capacidad</span>: Medida en GB, determina cuántos programas pueden ejecutarse simultáneamente</li>
+                    <li><span class="highlight">Acceso directo</span>: Cualquier posición accesible en tiempo constante</li>
+                    <li><span class="highlight">Temporariedad</span>: Almacena datos solo durante la ejecución de programas</li>
+                    <li><span class="highlight">Ancho de banda</span>: Cantidad de datos que puede transferir por segundo</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Tipos de Memoria Interna",
+                content: `Existen varios tipos de memoria interna, principalmente clasificados en:<ul class="list-content">
+                    <li><span class="highlight">DRAM</span> (Dynamic RAM) - Memoria dinámica de acceso aleatorio</li>
+                    <li><span class="highlight">SDRAM</span> (Synchronous DRAM) - DRAM síncrona</li>
+                    <li>SRAM (Static RAM) - Más rápida pero más costosa</li>
+                    <li>ROM (Read-Only Memory) - Memoria de solo lectura</li>
+                    <li>Cache L1, L2, L3 - Memoria de alta velocidad integrada en el procesador</li>
+                    <li>VRAM (Video RAM) - Memoria dedicada para procesamiento gráfico</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "DRAM: Memoria Dinámica",
+                content: `<span class="highlight">DRAM (Dynamic Random Access Memory)</span> es el tipo de memoria más común en computadoras. Almacena cada bit de datos en un capacitor separado dentro de un circuito integrado.<br><br>
+                <span class="highlight">Características principales:</span><ul class="list-content">
+                    <li>Requiere refresco constante para mantener los datos (cada 64ms)</li>
+                    <li>Mayor densidad de almacenamiento que SRAM</li>
+                    <li>Menor costo por bit</li>
+                    <li>Mayor latencia que SRAM</li>
+                    <li>Consume más energía debido al refresco constante</li>
+                    <li>Usada principalmente como memoria principal en sistemas</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1592409065737-a25380a8d0d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Arquitectura de la DRAM",
+                content: `La estructura de la DRAM se compone de:<ul class="list-content">
+                    <li><span class="highlight">Celdas de memoria</span>: Organizadas en una matriz de filas y columnas</li>
+                    <li><span class="highlight">Transistores</span>: Un transistor por celda que actúa como interruptor</li>
+                    <li><span class="highlight">Condensadores</span>: Almacenan carga eléctrica (1) o no (0)</li>
+                    <li><span class="highlight">Circuitos de refresco</span>: Mantienen la carga de los condensadores</li>
+                    <li><span class="highlight">Decodificadores</span>: Seleccionan filas y columnas específicas</li>
+                    <li><span class="highlight">Amplificadores de sentido</span>: Detectan y amplifican la pequeña carga de los condensadores</li>
+                    <li><span class="highlight">Buffer de E/S</span>: Interfaz para comunicarse con el bus del sistema</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1596524430615-b46475bff9aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "SDRAM: Memoria Sincrónica",
+                content: `<span class="highlight">SDRAM (Synchronous Dynamic Random Access Memory)</span> es una evolución de la DRAM que opera sincronizada con el reloj del sistema.<br><br>
+                <span class="highlight">Ventajas sobre DRAM:</span><ul class="list-content">
+                    <li>Mayor velocidad de transferencia</li>
+                    <li>Operación sincronizada con el bus del sistema</li>
+                    <li>Mejor gestión de operaciones en pipeline</li>
+                    <li>Mayor ancho de banda</li>
+                    <li>Mejor escalabilidad de velocidad</li>
+                    <li>Soporte para operaciones de ráfaga (burst)</li>
+                    <li>Menor consumo energético por operación</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1563014959-7aaa83350992?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Evolución de la SDRAM",
+                content: `La SDRAM ha evolucionado a través de varias generaciones:<ul class="list-content">
+                    <li><span class="highlight">SDR SDRAM</span>: Single Data Rate (100-133 MHz)</li>
+                    <li><span class="highlight">DDR SDRAM</span>: Double Data Rate (200-400 MHz)</li>
+                    <li><span class="highlight">DDR2</span>: Mayor velocidad, menor voltaje (400-1066 MHz)</li>
+                    <li><span class="highlight">DDR3</span>: Mayor eficiencia (800-2133 MHz)</li>
+                    <li><span class="highlight">DDR4</span>: Mayor densidad, menor consumo (1600-3200 MHz)</li>
+                    <li><span class="highlight">DDR5</span>: Mayor ancho de banda (4800-8400 MHz)</li>
+                    <li><span class="highlight">GDDR</span>: Versión para gráficos con mayor ancho de banda</li>
+                    <li><span class="highlight">LPDDR</span>: Bajo consumo para dispositivos móviles</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Frecuencia de la Memoria",
+                content: `La <span class="highlight">frecuencia</span> de la memoria, medida en MHz, indica cuántos ciclos de reloj puede completar por segundo. Determina la velocidad a la que la memoria puede leer y escribir datos.<br><br>
+                <span class="highlight">Importancia:</span><ul class="list-content">
+                    <li>Mayor frecuencia = Mayor ancho de banda</li>
+                    <li>Afecta directamente el rendimiento del sistema</li>
+                    <li>Debe estar sincronizada con el bus del sistema</li>
+                    <li>Se relaciona con la velocidad de transferencia</li>
+                    <li>En DDR, la velocidad efectiva es el doble de la frecuencia base</li>
+                    <li>Limitada por la tecnología de fabricación y diseño</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Cálculo del Ancho de Banda",
+                content: `El ancho de banda de la memoria se calcula como:<br><br>
+                <span class="highlight">Ancho de Banda = Frecuencia × Ancho del bus × Número de canales</span><br><br>
+                <span class="highlight">Ejemplo:</span> DDR4-3200 en dual-channel:<br>
+                3200 MHz × 64 bits × 2 = 51.2 GB/s<br><br>
+                <span class="highlight">Factores que influyen:</span><ul class="list-content">
+                    <li>Tipo de memoria (DDR4, DDR5, etc.)</li>
+                    <li>Configuración de canales (single, dual, quad)</li>
+                    <li>Velocidad del reloj base</li>
+                    <li>Eficiencia del controlador de memoria</li>
+                    <li>Latencia de las operaciones</li>
+                    <li>Overclocking aplicado</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Latencia de la Memoria",
+                content: `La <span class="highlight">latencia</span> es el tiempo que tarda la memoria en responder a una solicitud de datos. Se mide en nanosegundos (ns) y representa un factor crítico de rendimiento.<br><br>
+                <span class="highlight">Parámetros clave:</span><ul class="list-content">
+                    <li><span class="highlight">CAS Latency (CL)</span>: Tiempo entre solicitud y disponibilidad de datos</li>
+                    <li><span class="highlight">tRCD</span>: Delay de fila a columna (RAS to CAS Delay)</li>
+                    <li><span class="highlight">tRP</span>: Tiempo de pre-carga de fila (Row Precharge Time)</li>
+                    <li><span class="highlight">tRAS</span>: Tiempo de activación de fila (Row Active Time)</li>
+                    <li><span class="highlight">tRFC</span>: Tiempo de refresco de fila (Refresh Cycle Time)</li>
+                    <li><span class="highlight">tWR</span>: Tiempo de recuperación de escritura (Write Recovery)</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Impacto de la Latencia en el Rendimiento",
+                content: `La latencia afecta directamente la capacidad de respuesta del sistema:<br><br>
+                <span class="highlight">Latencia real = (CL × 2000) / Frecuencia (en MHz)</span><br><br>
+                <span class="highlight">Ejemplo:</span> DDR4-3200 con CL16:<br>
+                (16 × 2000) / 3200 = 10 ns<br><br>
+                <span class="highlight">Consideraciones:</span><ul class="list-content">
+                    <li>Menor latencia = Mejor rendimiento en aplicaciones sensibles</li>
+                    <li>Frecuencia vs Latencia: equilibrio necesario</li>
+                    <li>Aplicaciones intensivas se benefician más de baja latencia</li>
+                    <li>Juegos y aplicaciones en tiempo real son sensibles a latencia</li>
+                    <li>Latencia alta puede anular beneficios de alta frecuencia</li>
+                    <li>DDR5 tiene latencias más altas pero mayor ancho de banda</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Comparación: Frecuencia vs Latencia",
+                content: `<table class="comparison-table">
+                    <tr>
+                        <th>Configuración</th>
+                        <th>Frecuencia (MHz)</th>
+                        <th>CL</th>
+                        <th>Latencia Real (ns)</th>
+                        <th>Ancho de Banda (GB/s)</th>
+                    </tr>
+                    <tr>
+                        <td>DDR4-2400</td>
+                        <td>2400</td>
+                        <td>15</td>
+                        <td>12.5</td>
+                        <td>19.2</td>
+                    </tr>
+                    <tr>
+                        <td>DDR4-3200</td>
+                        <td>3200</td>
+                        <td>16</td>
+                        <td>10.0</td>
+                        <td>25.6</td>
+                    </tr>
+                    <tr>
+                        <td>DDR4-3600</td>
+                        <td>3600</td>
+                        <td>18</td>
+                        <td>10.0</td>
+                        <td>28.8</td>
+                    </tr>
+                    <tr>
+                        <td>DDR5-4800</td>
+                        <td>4800</td>
+                        <td>40</td>
+                        <td>16.7</td>
+                        <td>38.4</td>
+                    </tr>
+                    <tr>
+                        <td>DDR5-6400</td>
+                        <td>6400</td>
+                        <td>32</td>
+                        <td>10.0</td>
+                        <td>51.2</td>
+                    </tr>
+                </table>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Voltaje en Memorias",
+                content: `El <span class="highlight">voltaje</span> de operación es un factor crítico en el diseño de módulos de memoria. Ha disminuido con cada generación para mejorar la eficiencia energética.<br><br>
+                <span class="highlight">Evolución del voltaje:</span><ul class="list-content">
+                    <li>SDRAM: 3.3V</li>
+                    <li>DDR1: 2.5V</li>
+                    <li>DDR2: 1.8V</li>
+                    <li>DDR3: 1.5V (1.35V para DDR3L)</li>
+                    <li>DDR4: 1.2V</li>
+                    <li>DDR5: 1.1V</li>
+                    <li>LPDDR4: 1.1V</li>
+                    <li>LPDDR5: 1.05V</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Impacto del Voltaje en la Memoria",
+                content: `El voltaje afecta varios aspectos del rendimiento:<br><br>
+                <span class="highlight">Consumo energético:</span> Menor voltaje = Menor consumo<br>
+                <span class="highlight">Generación de calor:</span> Voltajes más bajos reducen la temperatura<br>
+                <span class="highlight">Estabilidad:</span> Voltajes precisos garantizan operación estable<br>
+                <span class="highlight">Overclocking:</span> Aumentar voltaje permite mayores frecuencias<br>
+                <span class="highlight">Durabilidad:</span> Voltajes altos pueden reducir vida útil<br><br>
+                <span class="highlight">Consideraciones:</span> Módulos de bajo voltaje (LV) ofrecen mejor eficiencia pero pueden tener limitaciones de frecuencia.`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Módulos de Memoria: DIMM",
+                content: `<span class="highlight">DIMM (Dual In-line Memory Module)</span> es el formato estándar para módulos de memoria en computadoras de escritorio y servidores.<br><br>
+                <span class="highlight">Características:</span><ul class="list-content">
+                    <li>Contactos eléctricos separados en ambos lados</li>
+                    <li>Mayor ancho de bus (64 bits)</li>
+                    <li>Tipos comunes: UDIMM, RDIMM, LRDIMM</li>
+                    <li>Físicamente más grandes que SO-DIMM</li>
+                    <li>Longitud estándar de 133.35 mm</li>
+                    <li>288 pines para DDR4, 288-284 pines para DDR5</li>
+                    <li>Muescas de posición para prevenir instalación incorrecta</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Módulos de Memoria: SO-DIMM",
+                content: `<span class="highlight">SO-DIMM (Small Outline DIMM)</span> es un formato compacto diseñado para laptops y sistemas pequeños.<br><br>
+                <span class="highlight">Características:</span><ul class="list-content">
+                    <li>Aproximadamente la mitad de tamaño que DIMM</li>
+                    <li>Mismo ancho de bus (64 bits)</li>
+                    <li>Menor consumo energético</li>
+                    <li>Compatible con versiones DDR estándar</li>
+                    <li>Longitud de 67.6 mm</li>
+                    <li>260 pines para DDR4, 262 pines para DDR5</li>
+                    <li>Usado en laptops, mini-PCs, impresoras, routers</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Dual Channel y Quad Channel",
+                content: `Las tecnologías multi-canal aumentan el ancho de banda al acceder a múltiples módulos simultáneamente.<br><br>
+                <span class="highlight">Dual Channel:</span><ul class="list-content">
+                    <li>Dos canales de 64 bits (128 bits total)</li>
+                    <li>Requiere módulos idénticos en pares</li>
+                    <li>Aumento de rendimiento de 5-15%</li>
+                    <li>Configuración más común en sistemas modernos</li>
+                </ul>
+                <span class="highlight">Quad Channel:</span><ul class="list-content">
+                    <li>Cuatro canales de 64 bits (256 bits total)</li>
+                    <li>Utilizado en estaciones de trabajo y servidores</li>
+                    <li>Mayor rendimiento en aplicaciones intensivas</li>
+                    <li>Requiere placa base y CPU compatibles</li>
+                    <li>Configuración de cuatro módulos idénticos</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "ECC: Código de Corrección de Errores",
+                content: `<span class="highlight">ECC (Error-Correcting Code)</span> es una tecnología que detecta y corrige errores de datos en la memoria.<br><br>
+                <span class="highlight">Características:</span><ul class="list-content">
+                    <li>Esencial en servidores y sistemas críticos</li>
+                    <li>Detecta errores de 1-2 bits, corrige errores de 1 bit</li>
+                    <li>Requiere módulos especiales y soporte del controlador</li>
+                    <li>Ligero impacto en rendimiento (2-3%)</li>
+                    <li>Mayor costo que memoria no-ECC</li>
+                    <li>Usa bits adicionales para almacenar códigos de corrección</li>
+                    <li>Previene corrupción de datos y fallos del sistema</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Selección de Memoria para Diferentes Usos",
+                content: `Recomendaciones según el uso:<br><br>
+                <span class="highlight">Oficina/básico:</span> 8GB DDR4, 2400-2666 MHz<br>
+                <span class="highlight">Gaming:</span> 16GB DDR4, 3200-3600 MHz, CL16<br>
+                <span class="highlight">Edición multimedia:</span> 32GB+ DDR4, 3200+ MHz<br>
+                <span class="highlight">Estaciones de trabajo:</span> 64GB+ ECC DDR4, quad-channel<br>
+                <span class="highlight">Servidores:</span> 128GB+ ECC DDR4/DDR5, alta frecuencia<br>
+                <span class="highlight">Desarrollo:</span> 32GB DDR4/DDR5, 3200+ MHz<br>
+                <span class="highlight">Virtualización:</span> 64GB+ DDR4/DDR5<br><br>
+                <span class="highlight">Considerar:</span> Compatibilidad con placa base y CPU.`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Instalación de Módulos de Memoria",
+                content: `Pasos para instalar memoria correctamente:<ul class="list-content">
+                    <li><span class="highlight">1.</span> Apagar y desconectar el equipo</li>
+                    <li><span class="highlight">2.</span> Identificar ranuras según manual de placa base</li>
+                    <li><span class="highlight">3.</span> Abrir pestillos laterales</li>
+                    <li><span class="highlight">4.</span> Alinear muesca del módulo con protuberancia en ranura</li>
+                    <li><span class="highlight">5.</span> Insertar firmemente hasta que los pestillos cierren</li>
+                    <li><span class="highlight">6.</span> Verificar en BIOS/UEFI la detección correcta</li>
+                    <li><span class="highlight">7.</span> Comprobar configuración dual/quad channel</li>
+                    <li><span class="highlight">8.</span> Actualizar BIOS si hay problemas de compatibilidad</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Troubleshooting de Problemas de Memoria",
+                content: `Solución a problemas comunes:<br><br>
+                <span class="highlight">Equipo no enciende:</span><ul class="list-content">
+                    <li>Verificar instalación correcta</li>
+                    <li>Probar módulos individualmente</li>
+                    <li>Limpiar contactos de memoria</li>
+                    <li>Probar en diferentes ranuras</li>
+                </ul>
+                <span class="highlight">Pantallazos azules/inestabilidad:</span><ul class="list-content">
+                    <li>Ejecutar MemTest86+</li>
+                    <li>Comprobar compatibilidad</li>
+                    <li>Actualizar BIOS</li>
+                    <li>Reducir overclocking</li>
+                    <li>Aumentar voltaje ligeramente</li>
+                </ul>
+                <span class="highlight">Memoria detectada incorrectamente:</span><ul class="list-content">
+                    <li>Limpiar contactos con alcohol isopropílico</li>
+                    <li>Probar en diferentes ranuras</li>
+                    <li>Restaurar configuración BIOS a valores predeterminados</li>
+                    <li>Verificar daños físicos en módulos</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Overclocking de Memoria",
+                content: `Técnicas para aumentar rendimiento:<br><br>
+                <span class="highlight">Aumentar frecuencia:</span> Incremento gradual en BIOS<br>
+                <span class="highlight">Reducir latencias:</span> Ajustar timings manualmente<br>
+                <span class="highlight">Aumentar voltaje:</span> Con precaución para mayor estabilidad<br>
+                <span class="highlight">Perfiles XMP/DOCP:</span> Configuraciones predefinidas optimizadas<br>
+                <span class="highlight">Ajustar subtimings:</span> Optimizar parámetros secundarios<br>
+                <span class="highlight">Mejorar refrigeración:</span> Para compensar mayor calor generado<br><br>
+                <span class="highlight">Riesgos:</span> Inestabilidad, daño permanente, pérdida de garantía, mayor consumo.`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Tecnologías Futuras de Memoria",
+                content: `Desarrollos en investigación:<br><br>
+                <span class="highlight">DDR6:</span> Hasta 12.8 GHz, mayor eficiencia<br>
+                <span class="highlight">LPDDR5X:</span> Para móviles, hasta 8533 Mbps<br>
+                <span class="highlight">Memoria no volátil:</span> Tecnologías como MRAM, ReRAM<br>
+                <span class="highlight">3D Stacking:</span> Mayor densidad mediante apilamiento<br>
+                <span class="highlight">Compute-in-Memory:</span> Procesamiento dentro de los chips de memoria<br>
+                <span class="highlight">HBM3:</span> Alta densidad y ancho de banda para GPUs<br>
+                <span class="highlight">Memoria óptica:</span> Uso de fotones para transferencia de datos<br><br>
+                <span class="highlight">Objetivos:</span> Mayor ancho de banda, menor latencia, menor consumo.`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Optimización de Memoria en Sistemas",
+                content: `Mejores prácticas:<ul class="list-content">
+                    <li>Actualizar controladores y BIOS/UEFI</li>
+                    <li>Habilitar XMP/DOCP en BIOS para perfiles optimizados</li>
+                    <li>Usar canales duales o cuádruples según soporte</li>
+                    <li>Distribuir módulos uniformemente entre canales</li>
+                    <li>Mantener módulos limpios y bien instalados</li>
+                    <li>Monitorear temperaturas en overclocking intensivo</li>
+                    <li>Optimizar configuración de timings</li>
+                    <li>Usar herramientas como MemTest86 para verificar estabilidad</li>
+                    <li>Actualizar firmware de SSD para mejorar gestión de memoria</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Mitos y Realidades sobre la Memoria",
+                content: `<span class="highlight">Mito:</span> "Más GB siempre es mejor"<br>
+                <span class="highlight">Realidad:</span> Rendimiento depende de uso; 64GB no ayuda si solo usas 8GB<br><br>
+                <span class="highlight">Mito:</span> "Mayor MHz siempre mejora rendimiento"<br>
+                <span class="highlight">Realidad:</span> Depende de la aplicación y latencia; mejor equilibrio CL/frecuencia<br><br>
+                <span class="highlight">Mito:</span> "Mezclar módulos no causa problemas"<br>
+                <span class="highlight">Realidad:</span> Puede causar inestabilidad; usar kits emparejados es mejor<br><br>
+                <span class="highlight">Mito:</span> "ECC es innecesario en computadoras personales"<br>
+                <span class="highlight">Realidad:</span> Útil para evitar corrupción de datos en trabajos críticos<br><br>
+                <span class="highlight">Mito:</span> "Memoria más rápida mejora FPS en juegos"<br>
+                <span class="highlight">Realidad:</span> Solo si la CPU es el cuello de botella, no con GPUs limitadas`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Impacto de la Memoria en Rendimiento General",
+                content: `Cómo afecta la memoria al sistema:<ul class="list-content">
+                    <li><span class="highlight">Carga de aplicaciones:</span> Más memoria permite más programas abiertos</li>
+                    <li><span class="highlight">Juegos:</span> FPS más estables con memoria rápida</li>
+                    <li><span class="highlight">Edición de video:</span> Reducción en tiempos de renderizado</li>
+                    <li><span class="highlight">Virtualización:</span> Permite ejecutar más máquinas virtuales</li>
+                    <li><span class="highlight">Respuesta del sistema:</span> Menor tiempo de carga de aplicaciones</li>
+                    <li><span class="highlight">Productividad:</span> Mejor rendimiento en hojas de cálculo grandes</li>
+                    <li><span class="highlight">Navegación web:</span> Más pestañas abiertas sin ralentizar</li>
+                    <li><span class="highlight">Compilación de código:</span> Tiempos de compilación más rápidos</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Conclusión: Aspectos Clave",
+                content: `Resumen de conceptos fundamentales:<ul class="list-content">
+                    <li><span class="highlight">Memoria interna</span> es esencial para rendimiento del sistema</li>
+                    <li><span class="highlight">DRAM</span> y <span class="highlight">SDRAM</span> son tecnologías predominantes</li>
+                    <li><span class="highlight">Frecuencia</span> determina velocidad de transferencia</li>
+                    <li><span class="highlight">Latencia</span> afecta tiempo de respuesta</li>
+                    <li><span class="highlight">Voltaje</span> impacta consumo energético y estabilidad</li>
+                    <li>Configuración multi-canal aumenta ancho de banda</li>
+                    <li>Selección adecuada mejora experiencia de usuario</li>
+                    <li>ECC es esencial para sistemas críticos</li>
+                    <li>DDR5 ofrece mayor ancho de banda pero mayor latencia inicial</li>
+                    <li>Optimización requiere equilibrio entre capacidad, velocidad y latencia</li>
+                </ul>`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            },
+            {
+                title: "Preguntas Frecuentes sobre Memoria",
+                content: `<span class="highlight">¿Puedo mezclar módulos de diferentes capacidades?</span><br>
+                Sí, pero no óptimo; puede funcionar a velocidad del módulo más lento.<br><br>
+                <span class="highlight">¿Cuánta memoria necesito realmente?</span><br>
+                8GB mínimo, 16GB recomendado, 32GB+ para uso profesional.<br><br>
+                <span class="highlight">¿DDR4 vs DDR5: cuál elegir?</span><br>
+                DDR5 para futura prueba y máximo rendimiento; DDR4 para mejor relación precio-rendimiento.<br><br>
+                <span class="highlight">¿La memoria mejora FPS en juegos?</span><br>
+                Sí, especialmente con CPUs potentes y en resoluciones bajas.<br><br>
+                <span class="highlight">¿Es seguro el overclocking de memoria?</span><br>
+                Con precaución y buen enfriamiento, sí; pero anula garantía.<br><br>
+                <span class="highlight">¿Debo limpiar mis módulos de memoria?</span><br>
+                Sí, periódicamente con aire comprimido y limpieza de contactos.`,
+                image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+            }
+        ];
+
+        // Initialize presentation
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.slides-container');
+            const indicatorsContainer = document.getElementById('slide-indicators');
+            const currentSlideEl = document.getElementById('current-slide');
+            const progressBar = document.getElementById('progress-bar');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            let currentSlide = 0;
+            
+            // Create slides
+            slides.forEach((slide, index) => {
+                const slideEl = document.createElement('div');
+                slideEl.className = 'slide';
+                slideEl.innerHTML = `
+                    <h2 class="slide-title">${slide.title}</h2>
+                    <div class="slide-content">
+                        <div class="text-content">${slide.content}</div>
+                        <div class="image-content">
+                            <img src="${slide.image}" alt="${slide.title}" class="slide-image">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(slideEl);
+                
+                // Create indicator
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator';
+                indicator.dataset.index = index;
+                indicatorsContainer.appendChild(indicator);
+            });
+            
+            // Initialize first slide
+            document.querySelector('.slide').classList.add('active');
+            document.querySelector('.indicator').classList.add('active');
+            updateNavigation();
+            updateProgress();
+            
+            // Navigation functions
+            function goToSlide(index) {
+                if (index < 0 || index >= slides.length) return;
+                
+                document.querySelector('.slide.active').classList.remove('active');
+                document.querySelector('.indicator.active').classList.remove('active');
+                
+                currentSlide = index;
+                document.querySelectorAll('.slide')[index].classList.add('active');
+                document.querySelectorAll('.indicator')[index].classList.add('active');
+                
+                currentSlideEl.textContent = currentSlide + 1;
+                updateNavigation();
+                updateProgress();
+                
+                // Scroll to top when changing slides
+                document.querySelector('.slide.active').scrollTop = 0;
+            }
+            
+            function updateNavigation() {
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+            
+            function updateProgress() {
+                const progress = ((currentSlide + 1) / slides.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+            
+            document.querySelectorAll('.indicator').forEach(indicator => {
+                indicator.addEventListener('click', () => {
+                    goToSlide(parseInt(indicator.dataset.index));
+                });
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    goToSlide(currentSlide - 1);
+                } else if (e.key === 'ArrowRight') {
+                    goToSlide(currentSlide + 1);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

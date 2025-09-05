@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supporting Network Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 700px;
+            animation: slideIn 0.4s ease-in-out;
+            position: relative;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.2rem;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        
+        .slide h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+            margin: 20px 0 15px 0;
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+        }
+        
+        .slide h3 {
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin: 15px 0 10px 0;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .slide ul, .slide ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .slide li {
+            margin-bottom: 8px;
+        }
+        
+        .content-with-image {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .content-left {
+            flex: 1;
+        }
+        
+        .content-right {
+            flex: 1;
+        }
+        
+        .image-container {
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .slide-image {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            object-fit: contain;
+        }
+        
+        .slide-image.emoji-placeholder {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+        }
+        
+        .image-caption {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #0284c7;
+        }
+        
+        .protocol-card h4 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(30, 58, 138, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            background: #1e3a8a;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .port-list {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .security-alert {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-with-image {
+                flex-direction: column;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <h1>Supporting Network Services</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Servicios Fundamentales de Red</h2>
+                    <ul>
+                        <li><strong>Servidores de Archivos e Impresión:</strong> Compartir recursos de red</li>
+                        <li><strong>Servidores de Base de Datos:</strong> Almacenamiento y gestión de datos</li>
+                        <li><strong>Servidores Web:</strong> Servicios HTTP/HTTPS</li>
+                        <li><strong>Servidores de Correo:</strong> Comunicación electrónica</li>
+                        <li><strong>Servicios de Directorio:</strong> Autenticación y autorización</li>
+                        <li><strong>Acceso Remoto:</strong> Administración y conectividad</li>
+                        <li><strong>Monitoreo de Red:</strong> Supervisión y mantenimiento</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=300&fit=crop" alt="Network Infrastructure" class="slide-image">
+                    <p class="image-caption">Infraestructura de red moderna</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p><strong>Objetivo del módulo:</strong> Comprender los servicios esenciales que soportan las redes modernas y cómo implementarlos de manera segura y eficiente.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: File/Print Servers -->
+        <div class="slide">
+            <h1>Servidores de Archivos e Impresión</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Funciones Principales</h2>
+                    <ul>
+                        <li><strong>File Share:</strong> Disco configurado para acceso de clientes por red</li>
+                        <li><strong>Arquitectura Cliente-Servidor:</strong> Máquina host como servidor, dispositivos como clientes</li>
+                        <li><strong>Protocolos:</strong> Propietarios (Windows) o TCP/IP (FTP)</li>
+                    </ul>
+                    
+                    <h3>Beneficios</h3>
+                    <ul>
+                        <li>Acceso compartido centralizado a recursos</li>
+                        <li>Gestión eficiente de impresión empresarial</li>
+                        <li>Control de colas de impresión</li>
+                        <li>Liberación controlada de trabajos</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c04892710.png" alt="HP Print Server" class="slide-image" style="height: 250px; object-fit: contain; background: white;">
+                    <p class="image-caption">Servidor de archivos e impresión HP</p>
+                </div>
+            </div>
+            <div class="important-note">
+                <p><strong>Nota:</strong> Los servidores de impresión previenen trabajos no recogidos y optimizan el flujo de trabajo en grandes redes empresariales.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: SMB Protocol -->
+        <div class="slide">
+            <h1>Server Message Block (SMB)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://surfshark.com/wp-content/uploads/2025/02/What_is_SMB_4_ES.svg" alt="SMB Protocol" class="slide-image">
+                    <p class="image-caption">Redes Windows con SMB</p>
+                </div>
+                <div class="content-right">
+                    <h2>Características del Protocolo SMB</h2>
+                    <ul>
+                        <li><strong>Puerto:</strong> TCP/445 directamente</li>
+                        <li><strong>Versión actual:</strong> SMB3</li>
+                        <li><strong>Compatibilidad UNIX/Linux:</strong> Suite Samba</li>
+                    </ul>
+                    
+                    <div class="port-list">
+                        <h3>Puertos SMB</h3>
+                        <p><strong>TCP/445:</strong> SMB directo sobre TCP</p>
+                        <p><strong>TCP/139:</strong> SMB sobre NetBIOS (legacy)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <h3>⚠️ Alerta de Seguridad</h3>
+                <p><strong>SMB1 está deshabilitado por defecto</strong> en versiones actuales de Windows debido a vulnerabilidades críticas de seguridad. Solo SMB2/3 deben utilizarse en entornos modernos.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>CIFS (Common Internet File System):</strong> Técnicamente se refiere solo a un dialecto específico de SMB versión 1, aunque a menudo se usa incorrectamente como sinónimo de SMB.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: NetBIOS -->
+        <div class="slide">
+            <h1>Network Basic Input/Output System (NetBIOS)</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>NetBIOS y NetBT</h2>
+                    <ul>
+                        <li><strong>NetBIOS original:</strong> Stack de protocolos pre-TCP/IP</li>
+                        <li><strong>NetBT:</strong> NetBIOS over TCP/IP</li>
+                        <li><strong>Función:</strong> Direccionamiento por nombre y establecimiento de sesiones</li>
+                    </ul>
+                    
+                    <div class="port-list">
+                        <h3>Puertos NetBT</h3>
+                        <p><strong>UDP/137:</strong> Servicios de nombres</p>
+                        <p><strong>UDP/138:</strong> Conexiones UDP</p>
+                        <p><strong>TCP/139:</strong> Servicios de sesión TCP</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://morphis-tech.com/blog/wp-content/uploads/2019/08/19.jpg" alt="NetBIOS Legacy" class="slide-image">
+                    <p class="image-caption">Sistemas legacy de red</p>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <h3>🚨 Recomendación de Seguridad</h3>
+                <p><strong>NetBT debe deshabilitarse</strong> en la mayoría de redes modernas ya que representa un riesgo significativo de seguridad. Solo es necesario para soporte de versiones de Windows anteriores al 2000.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Modernización:</strong> Las redes modernas utilizan IP, TCP/UDP y DNS para estas funciones, haciendo NetBT obsoleto.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: FTP -->
+        <div class="slide">
+            <h1>File Transfer Protocol (FTP)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://kinsta.com/wp-content/uploads/2023/01/FTP-modes.jpg" alt="FTP Transfer" class="slide-image">
+                    <p class="image-caption">Transferencia de archivos por red</p>
+                </div>
+                <div class="content-right">
+                    <h2>Características de FTP</h2>
+                    <ul>
+                        <li><strong>Función:</strong> Subida y descarga de archivos</li>
+                        <li><strong>Uso común:</strong> Subida de archivos a sitios web</li>
+                        <li><strong>Puerto de control:</strong> TCP/21</li>
+                        <li><strong>Puerto de datos:</strong> TCP/20 (activo) o asignado por servidor (pasivo)</li>
+                    </ul>
+                    
+                    <h3>Modos de Funcionamiento</h3>
+                    <ul>
+                        <li><strong>Modo Activo:</strong> Servidor inicia conexión de datos</li>
+                        <li><strong>Modo Pasivo:</strong> Cliente inicia ambas conexiones</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <h3>⚠️ Riesgo de Seguridad</h3>
+                <p><strong>FTP plano no está cifrado</strong> y representa un alto riesgo de seguridad. Las contraseñas se envían en texto plano.</p>
+            </div>
+            
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h4>FTPS</h4>
+                    <p>FTP-Secure con cifrado SSL/TLS</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>SFTP</h4>
+                    <p>FTP sobre Secure Shell (SSH)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Database Servers -->
+        <div class="slide">
+            <h1>Servidores de Base de Datos</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Propósito y Función</h2>
+                    <ul>
+                        <li><strong>Almacenamiento:</strong> Grandes cantidades de datos estructurados y no estructurados</li>
+                        <li><strong>Organización:</strong> Métodos eficientes de recuperación</li>
+                        <li><strong>Gestión:</strong> Consultas, reportes y toma de decisiones</li>
+                    </ul>
+                    
+                    <h3>Ventajas sobre archivos planos</h3>
+                    <ul>
+                        <li>Consultas complejas y reportes</li>
+                        <li>Modificación para propósitos especiales</li>
+                        <li>Soporte para decisiones empresariales</li>
+                        <li>Relaciones entre datos</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://assets.serverwatch.com/uploads/2021/08/SW.DatabaseServersinAction.png" alt="Database Server" class="slide-image">
+                    <p class="image-caption">Centro de datos moderno</p>
+                </div>
+            </div>
+            
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h4>Relacionales (SQL)</h4>
+                    <p>Oracle, MySQL, MariaDB<br>Tablas con columnas y filas</p>
+                </div>
+                <div class="protocol-card">
+                    <h4>No Relacionales</h4>
+                    <p>MongoDB, CouchDB, SimpleDB<br>Documentos, grafos, clave-valor</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Web Servers -->
+        <div class="slide">
+            <h1>Servidores Web</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://www.netdata.cloud/blog/images/webserver.png" alt="Web Server" class="slide-image">
+                    <p class="image-caption">Infraestructura de servidores web</p>
+                </div>
+                <div class="content-right">
+                    <h2>Protocolo HTTP</h2>
+                    <ul>
+                        <li><strong>Puerto por defecto:</strong> TCP/80</li>
+                        <li><strong>Función:</strong> Permitir a clientes (navegadores) solicitar recursos</li>
+                        <li><strong>Método principal:</strong> GET para obtener datos</li>
+                        <li><strong>Respuestas:</strong> Datos solicitados o códigos de error</li>
+                    </ul>
+                    
+                    <h3>Capacidades Extendidas</h3>
+                    <ul>
+                        <li><strong>HTML:</strong> Páginas con formato y hiperenlaces</li>
+                        <li><strong>POST:</strong> Envío de datos del cliente al servidor</li>
+                        <li><strong>Scripting:</strong> Aplicaciones web programables</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Tipos de Implementación</h3>
+                <ul>
+                    <li><strong>Internet Público:</strong> Sitios web accesibles globalmente</li>
+                    <li><strong>Intranet:</strong> Redes privadas solo con acceso local</li>
+                    <li><strong>Extranet:</strong> Redes privadas con acceso remoto autorizado</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: URLs -->
+        <div class="slide">
+            <h1>Uniform Resource Locators (URLs)</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Componentes de una URL</h2>
+                    <div class="code-block">
+https://store.comptia.org/bundles/aplus.html
+                    </div>
+                    
+                    <h3>Elementos principales</h3>
+                    <ul>
+                        <li><strong>Protocolo:</strong> https:// (método de acceso)</li>
+                        <li><strong>FQDN:</strong> store.comptia.org (ubicación del host)</li>
+                        <li><strong>Ruta:</strong> /bundles/aplus.html (directorio y archivo)</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Consideraciones:</strong></p>
+                        <ul>
+                            <li>FQDN no es sensible a mayúsculas</li>
+                            <li>La ruta puede ser sensible a mayúsculas</li>
+                            <li>Se puede usar dirección IP en lugar de FQDN</li>
+                            <li>IPv6 debe ir entre corchetes</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://aprendelibvrefiles.blob.core.windows.net/aprendelibvre-container/course/creacion_de_sitios_web/image/imgscursoweb-01_xl.png" alt="URL Structure" class="slide-image">
+                    <p class="image-caption">Navegador web mostrando URL</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: HTTPS -->
+        <div class="slide">
+            <h1>HyperText Transfer Protocol Secure (HTTPS)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240111152750/HTTPS-gif.gif" alt="HTTPS Security" class="slide-image">
+                    <p class="image-caption">Navegador con conexión segura HTTPS</p>
+                </div>
+                <div class="content-right">
+                    <h2>Seguridad en HTTP</h2>
+                    <ul>
+                        <li><strong>Problema HTTP:</strong> Datos no cifrados, sin autenticación</li>
+                        <li><strong>Solución:</strong> SSL/TLS desarrollado por Netscape</li>
+                        <li><strong>Puerto HTTPS:</strong> TCP/443</li>
+                        <li><strong>Estándar actual:</strong> TLS (Transport Layer Security)</li>
+                    </ul>
+                    
+                    <h3>Otros protocolos seguros</h3>
+                    <ul>
+                        <li>FTPS, SMTPS, LDAPS</li>
+                        <li>POP3S, IMAPS</li>
+                        <li>DTLS para UDP (VPNs)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Implementación de Certificados</h3>
+                <ul>
+                    <li><strong>Certificado digital:</strong> Emitido por Autoridad Certificadora (CA)</li>
+                    <li><strong>Par de claves:</strong> Privada (secreta) y pública (en certificado)</li>
+                    <li><strong>Túnel cifrado:</strong> Comunicaciones protegidas</li>
+                    <li><strong>Indicador visual:</strong> Candado en barra de direcciones</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 10: Mail Servers Overview -->
+        <div class="slide">
+            <h1>Servidores de Correo Electrónico</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Tipos de Protocolos de Correo</h2>
+                    <ul>
+                        <li><strong>Transferencia de correo:</strong> SMTP para entrega</li>
+                        <li><strong>Acceso a buzón:</strong> POP3/IMAP para descarga</li>
+                    </ul>
+                    
+                    <h3>Formato de Direcciones</h3>
+                    <div class="code-block">
+usuario@dominio.com
+david.martin@comptia.org
+                    </div>
+                    
+                    <h3>Proceso de Entrega</h3>
+                    <ol>
+                        <li>Cliente envía a servidor SMTP local</li>
+                        <li>SMTP busca MX record en DNS</li>
+                        <li>Establecimiento de sesión con servidor remoto</li>
+                        <li>Entrega a buzón del destinatario</li>
+                    </ol>
+                </div>
+                <div class="image-container">
+                    <img src="https://mailtrap.io/wp-content/uploads/2024/07/How-email-servers-work.png" alt="Email Infrastructure" class="slide-image">
+                    <p class="image-caption">Infraestructura de correo electrónico</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: SMTP -->
+        <div class="slide">
+            <h1>Simple Mail Transfer Protocol (SMTP)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://www.dongee.com/tutoriales/content/images/2022/11/image-65.png" alt="SMTP Transfer" class="slide-image">
+                    <p class="image-caption">Transferencia de correo entre servidores</p>
+                </div>
+                <div class="content-right">
+                    <h2>Configuraciones de Puerto SMTP</h2>
+                    <div class="port-list">
+                        <h3>Puerto TCP/25</h3>
+                        <ul>
+                            <li>Retransmisión entre servidores SMTP</li>
+                            <li>Message Transfer Agents (MTAs)</li>
+                            <li><strong>Inseguro:</strong> Sin cifrado</li>
+                        </ul>
+                        
+                        <h3>Puerto TCP/587</h3>
+                        <ul>
+                            <li>Envío desde clientes de correo</li>
+                            <li>Message Submission Agents (MSAs)</li>
+                            <li><strong>Seguro:</strong> Con cifrado y autenticación</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Descubrimiento de servidores:</strong> SMTP utiliza registros MX y A/AAAA en DNS para localizar servidores de correo del dominio de destino.</p>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Recomendación:</strong> Siempre configurar puerto 587 con cifrado TLS y autenticación para clientes de correo.</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: POP3 -->
+        <div class="slide">
+            <h1>Post Office Protocol 3 (POP3)</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Características de POP3</h2>
+                    <ul>
+                        <li><strong>Puerto inseguro:</strong> TCP/110</li>
+                        <li><strong>Puerto seguro:</strong> TCP/995 (POP3S)</li>
+                        <li><strong>Funcionamiento:</strong> Descarga y eliminación</li>
+                        <li><strong>Autenticación:</strong> Usuario y contraseña</li>
+                    </ul>
+                    
+                    <h3>Limitaciones</h3>
+                    <ul>
+                        <li>Acceso desde un solo dispositivo</li>
+                        <li>Mensajes eliminados del servidor</li>
+                        <li>Sin sincronización entre dispositivos</li>
+                        <li>Gestión limitada de carpetas</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong>Opción:</strong> Algunos clientes permiten dejar mensajes en el servidor para acceso múltiple.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20230817212918/IMG-20230817-WA0019.jpg" alt="POP3 Client" class="slide-image">
+                    <p class="image-caption">Cliente de correo configurando POP3</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: IMAP -->
+        <div class="slide">
+            <h1>Internet Message Access Protocol (IMAP)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://iniciok.com/media/IMAP0.png" alt="IMAP Multi-device" class="slide-image">
+                    <p class="image-caption">IMAP permite acceso multi-dispositivo</p>
+                </div>
+                <div class="content-right">
+                    <h2>Ventajas de IMAP sobre POP3</h2>
+                    <ul>
+                        <li><strong>Puerto inseguro:</strong> TCP/143</li>
+                        <li><strong>Puerto seguro:</strong> TCP/993 (IMAPS)</li>
+                        <li><strong>Conexiones permanentes:</strong> Al servidor</li>
+                        <li><strong>Múltiples clientes:</strong> Acceso simultáneo</li>
+                    </ul>
+                    
+                    <h3>Características Avanzadas</h3>
+                    <ul>
+                        <li>Gestión de buzón en el servidor</li>
+                        <li>Organización en carpetas</li>
+                        <li>Control de eliminación de mensajes</li>
+                        <li>Múltiples buzones por usuario</li>
+                        <li>Sincronización entre dispositivos</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Ideal para:</strong> Usuarios que acceden al correo desde múltiples dispositivos (PC, tablet, smartphone) y necesitan sincronización completa.</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Directory and Authentication Servers -->
+        <div class="slide">
+            <h1>Servidores de Directorio y Autenticación</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Necesidad de Control de Acceso</h2>
+                    <ul>
+                        <li><strong>Autenticación:</strong> Verificar identidad de usuarios</li>
+                        <li><strong>Autorización:</strong> Controlar acceso a recursos</li>
+                        <li><strong>Single Sign-On (SSO):</strong> Una autenticación para todos los servicios</li>
+                    </ul>
+                    
+                    <h3>Evolución de Sistemas</h3>
+                    <ul>
+                        <li><strong>Workgroup:</strong> Contraseña compartida simple</li>
+                        <li><strong>Enterprise:</strong> Base de datos centralizada de cuentas</li>
+                        <li><strong>Directorio:</strong> Servicios compatibles con aplicaciones</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://docs.oracle.com/cd/E19424-01/820-4811/images/pwd.gif" alt="Directory Services" class="slide-image">
+                    <p class="image-caption">Servicios de directorio empresarial</p>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Beneficio clave:</strong> Los usuarios se autentican una vez y obtienen acceso autorizado a todos los servidores de aplicaciones compatibles en la red.</p>
+            </div>
+        </div>
+
+        <!-- Slide 15: LDAP -->
+        <div class="slide">
+            <h1>Lightweight Directory Access Protocol (LDAP)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://www.dnsstuff.com/wp-content/uploads/2020/04/what-is-LDAP-authentication-for-Active-Directory.png" alt="LDAP Directory" class="slide-image">
+                    <p class="image-caption">Estructura de directorio LDAP</p>
+                </div>
+                <div class="content-right">
+                    <h2>Características LDAP</h2>
+                    <ul>
+                        <li><strong>Estándar base:</strong> X.500</li>
+                        <li><strong>Puerto inseguro:</strong> TCP/UDP 389</li>
+                        <li><strong>Puerto seguro:</strong> TCP/636 (LDAPS)</li>
+                        <li><strong>Función:</strong> Consultar y actualizar directorios</li>
+                    </ul>
+                    
+                    <h3>Implementaciones Populares</h3>
+                    <ul>
+                        <li><strong>Windows Active Directory:</strong> Microsoft</li>
+                        <li><strong>OpenLDAP:</strong> Código abierto</li>
+                        <li><strong>Otros:</strong> Apache Directory, 389 Directory</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Estructura de Directorio</h3>
+                <p>Los recursos de red se registran como <strong>objetos</strong> dentro del directorio, donde cada objeto es como un registro y los <strong>atributos</strong> son como campos de base de datos.</p>
+            </div>
+        </div>
+
+        <!-- Slide 16: AAA -->
+        <div class="slide">
+            <h1>Authentication, Authorization, and Accounting (AAA)</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Componentes AAA</h2>
+                    <ul>
+                        <li><strong>Supplicant:</strong> Dispositivo solicitando acceso (PC, laptop)</li>
+                        <li><strong>NAS/NAP:</strong> Dispositivos de acceso a red (switches, APs, VPN gateways)</li>
+                        <li><strong>AAA Server:</strong> Servidor de autenticación en la red local</li>
+                    </ul>
+                    
+                    <h3>Protocolos AAA</h3>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <h4>RADIUS</h4>
+                            <p>TCP/UDP 1812/1813<br>Autenticación de usuarios</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>TACACS+</h4>
+                            <p>TCP/49<br>Autenticación de dispositivos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://study-ccna.com/wp-content/uploads/aaa-authentication.png" alt="AAA Architecture" class="slide-image">
+                    <p class="image-caption">Arquitectura AAA con RADIUS</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Ventaja:</strong> Los dispositivos de acceso no almacenan credenciales, solo actúan como tránsito entre el servidor AAA y el suplicante.</p>
+            </div>
+        </div>
+
+        <!-- Slide 17: Remote Terminal Access -->
+        <div class="slide">
+            <h1>Servidores de Acceso Terminal Remoto</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20200813213711/Remote.png" alt="Remote Terminal" class="slide-image">
+                    <p class="image-caption">Acceso remoto a terminal</p>
+                </div>
+                <div class="content-right">
+                    <h2>Conceptos Fundamentales</h2>
+                    <ul>
+                        <li><strong>Terminal:</strong> Punto final de comunicación (TTY)</li>
+                        <li><strong>Shell:</strong> Entorno de procesamiento de comandos</li>
+                        <li><strong>Emulador de terminal:</strong> Software que replica función TTY</li>
+                    </ul>
+                    
+                    <h3>Protocolos de Acceso</h3>
+                    <div class="port-list">
+                        <h4>SSH (Secure Shell)</h4>
+                        <p><strong>Puerto:</strong> TCP/22</p>
+                        <p><strong>Seguridad:</strong> Cifrado completo</p>
+                        
+                        <h4>Telnet</h4>
+                        <p><strong>Puerto:</strong> TCP/23</p>
+                        <p><strong>Seguridad:</strong> Sin cifrado (obsoleto)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="security-alert">
+                <h3>⚠️ Recomendación de Seguridad</h3>
+                <p><strong>Solo usar SSH para acceso remoto.</strong> Telnet transmite credenciales en texto plano y es vulnerable a packet sniffing.</p>
+            </div>
+        </div>
+
+        <!-- Slide 18: SSH -->
+        <div class="slide">
+            <h1>Secure Shell (SSH)</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Características de SSH</h2>
+                    <ul>
+                        <li><strong>Puerto:</strong> TCP/22 por defecto</li>
+                        <li><strong>Cifrado:</strong> Toda la comunicación protegida</li>
+                        <li><strong>Plataformas:</strong> UNIX, Linux, Windows, macOS</li>
+                        <li><strong>Implementación popular:</strong> OpenSSH</li>
+                    </ul>
+                    
+                    <h3>Usos Adicionales</h3>
+                    <ul>
+                        <li><strong>SFTP:</strong> Transferencia segura de archivos</li>
+                        <li><strong>Túneles:</strong> Port forwarding</li>
+                        <li><strong>Gestión de red:</strong> Switches, routers, firewalls</li>
+                        <li><strong>Automatización:</strong> Scripts y administración</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://www.tommycoolman.com/wp-content/uploads/2021/08/rdpnetwork-diagram-01-scaled.jpg" alt="SSH Terminal" class="slide-image">
+                    <p class="image-caption">Terminal SSH con cifrado</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>SSH es el estándar de facto</strong> para acceso seguro remoto a servidores UNIX/Linux y dispositivos de red empresariales.</p>
+            </div>
+        </div>
+
+        <!-- Slide 19: RDP -->
+        <div class="slide">
+            <h1>Remote Desktop Protocol (RDP)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://www.layerstack.com/img/docs/resources/rdpdiagram.jpg" alt="RDP Connection" class="slide-image">
+                    <p class="image-caption">Conexión RDP a escritorio Windows</p>
+                </div>
+                <div class="content-right">
+                    <h2>Características RDP</h2>
+                    <ul>
+                        <li><strong>Puerto:</strong> TCP/3389</li>
+                        <li><strong>Desarrollador:</strong> Microsoft</li>
+                        <li><strong>Función:</strong> Acceso GUI remoto a Windows</li>
+                        <li><strong>Cifrado:</strong> Configurable por administrador</li>
+                    </ul>
+                    
+                    <h3>Compatibilidad Multi-plataforma</h3>
+                    <ul>
+                        <li><strong>Clientes:</strong> Linux, macOS, iOS, Android</li>
+                        <li><strong>Servidores:</strong> xrdp para sistemas no-Windows</li>
+                        <li><strong>Permisos:</strong> Configurables por administrador</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Ventaja:</strong> Permite administración gráfica completa, ideal para usuarios que prefieren interfaces visuales sobre línea de comandos.</p>
+            </div>
+        </div>
+
+        <!-- Slide 20: Time Servers -->
+        <div class="slide">
+            <h1>Servidores de Tiempo</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Network Time Protocol (NTP)</h2>
+                    <ul>
+                        <li><strong>Puerto:</strong> UDP/123</li>
+                        <li><strong>Función:</strong> Sincronización de relojes en red</li>
+                        <li><strong>Importancia:</strong> Logs precisos y protocolos temporizados</li>
+                    </ul>
+                    
+                    <h3>Niveles de Stratum</h3>
+                    <ul>
+                        <li><strong>Stratum-0:</strong> Reloj atómico (fuente más precisa)</li>
+                        <li><strong>Stratum-1:</strong> Servidores NTP conectados a Stratum-0</li>
+                        <li><strong>Stratum-2:</strong> Servidores sincronizados con Stratum-1</li>
+                        <li><strong>Stratum-n:</strong> Niveles subsecuentes</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://es.tonmind.com/js/htmledit/kindeditor/attached/20220415/20220415110555_58926.png" alt="NTP Network" class="slide-image">
+                    <p class="image-caption">Red de servidores NTP</p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+# Verificar estado NTP en Windows
+w32tm /query /status
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Network Time Security (NTS)</h3>
+                <p><strong>Aprobado en 2020:</strong> Usa cifrado TLS en puerto TCP/4460 para proteger la transferencia de datos de tiempo.</p>
+            </div>
+            
+            <div class="important-note">
+                <p><strong>Windows por defecto:</strong> Utiliza time.windows.com como servidor de tiempo.</p>
+            </div>
+        </div>
+
+        <!-- Slide 21: SNMP -->
+        <div class="slide">
+            <h1>Simple Network Management Protocol (SNMP)</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://ozeki.hu/attachments/7614/snmp-network.png" alt="SNMP Monitoring" class="slide-image">
+                    <p class="image-caption">Sistema de monitoreo SNMP</p>
+                </div>
+                <div class="content-right">
+                    <h2>Componentes SNMP</h2>
+                    <ul>
+                        <li><strong>Sistema de gestión:</strong> Estación de monitoreo</li>
+                        <li><strong>Dispositivos gestionados:</strong> Switches, routers, servidores</li>
+                        <li><strong>Agentes:</strong> Proceso en cada dispositivo</li>
+                    </ul>
+                    
+                    <div class="port-list">
+                        <h3>Puertos SNMP</h3>
+                        <p><strong>UDP/161:</strong> Consultas a dispositivos</p>
+                        <p><strong>UDP/162:</strong> Traps (alertas)</p>
+                    </div>
+                    
+                    <h3>Versiones</h3>
+                    <ul>
+                        <li><strong>SNMPv1/v2:</strong> Inseguros, no usar</li>
+                        <li><strong>SNMPv3:</strong> Con autenticación, recomendado</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>MIB (Management Information Base):</strong> Base de datos en cada agente que contiene estadísticas sobre la actividad del dispositivo.</p>
+            </div>
+        </div>
+
+        <!-- Slide 22: Syslog -->
+        <div class="slide">
+            <h1>Syslog - Recolección de Logs</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Características Syslog</h2>
+                    <ul>
+                        <li><strong>Puerto:</strong> UDP/514</li>
+                        <li><strong>Función:</strong> Recolector centralizado de logs</li>
+                        <li><strong>Estándar:</strong> De facto para logging distribuido</li>
+                        <li><strong>Compatibilidad:</strong> Routers, switches, servidores UNIX/Linux</li>
+                    </ul>
+                    
+                    <h3>Formato de Mensaje Syslog</h3>
+                    <ul>
+                        <li><strong>PRI code:</strong> Calculado de facility y severity</li>
+                        <li><strong>Header:</strong> Timestamp y hostname</li>
+                        <li><strong>Message:</strong> Tag del proceso y contenido</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://hlassets.paessler.com/common/files/infographics/syslog-monitoring.png" alt="Syslog Collection" class="slide-image">
+                    <p class="image-caption">Sistema centralizado de logs</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Beneficios de Centralización</h3>
+                <ul>
+                    <li>Revisión eficiente de logs</li>
+                    <li>Respuesta rápida a alertas</li>
+                    <li>Dashboards de estado</li>
+                    <li>Correlación de eventos</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 23: Proxy Servers -->
+        <div class="slide">
+            <h1>Servidores Proxy</h1>
+            <div class="content-with-image">
+                <div class="image-container">
+                    <img src="https://miro.medium.com/v2/resize:fit:1350/1*xrXRg3YqaPF5uPUXaCu4Hg.png" alt="Proxy Server" class="slide-image">
+                    <p class="image-caption">Proxy como intermediario web</p>
+                </div>
+                <div class="content-right">
+                    <h2>Diferencias con NAT</h2>
+                    <ul>
+                        <li><strong>NAT:</strong> Solo traduce direcciones IP</li>
+                        <li><strong>Proxy:</strong> Procesa requests HTTP completos</li>
+                        <li><strong>Puerto común:</strong> 8080 por convención</li>
+                    </ul>
+                    
+                    <h3>Tipos de Proxy</h3>
+                    <ul>
+                        <li><strong>Transparente:</strong> Sin configuración cliente</li>
+                        <li><strong>No transparente:</strong> Requiere configuración</li>
+                    </ul>
+                    
+                    <h3>Funciones Adicionales</h3>
+                    <ul>
+                        <li><strong>Filtrado de contenido:</strong> Bloqueo de sitios</li>
+                        <li><strong>Cache:</strong> Mejora rendimiento</li>
+                        <li><strong>Control de acceso:</strong> Reglas y horarios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Security Appliances -->
+        <div class="slide">
+            <h1>Dispositivos de Seguridad y UTM</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Funciones de Seguridad</h2>
+                    <ul>
+                        <li><strong>Firewalls:</strong> Control de acceso por ACL</li>
+                        <li><strong>IDS/IPS:</strong> Detección/prevención de intrusiones</li>
+                        <li><strong>Antivirus:</strong> Escaneo de archivos en tránsito</li>
+                        <li><strong>Spam Gateway:</strong> Filtrado de correo usando SPF/DKIM/DMARC</li>
+                        <li><strong>Content Filter:</strong> Bloqueo de sitios web</li>
+                        <li><strong>DLP:</strong> Prevención de fuga de datos</li>
+                    </ul>
+                    
+                    <h3>Unified Threat Management (UTM)</h3>
+                    <ul>
+                        <li>Combina múltiples funciones de seguridad</li>
+                        <li>Configuración y reporting centralizados</li>
+                        <li>Alternativa a dispositivos separados</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="https://www.nexcom.com/UploadFiles/FCKeditor/image/Applications/2016_NCS/Network-Security_Appliance.jpg" alt="UTM Security" class="slide-image">
+                    <p class="image-caption">Dispositivo UTM empresarial</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Ventaja UTM:</strong> Simplifica la gestión de seguridad al centralizar múltiples funciones en un solo dispositivo con configuración y reportes unificados.</p>
+            </div>
+        </div>
+
+        <!-- Slide 25: Resumen y Conclusiones -->
+        <div class="slide">
+            <h1>Resumen: Supporting Network Services</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Servicios Fundamentales Cubiertos</h2>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <h4>Compartición</h4>
+                            <p>SMB/CIFS, FTP, File/Print Servers</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>Web y Correo</h4>
+                            <p>HTTP/HTTPS, SMTP, POP3, IMAP</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>Directorio y AAA</h4>
+                            <p>LDAP, RADIUS, TACACS+</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>Acceso Remoto</h4>
+                            <p>SSH, RDP, Terminal Services</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>Monitoreo</h4>
+                            <p>NTP, SNMP, Syslog</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>Seguridad</h4>
+                            <p>Proxy, UTM, Firewalls</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://images.squarespace-cdn.com/content/v1/5d5c227d9c5b31000112504a/1645636145908-LXQX5LMLEQFBDN0MQWM0/comptia+partner+badge.png" alt="CompTIA Badge" class="slide-image">
+                    <p class="image-caption">Módulo completado exitosamente</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Puntos Clave para Recordar</h3>
+                <ul>
+                    <li><strong>Seguridad:</strong> Siempre usar versiones cifradas (HTTPS, IMAPS, SSH)</li>
+                    <li><strong>Puertos:</strong> Conocer puertos estándar para troubleshooting</li>
+                    <li><strong>Obsolescencia:</strong> Evitar protocolos legacy inseguros</li>
+                    <li><strong>Centralización:</strong> UTM y servicios centralizados simplifican gestión</li>
+                    <li><strong>Monitoreo:</strong> Implementar logging y time sync para operaciones efectivas</li>
+                </ul>
+            </div>
+            
+            <div class="important-note">
+                <p style="text-align: center; font-size: 1.2rem;"><strong>¡Gracias por su atención!</strong><br>¿Preguntas sobre Supporting Network Services?</p>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+             <a href="index.html"><button class="btn">Volver inicio</button></a> 
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">25</span>
+            </span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializar
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

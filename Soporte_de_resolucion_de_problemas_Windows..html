@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte y Resolución de Problemas en Windows</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 700px;
+            animation: slideIn 0.4s ease-in-out;
+            position: relative;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.2rem;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        
+        .slide h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+            margin: 20px 0 15px 0;
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+        }
+        
+        .slide h3 {
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin: 15px 0 10px 0;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .slide ul, .slide ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .slide li {
+            margin-bottom: 8px;
+        }
+        
+        .content-with-image {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .content-left {
+            flex: 1;
+        }
+        
+        .content-right {
+            flex: 1;
+        }
+        
+        .image-container {
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .slide-image {
+            width: 100%;
+            height: 350px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            object-fit: contain;
+        }
+        
+        .image-caption {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .security-alert {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #0284c7;
+        }
+        
+        .protocol-card h4 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(30, 58, 138, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            background: #1e3a8a;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .red-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #10b981;
+        }
+        
+        .feature-card h4 {
+            color: #047857;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table {
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+        
+        @media (max-width: 768px) {
+            .content-with-image {
+                flex-direction: column;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Título Principal -->
+        <div class="slide active">
+            <h1>Soporte y Resolución de Problemas en Windows</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Desafíos del Soporte Técnico</h2>
+                    <ul>
+                        <li><strong class="red-text">Más que configuración:</strong> Planificación, capacitación y resolución de problemas</li>
+                        <li><strong class="red-text">Factores clave:</strong> Técnicos, operativos y de negocio</li>
+                        <li><strong class="red-text">Conocimiento esencial:</strong> Síntomas comunes, causas probables y herramientas de recuperación</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p>El soporte efectivo requiere <strong class="red-text">diagnóstico preciso</strong> y <strong class="red-text">soluciones prácticas</strong> para problemas del sistema operativo y red.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <div class="slide-image" style="background-color: #3b82f6; color: white;">
+                        <span>Imagen: Soporte técnico en entorno Windows</span>
+                    </div>
+                    <p class="image-caption">El soporte técnico abarca múltiples aspectos del sistema operativo</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Resolución de Problemas de Red -->
+        <div class="slide">
+            <h1>Resolución de Problemas de Red en Windows</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Escenario Común</h2>
+                    <p>Usuario reporta que su sistema Windows no puede conectarse al servidor de archivos, impidiendo la transferencia de archivos.</p>
+                    
+                    <div class="important-note">
+                        <p><strong class="red-text">Caso remoto:</strong> El usuario está en una conferencia y no puede llevar su laptop al departamento de TI.</p>
+                    </div>
+                    
+                    <h3>Habilidades Clave</h3>
+                    <ul>
+                        <li>Diagnóstico de conexiones locales y remotas</li>
+                        <li>Uso de herramientas integradas de Windows</li>
+                        <li>Comunicación efectiva con usuarios no técnicos</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <div class="slide-image" style="background-color: #10b981; color: white;">
+                        <span>Diagrama: Conexión de red fallida</span>
+                    </div>
+                    <p class="image-caption">Problemas de conectividad requieren diagnóstico sistemático</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Configuración IP -->
+        <div class="slide">
+            <h1>Resolución de Problemas de Configuración IP</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Estados de Conexión</h2>
+                    <ul>
+                        <li><strong class="red-text">Desconectado:</strong> Verificar cable o configuración inalámbrica</li>
+                        <li><strong class="red-text">Conectividad limitada:</strong> Sin servidor DHCP disponible (usa dirección APIPA 169.254.x.y)</li>
+                        <li><strong class="red-text">Sin acceso a Internet:</strong> Configuración IP válida localmente pero sin conexión externa</li>
+                    </ul>
+                    
+                    <div class="security-alert">
+                        <p><strong>Nota:</strong> Windows 10 versión 1511 y anteriores usan <strong class="red-text">www.msftncsi.com</strong> para el indicador de estado de conectividad (NCSI).</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <div class="slide-image" style="background-color: #6366f1; color: white;">
+                        <span>Captura: Estados de conexión de red</span>
+                    </div>
+                    <p class="image-caption">Diferentes estados indican distintos problemas de red</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Comando ipconfig -->
+        <div class="slide">
+            <h1>Uso del Comando ipconfig</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Información Básica</h2>
+                    <p>Sin parámetros, muestra dirección IP, máscara de subred y puerta de enlace predeterminada.</p>
+                    
+                    <h3>Parámetro /all</h3>
+                    <ul>
+                        <li>Muestra configuración detallada</li>
+                        <li>Incluye servidores DHCP y DNS</li>
+                        <li>Dirección MAC y estado NetBIOS</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong class="red-text">Preguntas clave:</strong> ¿Configuración estática o DHCP? ¿Parámetros correctos para la red local?</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_troubleshoot_windows_networking/236-1640183027408-windows_10_21h2_cmd_ipconfig_all.png" alt="Ejemplo de ipconfig /all" class="slide-image">
+                    <p class="image-caption">Ejemplo de salida de ipconfig /all</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Renovación DHCP -->
+        <div class="slide">
+            <h1>Gestión de Direcciones IP con ipconfig</h1>
+            <div class="content-left">
+                <h2>Renovación de Dirección IP</h2>
+                <p>Si una concesión DHCP falta o es incorrecta, se puede solicitar una nueva:</p>
+                
+                <div class="protocol-grid">
+                    <div class="protocol-card">
+                        <h4>Liberar IP</h4>
+                        <p><code>ipconfig /release NombreAdaptador</code></p>
+                        <p>Elimina la dirección IP actual del adaptador</p>
+                    </div>
+                    <div class="protocol-card">
+                        <h4>Renovar IP</h4>
+                        <p><code>ipconfig /renew NombreAdaptador</code></p>
+                        <p>Solicita una nueva concesión DHCP</p>
+                    </div>
+                </div>
+                
+                <h2>Resolución DNS</h2>
+                <div class="protocol-grid">
+                    <div class="protocol-card">
+                        <h4>Mostrar caché DNS</h4>
+                        <p><code>ipconfig /displaydns</code></p>
+                        <p>Muestra nombres de host resueltos recientemente</p>
+                    </div>
+                    <div class="protocol-card">
+                        <h4>Limpiar caché DNS</h4>
+                        <p><code>ipconfig /flushdns</code></p>
+                        <p>Elimina registros DNS en caché que puedan estar obsoletos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Comandos de Red -->
+        <div class="slide">
+            <h1>Comandos Esenciales para Redes</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>hostname</h4>
+                    <p>Muestra el nombre configurado en la máquina local</p>
+                    <p><strong class="red-text">Uso:</strong> Identificación del equipo en la red</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Restablecimiento de Red</h4>
+                    <p>Opción en Configuración > Red e Internet > Estado</p>
+                    <p><strong class="red-text">Advertencia:</strong> Borra configuraciones personalizadas (VPNs, etc.)</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Nota Importante</h4>
+                    <p>No reinicie servidores sin considerar el impacto en otros usuarios</p>
+                    <p><strong class="red-text">Solo cuando:</strong> El problema es generalizado</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Comando ping -->
+        <div class="slide">
+            <h1>Diagnóstico con el Comando ping</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Procedimiento Básico</h2>
+                    <ol>
+                        <li><strong class="red-text">ping 127.0.0.1</strong> - Verifica que TCP/IP está instalado</li>
+                        <li><strong class="red-text">ping IP_local</strong> - Confirma dirección IP correcta</li>
+                        <li><strong class="red-text">ping puerta_enlace</strong> - Prueba comunicación local</li>
+                        <li><strong class="red-text">ping host_remoto</strong> - Verifica comunicación externa</li>
+                    </ol>
+                    
+                    <div class="important-note">
+                        <p>El tiempo de ida y vuelta (ms) ayuda a diagnosticar problemas de latencia.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_troubleshoot_windows_networking/2625-1640183065570-windows_10_21h2_cmd_ping_loopback_host_gateway_remote.png" alt="Ejemplo de comandos ping" class="slide-image">
+                    <p class="image-caption">Secuencia de prueba de conectividad con ping</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Errores comunes con ping -->
+        <div class="slide">
+            <h1>Interpretación de Errores con ping</h1>
+            <div class="comparison-table">
+                <table>
+                    <tr>
+                        <th>Mensaje de Error</th>
+                        <th>Significado</th>
+                        <th>Causas Probables</th>
+                    </tr>
+                    <tr>
+                        <td><strong class="red-text">Destino inalcanzable</strong></td>
+                        <td>No hay respuesta a sondas ARP</td>
+                        <td>Host desconectado, IP duplicada o máscara incorrecta</td>
+                    </tr>
+                    <tr>
+                        <td><strong class="red-text">Inalcanzable desde puerta de enlace</strong></td>
+                        <td>El router no tiene información de enrutamiento</td>
+                        <td>Configuración incorrecta del router o red destino</td>
+                    </tr>
+                    <tr>
+                        <td><strong class="red-text">Sin respuesta (Tiempo de espera agotado)</strong></td>
+                        <td>No se recibió respuesta</td>
+                        <td>Host remoto apagado o configurado para no responder</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Modo continuo:</strong> <code>ping -t</code> envía paquetes indefinidamente (CTRL+C para detener).</p>
+                <p><strong>DNS:</strong> Se puede usar con nombres (ping ejemplo.com) o FQDN, pero requiere DNS funcionando.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Comando tracert -->
+        <div class="slide">
+            <h1>Rastreo de Rutas con tracert</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Función Principal</h2>
+                    <p>Traza la ruta que sigue un paquete para llegar a su destino, mostrando cada salto (router) en el camino.</p>
+                    
+                    <h3>Características Clave</h3>
+                    <ul>
+                        <li>Muestra tiempos de respuesta por salto</li>
+                        <li>Identifica cuellos de botella en la red</li>
+                        <li>Útil para problemas de enrutamiento</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <p><strong class="red-text">Alternativa:</strong> <code>pathping</code> combina tracert con ping para medir latencia y pérdida de paquetes.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_troubleshoot_windows_networking/7679-1640183098555-windows_10_21h2_cmd_tracert_gateway_google.png" alt="Ejemplo de tracert" class="slide-image">
+                    <p class="image-caption">Ejemplo de salida del comando tracert</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Resolución de Nombres -->
+        <div class="slide">
+            <h1>Resolución de Problemas de DNS</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Comando nslookup</h2>
+                    <p>Herramienta para consultar servidores DNS y resolver problemas de nombres.</p>
+                    
+                    <h3>Sintaxis Básica</h3>
+                    <p><code>nslookup -Opción Host Servidor</code></p>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Ejemplo:</strong> <code>nslookup -type=mx comptia.org 8.8.8.8</code><br>
+                        Consulta registros MX (correo) para comptia.org usando DNS de Google.</p>
+                    </div>
+                    
+                    <h3>Comparación de Servidores</h3>
+                    <p>Al consultar diferentes servidores DNS, se pueden identificar problemas de configuración.</p>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_troubleshoot_windows_networking/7524-1640183123561-06d_nslookup_comptia_mx.png" alt="Ejemplo de nslookup" class="slide-image">
+                    <p class="image-caption">Consulta de registros MX con nslookup</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Puertos y Conexiones -->
+        <div class="slide">
+            <h1>Monitoreo de Puertos con netstat</h1>
+            <div class="content-with-image">
+                <div class="content-left">
+                    <h2>Funcionalidad Principal</h2>
+                    <p>Muestra puertos abiertos y conexiones activas en el host local.</p>
+                    
+                    <h3>Parámetros Clave</h3>
+                    <ul>
+                        <li><strong class="red-text">-a:</strong> Incluye puertos UDP</li>
+                        <li><strong class="red-text">-b:</strong> Muestra el proceso asociado (requiere permisos de admin)</li>
+                        <li><strong class="red-text">-n:</strong> Muestra números en lugar de nombres (más rápido)</li>
+                        <li><strong class="red-text">-e/-s:</strong> Estadísticas de Ethernet y protocolos</li>
+                    </ul>
+                    
+                    <div class="security-alert">
+                        <p><strong>Uso en troubleshooting:</strong> Verificar si puertos de servicios esenciales (compartición de archivos, correo) están abiertos.</p>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdn.testout.com/a-plus-220-120x-en-us/materials/resources/text/s_troubleshoot_windows_networking/4162-1640183159484-windows_10_21h2_cmd_netstat_nab_minecraft.png" alt="Ejemplo de netstat" class="slide-image">
+                    <p class="image-caption">Conexiones y procesos con netstat</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Tecnologías de Acceso Remoto -->
+        <div class="slide">
+            <h1>Tecnologías de Acceso Remoto</h1>
+            <div class="content-left">
+                <h2>Escenario Común</h2>
+                <p>Un representante de ventas necesita un controlador actualizado instalado en su laptop para conectarse a una impresora en ubicación remota.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Escritorio Remoto</h4>
+                        <p>Conexión gráfica completa al equipo remoto</p>
+                        <p><strong class="red-text">Protocolo:</strong> RDP (Puerto 3389)</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Terminal de Comandos</h4>
+                        <p>Conexión solo a intérprete de comandos</p>
+                        <p><strong class="red-text">Ejemplo:</strong> SSH (Puerto 22)</p>
+                    </div>
+                </div>
+                
+                <div class="important-note">
+                    <p><strong>Consideraciones de seguridad:</strong> Permisos selectivos, encriptación, verificación de servidor legítimo y protección contra vulnerabilidades.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continuar con las siguientes diapositivas... -->
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+
+
+            
+            <a href="index.html"><button class="btn">Volver inicio</button></a> 
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">30</span>
+            </span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializar
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+
+
+
+</body>
+</html>
